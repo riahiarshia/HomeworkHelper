@@ -1,0 +1,9 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"subject\": \"Mathematics\", \"difficulty\": \"Intermediate\", \"steps\": [{\"question\": \"What is the first step to solve this equation?\", \"explanation\": \"Start by identifying the type of equation\", \"options\": [\"Add both sides\", \"Subtract from both sides\", \"Multiply by 2\", \"Divide by 3\"], \"correctAnswer\": \"Add both sides\"}]}"
+      }
+    }
+  ]
+}

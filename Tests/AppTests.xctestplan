@@ -1,0 +1,69 @@
+{
+  "configurations" : [
+    {
+      "id" : "Configuration-1",
+      "name" : "iPhone 16",
+      "options" : {
+        "commandLineArgumentEntries" : [
+          {
+            "argument" : "-uiTest",
+            "enabled" : true
+          },
+          {
+            "argument" : "-uiLocale",
+            "enabled" : true,
+            "value" : "en_US"
+          }
+        ],
+        "environmentVariableEntries" : [
+          {
+            "key" : "UITEST",
+            "value" : "1",
+            "enabled" : true
+          }
+        ],
+        "language" : "en",
+        "region" : "US",
+        "targetForVariableExpansion" : {
+          "containerPath" : "container:HomeworkHelper.xcodeproj",
+          "identifier" : "HomeworkHelper",
+          "name" : "HomeworkHelper"
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+
+    ],
+    "environmentVariableEntries" : [
+
+    ],
+    "language" : "en",
+    "region" : "US",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:HomeworkHelper.xcodeproj",
+      "identifier" : "HomeworkHelper",
+      "name" : "HomeworkHelper"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:HomeworkHelper.xcodeproj",
+        "identifier" : "HomeworkHelperTests",
+        "name" : "HomeworkHelperTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:HomeworkHelper.xcodeproj",
+        "identifier" : "HomeworkHelperUITests",
+        "name" : "HomeworkHelperUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
