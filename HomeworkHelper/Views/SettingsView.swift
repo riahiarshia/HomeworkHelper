@@ -2,7 +2,6 @@ import SwiftUI
 import MessageUI
 
 struct SettingsView: View {
-    @EnvironmentObject var openAIService: OpenAIService
     @EnvironmentObject var dataManager: DataManager
     @State private var apiKey: String = ""
     @State private var azureClientSecret: String = ""
@@ -18,8 +17,21 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                // Azure Key Vault Section (if configured)
-                if openAIService.isUsingAzure() {
+                // Backend API Section
+                Section(header: Text("Backend API")) {
+                    HStack {
+                        Image(systemName: "checkmark.shield.fill")
+                            .foregroundColor(.green)
+                        Text("Backend API Configured")
+                            .font(.headline)
+                    }
+                    
+                    Text("All AI requests are processed securely through our backend server. No API keys are stored on your device.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                if false {
                     Section(header: Text("Azure Key Vault")) {
                         HStack {
                             Image(systemName: "checkmark.shield.fill")
@@ -28,39 +40,9 @@ struct SettingsView: View {
                                 .font(.headline)
                         }
                         
-                        if openAIService.isLoadingFromAzure {
-                            HStack {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle())
-                                Text("Loading from Azure...")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        if let error = openAIService.azureError {
-                            Text(error)
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                        }
-                        
-                        Button {
-                            Task {
-                                isRefreshingAzure = true
-                                await openAIService.refreshFromAzure()
-                                isRefreshingAzure = false
-                            }
-                        } label: {
-                            HStack {
-                                if isRefreshingAzure {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle())
-                                } else {
-                                    Image(systemName: "arrow.clockwise")
-                                }
-                                Text("Refresh from Azure")
-                            }
-                        }
-                        .disabled(isRefreshingAzure)
+                        Text("Azure integration is now handled by the backend server.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         
                         Text("API key is automatically fetched from Azure Key Vault. Updates refresh every hour.")
                             .font(.caption)
@@ -85,8 +67,8 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section(header: Text("OpenAI Configuration")) {
-                    if openAIService.isUsingAzure() {
+                Section(header: Text("Legacy Configuration (Disabled)")) {
+                    if false {
                         Text("✅ Using Azure Key Vault for API key management")
                             .font(.caption)
                             .foregroundColor(.green)
@@ -96,20 +78,7 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
                     
-                    SecureField("Emergency API Key (if Azure fails)", text: $apiKey)
-                        .textContentType(.password)
-                        .autocapitalization(.none)
-                        .onAppear {
-                            apiKey = openAIService.apiKey
-                        }
-                    
-                    Button("Save API Key") {
-                        openAIService.saveAPIKey(apiKey)
-                        showingAPIKeyAlert = true
-                    }
-                    .disabled(apiKey.isEmpty)
-                    
-                    Text("Your API key is stored securely on your device and never shared.")
+                    Text("API key management is now handled by the backend server.")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }

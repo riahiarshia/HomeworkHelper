@@ -25,12 +25,17 @@ class OpenAIService: ObservableObject {
     
     // Load API key from Azure Key Vault
     func loadAPIKeyFromAzure() async {
+        print("🔍 DEBUG OpenAIService.loadAPIKeyFromAzure:")
+        
         guard azureKeyVault.isConfigured() else {
+            print("🔍 DEBUG OpenAIService: Azure Key Vault not configured")
             await MainActor.run {
                 azureError = "Azure Key Vault not configured. Using manual API key entry."
             }
             return
         }
+        
+        print("🔍 DEBUG OpenAIService: Azure Key Vault is configured, fetching API key...")
         
         await MainActor.run {
             isLoadingFromAzure = true
@@ -42,14 +47,15 @@ class OpenAIService: ObservableObject {
             await MainActor.run {
                 saveAPIKey(key)
                 isLoadingFromAzure = false
-                print("✅ Successfully loaded API key from Azure Key Vault")
+                print("✅ DEBUG OpenAIService: Successfully loaded API key from Azure Key Vault")
+                print("🔍 DEBUG OpenAIService: API key length: \(key.count)")
             }
         } catch {
             await MainActor.run {
                 isLoadingFromAzure = false
                 azureError = "Failed to load from Azure: \(error.localizedDescription)"
-                print("⚠️ Azure Key Vault error: \(error.localizedDescription)")
-                print("ℹ️ Falling back to keychain/manual entry")
+                print("⚠️ DEBUG OpenAIService: Azure Key Vault error: \(error.localizedDescription)")
+                print("ℹ️ DEBUG OpenAIService: Falling back to keychain/manual entry")
             }
         }
     }
@@ -108,6 +114,12 @@ class OpenAIService: ObservableObject {
     }
     
     func analyzeProblem(imageData: Data?, problemText: String?, userGradeLevel: String) async throws -> ProblemAnalysis {
+        print("🔍 DEBUG OpenAIService.analyzeProblem:")
+        print("   Image data provided: \(imageData != nil)")
+        print("   Problem text provided: \(problemText != nil)")
+        print("   User grade level: \(userGradeLevel)")
+        print("   API key available: \(!apiKey.isEmpty)")
+        print("   API key length: \(apiKey.count)")
         let systemPrompt = """
         You are "Homework Mentor" — a precise and patient AI tutor that helps students solve their exact homework questions step by step.  
         - Focus ONLY on the given problem or image, not general education.  
@@ -241,14 +253,31 @@ class OpenAIService: ObservableObject {
             "response_format": ["type": "json_object"]
         ]
         
+        print("🔍 DEBUG OpenAIService: Making request to OpenAI API...")
         let result = try await makeRequest(endpoint: "/chat/completions", body: body)
+        print("🔍 DEBUG OpenAIService: Received response from OpenAI")
         
         if let choices = result["choices"] as? [[String: Any]],
            let message = choices.first?["message"] as? [String: Any],
-           let content = message["content"] as? String,
-           let jsonData = content.data(using: .utf8),
-           let analysis = try? JSONDecoder().decode(ProblemAnalysis.self, from: jsonData) {
-            return analysis
+           let content = message["content"] as? String {
+            
+            print("🔍 DEBUG OpenAIService: Response content length: \(content.count)")
+            print("🔍 DEBUG OpenAIService: Response content preview: \(String(content.prefix(200)))...")
+            
+            if let jsonData = content.data(using: .utf8),
+               let analysis = try? JSONDecoder().decode(ProblemAnalysis.self, from: jsonData) {
+                print("🔍 DEBUG OpenAIService: Successfully parsed analysis:")
+                print("   Subject: \(analysis.subject)")
+                print("   Difficulty: \(analysis.difficulty)")
+                print("   Number of steps: \(analysis.steps.count)")
+                return analysis
+            } else {
+                print("❌ DEBUG OpenAIService: Failed to parse JSON response")
+                print("❌ DEBUG OpenAIService: Raw content: \(content)")
+            }
+        } else {
+            print("❌ DEBUG OpenAIService: Invalid response structure")
+            print("❌ DEBUG OpenAIService: Raw result: \(result)")
         }
         
         throw NSError(domain: "OpenAIService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to parse response"])

@@ -24,6 +24,7 @@
 		A1000015 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* OpenAIService.swift */; };
 		A1000016 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* KeychainHelper.swift */; };
 		A1000020 /* AzureKeyVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* AzureKeyVaultService.swift */; };
+		A1000022 /* BackendAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* BackendAPIService.swift */; };
 		A1000017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000017 /* Assets.xcassets */; };
 		A1000021 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A4000002 /* PrivacyInfo.xcprivacy */; };
 A1000018 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018 /* OnboardingView.swift */; };
@@ -49,6 +50,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 		A2000015 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		A2000016 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		A2000020 /* AzureKeyVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureKeyVaultService.swift; sourceTree = "<group>"; };
+		A2000022 /* BackendAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPIService.swift; sourceTree = "<group>"; };
 		A2000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3000001 /* HomeworkHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeworkHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 				A2000015 /* OpenAIService.swift */,
 				A2000016 /* KeychainHelper.swift */,
 				A2000020 /* AzureKeyVaultService.swift */,
+				A2000022 /* BackendAPIService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 				A1000015 /* OpenAIService.swift in Sources */,
 				A1000016 /* KeychainHelper.swift in Sources */,
 				A1000020 /* AzureKeyVaultService.swift in Sources */,
+				A1000022 /* BackendAPIService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

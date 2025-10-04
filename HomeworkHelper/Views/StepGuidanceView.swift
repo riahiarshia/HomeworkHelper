@@ -4,7 +4,6 @@ struct StepGuidanceView: View {
     let problemId: UUID
     
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var openAIService: OpenAIService
     @Environment(\.presentationMode) var presentationMode
     
     @State private var currentStepIndex = 0
@@ -19,6 +18,7 @@ struct StepGuidanceView: View {
     @State private var studentQuestion = ""
     @State private var showQuestionArea = false
     @State private var isSubmittingQuestion = false
+    @State private var debugInfo = ""
     @State private var showCompletionView = false
     
     private var steps: [GuidanceStep] {
@@ -35,27 +35,125 @@ struct StepGuidanceView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                if let step = currentStep {
-                    progressIndicator
+        Group {
+            if steps.isEmpty {
+                VStack(spacing: 20) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Text("Loading homework steps...")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
                     
-                    stepContent(step)
-                    
-                    optionsView(step)
-                    
-                    questionArea
-                    
-                    actionButtons(step)
-                    
-                    if showHint {
-                        hintView
+                    // Debug information
+                    VStack(spacing: 8) {
+                        Text("Debug Info:")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                        Text("Problem ID: \(problemId.uuidString)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text("Steps in DataManager: \(dataManager.steps.count)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text("Steps for this problem: \(dataManager.steps[problemId.uuidString]?.count ?? 0)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        
+                        // Additional debugging info
+                        Text("Total Problems: \(dataManager.problems.count)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text("Current Problem Found: \(dataManager.problems.contains { $0.id == problemId } ? "Yes" : "No")")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text("All Problem IDs: \(dataManager.problems.map { $0.id.uuidString }.joined(separator: ", "))")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .lineLimit(2)
+                        
+                        // Debug button to manually trigger analysis
+                        Button("🔧 Debug: Force Analysis") {
+                            print("🚨 CRITICAL DEBUG: Manual analysis trigger pressed!")
+                            // This will help us debug what's happening
+                            if let problem = dataManager.problems.first(where: { $0.id == problemId }) {
+                                print("🚨 CRITICAL DEBUG: Found problem: \(problem.subject ?? "Unknown")")
+                                print("🚨 CRITICAL DEBUG: Problem total steps: \(problem.totalSteps)")
+                                // Show debug info in UI
+                                DispatchQueue.main.async {
+                                    debugInfo = "Found: \(problem.subject ?? "Unknown")\nTotal Steps: \(problem.totalSteps)\nCreated: \(problem.createdAt)"
+                                }
+                            } else {
+                                print("🚨 CRITICAL DEBUG: Problem NOT found in DataManager!")
+                                DispatchQueue.main.async {
+                                    debugInfo = "Problem NOT found!"
+                                }
+                            }
+                        }
+                        .font(.caption)
+                        .padding(4)
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(4)
+                        
+                        // Show debug info if available
+                        if !debugInfo.isEmpty {
+                            Text("Debug Info:")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.red)
+                            Text(debugInfo)
+                                .font(.caption2)
+                                .foregroundColor(.red)
+                                .multilineTextAlignment(.leading)
+                        }
                     }
-                } else if showCompletion {
-                    completionView
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    print("🔍 DEBUG StepGuidanceView onAppear:")
+                    print("   Problem ID: \(problemId.uuidString)")
+                    print("   Total steps in DataManager: \(dataManager.steps.count)")
+                    print("   Steps for this problem: \(dataManager.steps[problemId.uuidString]?.count ?? 0)")
+                    print("   All problem IDs: \(dataManager.steps.keys.joined(separator: ", "))")
+                    
+                    // Check if steps are still loading after a delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        print("🔍 DEBUG StepGuidanceView after 2 seconds:")
+                        print("   Steps still empty: \(steps.isEmpty)")
+                        print("   DataManager steps count: \(dataManager.steps[problemId.uuidString]?.count ?? 0)")
+                        
+                        if steps.isEmpty {
+                            print("⚠️ WARNING: Steps still not loaded after 2 seconds!")
+                            print("   This indicates a problem with step generation or storage")
+                        }
+                    }
+                }
+            } else {
+                ScrollView {
+                    VStack(spacing: 24) {
+                        if let step = currentStep {
+                            progressIndicator
+                            
+                            stepContent(step)
+                            
+                            optionsView(step)
+                            
+                            questionArea
+                            
+                            actionButtons(step)
+                            
+                            if showHint {
+                                hintView
+                            }
+                        } else if showCompletion {
+                            completionView
+                        }
+                    }
+                    .padding()
                 }
             }
-            .padding()
         }
         .navigationTitle("Problem \(problem?.id.uuidString.prefix(8) ?? "Unknown") - Step \(currentStepIndex + 1) of \(steps.count)")
         .navigationBarTitleDisplayMode(.inline)
@@ -437,7 +535,7 @@ struct StepGuidanceView: View {
             The student's education depends on your accuracy. Be thorough but fair.
             """
             
-            let verificationResponse = try await openAIService.generateChatResponse(
+            let verificationResponse = try await BackendAPIService.shared.generateChatResponse(
                 messages: [ChatMessage(problemId: problemId, role: .user, content: verificationPrompt)],
                 problemContext: problemContext,
                 userGradeLevel: userGradeLevel
@@ -597,7 +695,7 @@ struct StepGuidanceView: View {
         do {
             let problemContext = problem?.problemText ?? "homework problem"
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
-            hintText = try await openAIService.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
             showHint = true
             
             var updatedStep = step
@@ -661,7 +759,7 @@ struct StepGuidanceView: View {
             dataManager.addMessage(userMessage, for: problemId)
             
             // Get AI response with enhanced context
-            let response = try await openAIService.generateChatResponse(
+            let response = try await BackendAPIService.shared.generateChatResponse(
                 messages: dataManager.messages[problemId.uuidString] ?? [],
                 problemContext: problemContext,
                 userGradeLevel: userGradeLevel

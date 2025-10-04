@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var openAIService: OpenAIService
     @State private var selectedTab = 0
     
     private var needsOnboarding: Bool {

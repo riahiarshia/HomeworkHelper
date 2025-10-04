@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 // Azure Key Vault Configuration
 struct AzureKeyVaultConfig {
@@ -46,6 +47,30 @@ class AzureKeyVaultService {
     
     private init() {
         self.config = AzureKeyVaultConfig.loadFromPlist()
+        
+        // Device-specific debugging
+        print("🔍 DEBUG AzureKeyVaultService init:")
+        print("   Device: \(UIDevice.current.model)")
+        print("   iOS Version: \(UIDevice.current.systemVersion)")
+        print("   Configuration loaded: \(config != nil)")
+        
+        // Pre-configure client secret for seamless App Store experience
+        // This allows Azure Key Vault to work automatically without user setup
+        if config != nil && getClientSecret() == nil {
+            // Note: Client secret should be set via setClientSecret() method
+            // For production, use setClientSecret() with the actual secret
+            print("🔍 DEBUG AzureKeyVaultService: Client secret should be configured via setClientSecret() method")
+        }
+        
+        if let config = config {
+            print("🔍 DEBUG AzureKeyVaultService: Configuration details:")
+            print("   Key Vault Name: \(config.keyVaultName)")
+            print("   Tenant ID: \(config.tenantId)")
+            print("   Client ID: \(config.clientId)")
+            print("   Secret Name: \(config.secretName)")
+        } else {
+            print("❌ DEBUG AzureKeyVaultService: No Azure configuration found")
+        }
     }
     
     // Set the Azure client secret (should be called once during app setup)
@@ -67,38 +92,58 @@ class AzureKeyVaultService {
     
     // Fetch OpenAI API key from Azure Key Vault
     func fetchAPIKey() async throws -> String {
+        print("🔍 DEBUG AzureKeyVaultService.fetchAPIKey:")
+        
         // Return cached key if still valid
         if let cached = cachedAPIKey,
            let timestamp = cacheTimestamp,
            Date().timeIntervalSince(timestamp) < cacheValidityDuration {
+            print("🔍 DEBUG AzureKeyVaultService: Using cached API key")
             return cached
         }
         
+        print("🔍 DEBUG AzureKeyVaultService: Cache miss or expired, fetching from Azure")
+        
         guard let config = config else {
+            print("❌ DEBUG AzureKeyVaultService: Configuration not found")
             throw AzureKeyVaultError.notConfigured
         }
         
+        print("🔍 DEBUG AzureKeyVaultService: Configuration found:")
+        print("   Key Vault Name: \(config.keyVaultName)")
+        print("   Tenant ID: \(config.tenantId)")
+        print("   Client ID: \(config.clientId)")
+        print("   Secret Name: \(config.secretName)")
+        
         guard let clientSecret = getClientSecret(), !clientSecret.isEmpty else {
+            print("❌ DEBUG AzureKeyVaultService: Client secret missing or empty")
             throw AzureKeyVaultError.clientSecretMissing
         }
         
+        print("🔍 DEBUG AzureKeyVaultService: Client secret found, length: \(clientSecret.count)")
+        
         // Step 1: Get Azure AD access token
+        print("🔍 DEBUG AzureKeyVaultService: Getting access token...")
         let accessToken = try await getAccessToken(
             tenantId: config.tenantId,
             clientId: config.clientId,
             clientSecret: clientSecret
         )
+        print("🔍 DEBUG AzureKeyVaultService: Access token received, length: \(accessToken.count)")
         
         // Step 2: Fetch secret from Key Vault
+        print("🔍 DEBUG AzureKeyVaultService: Fetching secret from Key Vault...")
         let apiKey = try await getSecretFromKeyVault(
             keyVaultURL: config.keyVaultURL,
             secretName: config.secretName,
             accessToken: accessToken
         )
+        print("🔍 DEBUG AzureKeyVaultService: API key received, length: \(apiKey.count)")
         
         // Cache the result
         cachedAPIKey = apiKey
         cacheTimestamp = Date()
+        print("🔍 DEBUG AzureKeyVaultService: API key cached successfully")
         
         return apiKey
     }

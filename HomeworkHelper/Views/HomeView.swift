@@ -2,16 +2,36 @@ import SwiftUI
 import PhotosUI
 import AudioToolbox
 import AVFoundation
+import os.log
+
+enum TimeoutError: LocalizedError {
+    case timeout
+    
+    var errorDescription: String? {
+        switch self {
+        case .timeout:
+            return "Request timed out. Please check your network connection and try again."
+        }
+    }
+}
+
+private let logger = Logger(subsystem: "com.homeworkhelper.app", category: "HomeView")
 
 struct HomeView: View {
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var openAIService: OpenAIService
+    @StateObject private var backendService = BackendAPIService.shared
+    
+    init() {
+        logger.critical("🚨 CRITICAL DEBUG: HomeView init called!")
+    }
     
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showCamera = false
     @State private var isProcessing = false
     @State private var processingMessage = ""
+    @State private var showImageQualityAlert = false
+    @State private var imageQualityMessage = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var navigateToGuidance = false
@@ -55,6 +75,7 @@ struct HomeView: View {
                 }
             }
             .onAppear {
+                logger.critical("🚨 CRITICAL DEBUG: HomeView onAppear called!")
                 if showLaunchAnimation && !hasShownLaunchAnimation {
                     hasShownLaunchAnimation = true
                     startLaunchAnimation()
@@ -75,15 +96,28 @@ struct HomeView: View {
                 )
             )
             .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: $selectedImage, sourceType: .photoLibrary, onImageSelected: handleImageSelected)
+                ImagePicker(image: $selectedImage, sourceType: .photoLibrary, onImageSelected: analyzeImageWithQualityCheck)
             }
             .sheet(isPresented: $showCamera) {
-                ImagePicker(image: $selectedImage, sourceType: .camera, onImageSelected: handleImageSelected)
+                ImagePicker(image: $selectedImage, sourceType: .camera, onImageSelected: analyzeImageWithQualityCheck)
             }
             .alert("Error", isPresented: $showAlert) {
                 Button("OK") { }
             } message: {
                 Text(alertMessage)
+            }
+            .alert("Image Quality Issue", isPresented: $showImageQualityAlert) {
+                Button("Try Different Image") {
+                    selectedImage = nil
+                }
+                Button("Analyze Anyway") {
+                    // User wants to proceed despite quality issues
+                    Task {
+                        await analyzeImageIgnoringQuality()
+                    }
+                }
+            } message: {
+                Text(imageQualityMessage)
             }
         }
     }
@@ -254,6 +288,47 @@ struct HomeView: View {
         }
     }
     
+    // MARK: - Network Reachability
+    
+    private func checkNetworkReachability() async -> Bool {
+        guard let url = URL(string: "https://www.google.com") else {
+            return false
+        }
+        
+        do {
+            let (_, response) = try await URLSession.shared.data(from: url)
+            if let httpResponse = response as? HTTPURLResponse {
+                return httpResponse.statusCode == 200
+            }
+            return false
+        } catch {
+            print("❌ DEBUG HomeView: Network reachability check failed: \(error)")
+            return false
+        }
+    }
+    
+    // MARK: - Timeout Wrapper
+    
+    private func withTimeout<T>(seconds: TimeInterval, operation: @escaping () async throws -> T) async throws -> T {
+        return try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                return try await operation()
+            }
+            
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw TimeoutError.timeout
+            }
+            
+            guard let result = try await group.next() else {
+                throw TimeoutError.timeout
+            }
+            
+            group.cancelAll()
+            return result
+        }
+    }
+    
     private var imagePreview: some View {
         VStack {
             if let image = selectedImage {
@@ -297,7 +372,7 @@ struct HomeView: View {
             }
             
             VStack(spacing: 8) {
-                Text(processingMessage)
+                Text(backendService.progressMessage.isEmpty ? processingMessage : backendService.progressMessage)
                     .font(.headline)
                     .multilineTextAlignment(.center)
                     .foregroundColor(.primary)
@@ -510,6 +585,7 @@ struct HomeView: View {
     
     
     private func analyzeProblem() async {
+        print("🚨 CRITICAL DEBUG: analyzeProblem() function called!")
         isProcessing = true
         
         do {
@@ -532,19 +608,6 @@ struct HomeView: View {
             
             // Update processing message based on what we're doing
             if imageData != nil {
-                processingMessage = "Verifying homework content..."
-                await MainActor.run { }
-                
-                let verification = try await openAIService.verifyImage(imageData!)
-                
-                guard verification.isValidHomework else {
-                    alertMessage = "This doesn't appear to be homework content. Please try a different image."
-                    showAlert = true
-                    isProcessing = false
-                    selectedImage = nil
-                    return
-                }
-                
                 processingMessage = "Reading specific problems from your homework..."
                 await MainActor.run { }
             } else {
@@ -553,11 +616,27 @@ struct HomeView: View {
             }
             
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
-            let analysis = try await openAIService.analyzeProblem(
-                imageData: imageData,
-                problemText: nil,
-                userGradeLevel: userGradeLevel
-            )
+            print("🔍 DEBUG HomeView: Starting homework analysis")
+            print("   Device: \(UIDevice.current.model)")
+            print("   iOS Version: \(UIDevice.current.systemVersion)")
+            print("   User ID: \(userId)")
+            print("   User grade level: \(userGradeLevel)")
+            print("   Image data size: \(imageData?.count ?? 0) bytes")
+            print("   Network reachability: \(await checkNetworkReachability())")
+            
+            // Add timeout wrapper for device compatibility
+            let analysis = try await withTimeout(seconds: 300) {
+                try await BackendAPIService.shared.analyzeHomework(
+                    imageData: imageData,
+                    problemText: nil,
+                    userGradeLevel: userGradeLevel
+                )
+            }
+            
+            print("🔍 DEBUG HomeView: Analysis completed successfully")
+            print("   Subject: \(analysis.subject)")
+            print("   Difficulty: \(analysis.difficulty)")
+            print("   Number of steps: \(analysis.steps.count)")
             
             processingMessage = "Creating step-by-step solutions..."
             await MainActor.run { }
@@ -571,13 +650,18 @@ struct HomeView: View {
                 totalSteps: analysis.steps.count
             )
             
+            print("🔍 DEBUG HomeView: Created problem with ID: \(problem.id)")
+            
             if let imgData = imageData {
                 let imageFilename = dataManager.saveImage(imgData, forProblemId: problem.id)
                 problem.imageFilename = imageFilename
             }
             
             dataManager.addProblem(problem)
+            print("🔍 DEBUG HomeView: Added problem to DataManager")
             
+            // Add all steps first
+            print("🔍 DEBUG HomeView: Adding \(analysis.steps.count) steps to DataManager")
             for (index, stepData) in analysis.steps.enumerated() {
                 let step = GuidanceStep(
                     problemId: problem.id,
@@ -587,19 +671,224 @@ struct HomeView: View {
                     options: stepData.options,
                     correctAnswer: stepData.correctAnswer
                 )
+                print("🔍 DEBUG HomeView: Adding step \(index + 1) of \(analysis.steps.count)")
                 dataManager.addStep(step, for: problem.id)
             }
             
-            currentProblemId = problem.id
-            selectedImage = nil
-            navigateToGuidance = true
+            print("🔍 DEBUG HomeView: Finished adding steps, waiting for DataManager to sync...")
+            
+            // Wait for DataManager to finish adding steps
+            var attempts = 0
+            let maxAttempts = 50 // 5 seconds max wait
+            
+            while dataManager.steps[problem.id.uuidString]?.count != analysis.steps.count && attempts < maxAttempts {
+                try await Task.sleep(nanoseconds: 100_000_000) // 100ms intervals
+                attempts += 1
+                print("🔍 DEBUG HomeView: Waiting for steps... Attempt \(attempts)/\(maxAttempts). Current count: \(dataManager.steps[problem.id.uuidString]?.count ?? 0), Expected: \(analysis.steps.count)")
+            }
+            
+            let finalStepCount = dataManager.steps[problem.id.uuidString]?.count ?? 0
+            print("🔍 DEBUG HomeView: Final step count: \(finalStepCount), Expected: \(analysis.steps.count)")
+            
+            if finalStepCount != analysis.steps.count {
+                print("⚠️ WARNING: Step count mismatch! Expected \(analysis.steps.count), got \(finalStepCount)")
+            } else {
+                print("✅ DEBUG HomeView: All steps successfully added to DataManager")
+            }
+            
+            await MainActor.run {
+                print("🚨 CRITICAL DEBUG: Analysis completed successfully! Navigating to StepGuidanceView")
+                print("🚨 CRITICAL DEBUG: Problem ID: \(problem.id)")
+                print("🚨 CRITICAL DEBUG: Steps added: \(dataManager.steps[problem.id.uuidString]?.count ?? 0)")
+                currentProblemId = problem.id
+                selectedImage = nil
+                navigateToGuidance = true
+            }
             
         } catch {
-            alertMessage = "Error: \(error.localizedDescription)"
+            print("🚨 CRITICAL DEBUG: Analysis failed with error: \(error)")
+            print("🚨 CRITICAL DEBUG: Error type: \(type(of: error))")
+            await MainActor.run {
+                alertMessage = "Error: \(error.localizedDescription)"
+                showAlert = true
+                isProcessing = false
+            }
+        }
+    }
+    
+    // MARK: - Image Analysis with Quality Check
+    
+    private func analyzeImageWithQualityCheck(_ image: UIImage) {
+        logger.critical("🚨 CRITICAL DEBUG: analyzeImageWithQualityCheck() function called!")
+        selectedImage = image
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            logger.critical("❌ CRITICAL DEBUG: Failed to convert image to JPEG data")
+            alertMessage = "Failed to process image"
             showAlert = true
+            return
+        }
+        logger.critical("🚨 CRITICAL DEBUG: Image converted to JPEG data, size: \(imageData.count) bytes")
+        
+        isProcessing = true
+        processingMessage = "Checking image quality..."
+        
+        Task {
+            do {
+                logger.critical("🚨 CRITICAL DEBUG: Starting image quality validation...")
+                // First, validate image quality
+                let qualityResult = try await backendService.validateImageQuality(imageData: imageData)
+                logger.critical("🚨 CRITICAL DEBUG: Image quality validation completed. Is good quality: \(qualityResult.isGoodQuality)")
+                
+                await MainActor.run {
+                    if !qualityResult.isGoodQuality {
+                        // Show quality issues
+                        var message = "Image quality issues detected:\n\n"
+                        
+                        if !qualityResult.issues.isEmpty {
+                            message += "Issues:\n"
+                            for issue in qualityResult.issues {
+                                message += "• \(issue)\n"
+                            }
+                        }
+                        
+                        if !qualityResult.recommendations.isEmpty {
+                            message += "\nRecommendations:\n"
+                            for recommendation in qualityResult.recommendations {
+                                message += "• \(recommendation)\n"
+                            }
+                        }
+                        
+                        message += "\nPlease try uploading a clearer image."
+                        imageQualityMessage = message
+                        showImageQualityAlert = true
+                        isProcessing = false
+                        return
+                    }
+                    
+                    // Quality is good, proceed with analysis
+                    processingMessage = "Image quality looks good! Starting analysis..."
+                }
+                
+                // Analyze the homework
+                logger.critical("🚨 CRITICAL DEBUG: Starting homework analysis...")
+                let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+                logger.critical("🚨 CRITICAL DEBUG: User grade level: \(userGradeLevel)")
+                let analysis = try await backendService.analyzeHomework(
+                    imageData: imageData,
+                    problemText: nil,
+                    userGradeLevel: userGradeLevel
+                )
+                
+                logger.critical("🚨 CRITICAL DEBUG: Homework analysis completed successfully!")
+                logger.critical("🚨 CRITICAL DEBUG: Analysis result - Subject: \(analysis.subject), Difficulty: \(analysis.difficulty), Steps: \(analysis.steps.count)")
+                
+                await MainActor.run {
+                    // Create problem from analysis
+                    let problem = HomeworkProblem(
+                        id: UUID(),
+                        userId: dataManager.currentUser?.id ?? UUID(),
+                        subject: analysis.subject,
+                        totalSteps: analysis.steps.count,
+                        completedSteps: 0
+                    )
+                    
+                    dataManager.addProblem(problem)
+                    
+                    // Add all steps from analysis
+                    for (index, stepData) in analysis.steps.enumerated() {
+                        let step = GuidanceStep(
+                            problemId: problem.id,
+                            stepNumber: index + 1,
+                            question: stepData.question,
+                            explanation: stepData.explanation,
+                            options: stepData.options,
+                            correctAnswer: stepData.correctAnswer
+                        )
+                        dataManager.addStep(step, for: problem.id)
+                    }
+                    
+                    currentProblemId = problem.id
+                    navigateToGuidance = true
+                    isProcessing = false
+                }
+                
+            } catch {
+                logger.critical("🚨 CRITICAL DEBUG: analyzeImageWithQualityCheck failed with error: \(error)")
+                logger.critical("🚨 CRITICAL DEBUG: Error type: \(type(of: error))")
+                await MainActor.run {
+                    alertMessage = "Error: \(error.localizedDescription)"
+                    showAlert = true
+                    isProcessing = false
+                }
+            }
+        }
+    }
+    
+    private func analyzeImageIgnoringQuality() async {
+        guard let image = selectedImage,
+              let imageData = image.jpegData(compressionQuality: 0.8) else {
+            await MainActor.run {
+                alertMessage = "Failed to process image"
+                showAlert = true
+            }
+            return
         }
         
-        isProcessing = false
+        await MainActor.run {
+            isProcessing = true
+            processingMessage = "Starting analysis..."
+        }
+        
+        do {
+            // Analyze the homework directly without quality check
+            let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let analysis = try await backendService.analyzeHomework(
+                imageData: imageData,
+                problemText: nil,
+                userGradeLevel: userGradeLevel
+            )
+            
+            await MainActor.run {
+                // Create problem from analysis
+                var problem = HomeworkProblem(
+                    id: UUID(),
+                    userId: dataManager.currentUser?.id ?? UUID(),
+                    subject: analysis.subject,
+                    totalSteps: analysis.steps.count,
+                    completedSteps: 0
+                )
+                
+                let imageFilename = dataManager.saveImage(imageData, forProblemId: problem.id)
+                problem.imageFilename = imageFilename
+                
+                dataManager.addProblem(problem)
+                
+                // Add all steps from analysis
+                for (index, stepData) in analysis.steps.enumerated() {
+                    let step = GuidanceStep(
+                        problemId: problem.id,
+                        stepNumber: index + 1,
+                        question: stepData.question,
+                        explanation: stepData.explanation,
+                        options: stepData.options,
+                        correctAnswer: stepData.correctAnswer
+                    )
+                    dataManager.addStep(step, for: problem.id)
+                }
+                
+                currentProblemId = problem.id
+                selectedImage = nil
+                navigateToGuidance = true
+                isProcessing = false
+            }
+            
+        } catch {
+            await MainActor.run {
+                alertMessage = "Error: \(error.localizedDescription)"
+                showAlert = true
+                isProcessing = false
+            }
+        }
     }
 }
 
@@ -630,9 +919,15 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            logger.critical("🚨 CRITICAL DEBUG: ImagePicker didFinishPickingMediaWithInfo called!")
             if let image = info[.originalImage] as? UIImage {
+                logger.critical("🚨 CRITICAL DEBUG: Image selected successfully, size: \(image.size.width)x\(image.size.height)")
                 parent.image = image
+                logger.critical("🚨 CRITICAL DEBUG: Calling onImageSelected callback...")
                 parent.onImageSelected?(image)
+                logger.critical("🚨 CRITICAL DEBUG: onImageSelected callback completed")
+            } else {
+                logger.critical("❌ CRITICAL DEBUG: Failed to get image from picker")
             }
             parent.presentationMode.wrappedValue.dismiss()
         }

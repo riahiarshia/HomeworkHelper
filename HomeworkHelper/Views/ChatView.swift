@@ -4,7 +4,6 @@ struct ChatView: View {
     let problemId: UUID
     
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var openAIService: OpenAIService
     @Environment(\.presentationMode) var presentationMode
     
     @State private var messageText = ""
@@ -100,7 +99,7 @@ struct ChatView: View {
         do {
             let problemContext = problem?.problemText ?? "homework problem"
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
-            let response = try await openAIService.generateChatResponse(
+            let response = try await BackendAPIService.shared.generateChatResponse(
                 messages: messages,
                 problemContext: problemContext,
                 userGradeLevel: userGradeLevel

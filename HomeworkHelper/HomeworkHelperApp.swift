@@ -3,7 +3,6 @@ import SwiftUI
 @main
 struct HomeworkHelperApp: App {
     @StateObject private var dataManager = DataManager.shared
-    @StateObject private var openAIService = OpenAIService.shared
     
     init() {
         // Configure test mode if UI testing arguments are present
@@ -16,7 +15,6 @@ struct HomeworkHelperApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(dataManager)
-                .environmentObject(openAIService)
         }
     }
     

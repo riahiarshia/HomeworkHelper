@@ -111,65 +111,97 @@ class DataManager: ObservableObject {
     }
     
     func addProblem(_ problem: HomeworkProblem) {
-        problems.append(problem)
-        saveData()
+        print("🔍 DEBUG DataManager.addProblem:")
+        print("   Problem ID: \(problem.id)")
+        print("   Subject: \(problem.subject ?? "Unknown")")
+        print("   Total Steps: \(problem.totalSteps)")
+        
+        DispatchQueue.main.async {
+            self.problems.append(problem)
+            print("🔍 DEBUG DataManager.addProblem: Added problem. Total problems: \(self.problems.count)")
+            self.saveData()
+            print("🔍 DEBUG DataManager.addProblem: Saved data after adding problem")
+        }
     }
     
     func updateProblem(_ problem: HomeworkProblem) {
-        if let index = problems.firstIndex(where: { $0.id == problem.id }) {
-            problems[index] = problem
-            saveData()
+        DispatchQueue.main.async {
+            if let index = self.problems.firstIndex(where: { $0.id == problem.id }) {
+                self.problems[index] = problem
+                self.saveData()
+            }
         }
     }
     
     func addStep(_ step: GuidanceStep, for problemId: UUID) {
-        let key = problemId.uuidString
-        if steps[key] == nil {
-            steps[key] = []
+        print("🔍 DEBUG DataManager.addStep:")
+        print("   Problem ID: \(problemId.uuidString)")
+        print("   Step ID: \(step.id)")
+        print("   Step Number: \(step.stepNumber)")
+        print("   Question: \(step.question)")
+        
+        DispatchQueue.main.async {
+            let key = problemId.uuidString
+            if self.steps[key] == nil {
+                print("🔍 DEBUG DataManager.addStep: Creating new steps array for problem \(key)")
+                self.steps[key] = []
+            }
+            
+            self.steps[key]?.append(step)
+            print("🔍 DEBUG DataManager.addStep: Added step. Total steps for problem \(key): \(self.steps[key]?.count ?? 0)")
+            
+            self.saveData()
+            print("🔍 DEBUG DataManager.addStep: Saved data after adding step")
         }
-        steps[key]?.append(step)
-        saveData()
     }
     
     func updateStep(_ step: GuidanceStep, for problemId: UUID) {
-        let key = problemId.uuidString
-        if let index = steps[key]?.firstIndex(where: { $0.id == step.id }) {
-            steps[key]?[index] = step
-            saveData()
+        DispatchQueue.main.async {
+            let key = problemId.uuidString
+            if let index = self.steps[key]?.firstIndex(where: { $0.id == step.id }) {
+                self.steps[key]?[index] = step
+                self.saveData()
+            }
         }
     }
     
     func addMessage(_ message: ChatMessage, for problemId: UUID) {
-        let key = problemId.uuidString
-        if messages[key] == nil {
-            messages[key] = []
+        DispatchQueue.main.async {
+            let key = problemId.uuidString
+            if self.messages[key] == nil {
+                self.messages[key] = []
+            }
+            self.messages[key]?.append(message)
+            self.saveData()
         }
-        messages[key]?.append(message)
-        saveData()
     }
     
     func updateUserPoints(_ points: Int) {
-        currentUser?.points += points
-        saveData()
+        DispatchQueue.main.async {
+            self.currentUser?.points += points
+            self.saveData()
+        }
     }
     
     func updateProgress(subject: String, points: Int) {
-        if let index = progress.firstIndex(where: { $0.subject == subject && $0.userId == currentUser?.id }) {
-            progress[index].problemsSolved += 1
-            progress[index].totalPoints += points
-            progress[index].averageScore = Double(progress[index].totalPoints) / Double(progress[index].problemsSolved)
-            progress[index].lastUpdated = Date()
-        } else if let userId = currentUser?.id {
-            let newProgress = UserProgress(
-                userId: userId,
-                subject: subject,
-                problemsSolved: 1,
-                totalPoints: points,
-                averageScore: Double(points),
-                lastUpdated: Date()
-            )
-            progress.append(newProgress)
+        DispatchQueue.main.async {
+            if let index = self.progress.firstIndex(where: { $0.subject == subject && $0.userId == self.currentUser?.id }) {
+                self.progress[index].problemsSolved += 1
+                self.progress[index].totalPoints += points
+                self.progress[index].averageScore = Double(self.progress[index].totalPoints) / Double(self.progress[index].problemsSolved)
+                self.progress[index].lastUpdated = Date()
+            } else if let userId = self.currentUser?.id {
+                let newProgress = UserProgress(
+                    userId: userId,
+                    subject: subject,
+                    problemsSolved: 1,
+                    totalPoints: points,
+                    averageScore: Double(points),
+                    lastUpdated: Date()
+                )
+                self.progress.append(newProgress)
+            }
+            self.saveData()
         }
-        saveData()
     }
 }
