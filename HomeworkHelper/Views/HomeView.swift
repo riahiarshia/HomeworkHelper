@@ -28,6 +28,14 @@ struct HomeView: View {
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showCamera = false
+    @State private var showImageCropper = false
+    @State private var tempImageForCropping: UIImage?
+    @State private var pendingImageSource: ImageSource? = nil
+    
+    enum ImageSource {
+        case camera
+        case photoLibrary
+    }
     @State private var isProcessing = false
     @State private var processingMessage = ""
     @State private var showImageQualityAlert = false
@@ -96,10 +104,49 @@ struct HomeView: View {
                 )
             )
             .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: $selectedImage, sourceType: .photoLibrary, onImageSelected: analyzeImageWithQualityCheck)
+                ImagePicker(image: $tempImageForCropping, sourceType: .photoLibrary, onImageSelected: { image in
+                    logger.critical("🚨 CRITICAL DEBUG: Photo library onImageSelected callback - setting tempImageForCropping")
+                    tempImageForCropping = image
+                    selectedImage = nil
+                    showImagePicker = false
+                    
+                    // Wait for sheet to dismiss, then show cropper
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        logger.critical("🚨 CRITICAL DEBUG: About to show ImageCropper, tempImageForCropping is nil: \(image == nil)")
+                        showImageCropper = true
+                    }
+                })
             }
             .sheet(isPresented: $showCamera) {
-                ImagePicker(image: $selectedImage, sourceType: .camera, onImageSelected: analyzeImageWithQualityCheck)
+                ImagePicker(image: $tempImageForCropping, sourceType: .camera, onImageSelected: { image in
+                    print("📸 Image captured from camera")
+                    tempImageForCropping = image
+                    selectedImage = nil
+                    showCamera = false
+                    
+                    // Wait for sheet to dismiss, then show cropper
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showImageCropper = true
+                    }
+                })
+            }
+            .sheet(isPresented: $showImageCropper) {
+                ImageCropperView(image: $tempImageForCropping, onCrop: { croppedImage in
+                    logger.critical("🚨 CRITICAL DEBUG: ImageCropper onCrop callback - received cropped image")
+                    // Dismiss sheet first
+                    showImageCropper = false
+                    
+                    // Clear temp image and pending source
+                    tempImageForCropping = nil
+                    pendingImageSource = nil
+                    
+                    // Wait for sheet to fully dismiss before starting analysis
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        logger.critical("🚨 CRITICAL DEBUG: Starting image analysis")
+                        analyzeImageWithQualityCheck(croppedImage)
+                    }
+                })
+                .interactiveDismissDisabled(false)
             }
             .alert("Error", isPresented: $showAlert) {
                 Button("OK") { }
@@ -260,6 +307,8 @@ struct HomeView: View {
             
             HStack(spacing: 12) {
                 Button {
+                    logger.critical("🚨 CRITICAL DEBUG: Camera button tapped!")
+                    pendingImageSource = .camera
                     showCamera = true
                 } label: {
                     Label("Camera", systemImage: "camera.fill")
@@ -273,6 +322,8 @@ struct HomeView: View {
                 .disabled(isProcessing)
                 
                 Button {
+                    logger.critical("🚨 CRITICAL DEBUG: Photo Library button tapped!")
+                    pendingImageSource = .photoLibrary
                     showImagePicker = true
                 } label: {
                     Label("Photo Library", systemImage: "photo.fill")
@@ -720,19 +771,31 @@ struct HomeView: View {
     
     private func analyzeImageWithQualityCheck(_ image: UIImage) {
         logger.critical("🚨 CRITICAL DEBUG: analyzeImageWithQualityCheck() function called!")
-        selectedImage = image
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            logger.critical("❌ CRITICAL DEBUG: Failed to convert image to JPEG data")
-            alertMessage = "Failed to process image"
-            showAlert = true
-            return
-        }
-        logger.critical("🚨 CRITICAL DEBUG: Image converted to JPEG data, size: \(imageData.count) bytes")
         
+        // Immediately set processing state on main thread
         isProcessing = true
-        processingMessage = "Checking image quality..."
+        processingMessage = "Preparing image..."
         
-        Task {
+        // Do ALL image processing in background task to avoid freezing
+        Task.detached(priority: .userInitiated) {
+            // Convert to JPEG in background (can be slow!)
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                await MainActor.run {
+                    logger.critical("❌ CRITICAL DEBUG: Failed to convert image to JPEG data")
+                    alertMessage = "Failed to process image"
+                    showAlert = true
+                    isProcessing = false
+                }
+                return
+            }
+            
+            await MainActor.run {
+                logger.critical("🚨 CRITICAL DEBUG: Image converted to JPEG data, size: \(imageData.count) bytes")
+                selectedImage = image
+                processingMessage = "Checking image quality..."
+            }
+            
+            // Continue with quality check
             do {
                 logger.critical("🚨 CRITICAL DEBUG: Starting image quality validation...")
                 // First, validate image quality
@@ -899,9 +962,11 @@ struct ImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
+        logger.critical("🚨 CRITICAL DEBUG: ImagePicker makeUIViewController called with sourceType: \(sourceType.rawValue)")
         let picker = UIImagePickerController()
         picker.sourceType = sourceType
         picker.delegate = context.coordinator
+        logger.critical("🚨 CRITICAL DEBUG: ImagePicker created successfully")
         return picker
     }
     

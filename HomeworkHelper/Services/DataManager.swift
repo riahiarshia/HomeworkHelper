@@ -21,8 +21,9 @@ class DataManager: ObservableObject {
     
     private func setupDefaultUser() {
         if currentUser == nil {
-            currentUser = User(username: "Student", age: nil, grade: nil, points: 0, streak: 0)
-            saveData()
+            // Don't create a default user - let the onboarding flow handle user creation
+            // This prevents the app from getting stuck in onboarding loop
+            print("🔍 DEBUG DataManager: No existing user found, onboarding will be shown")
         }
     }
     

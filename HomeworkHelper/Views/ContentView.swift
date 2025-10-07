@@ -6,6 +6,8 @@ struct ContentView: View {
     
     private var needsOnboarding: Bool {
         guard let user = dataManager.currentUser else { return true }
+        // User needs onboarding if they don't have both age AND grade set
+        // (they should have at least one of them set after completing onboarding)
         return user.age == nil && user.grade == nil
     }
     
