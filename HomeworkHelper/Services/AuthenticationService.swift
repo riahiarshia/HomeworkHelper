@@ -10,10 +10,51 @@ class AuthenticationService: ObservableObject {
     
     private let backendURL = "https://homework-helper-api.azurewebsites.net"
     private let keychain = KeychainHelper.shared
+    private var lastValidationTime: Date?
+    private let validationInterval: TimeInterval = 300 // 5 minutes
     
     init() {
         // Check if user is already authenticated
         loadSavedUser()
+        
+        // Listen for app becoming active to validate session
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func appDidBecomeActive() {
+        // Only validate if user is authenticated and enough time has passed
+        guard isAuthenticated else { return }
+        
+        // Check if we need to validate (avoid too frequent validations)
+        if let lastValidation = lastValidationTime,
+           Date().timeIntervalSince(lastValidation) < validationInterval {
+            print("⏭️ Skipping validation - too soon since last check")
+            return
+        }
+        
+        print("🔄 App became active - validating session...")
+        Task {
+            await revalidateSession()
+        }
+    }
+    
+    // Public method to force validation
+    func revalidateSession() async {
+        guard let token = keychain.load(forKey: "authToken") else {
+            print("⚠️ No token found for revalidation")
+            return
+        }
+        
+        await validateSession(token: token)
     }
     
     // MARK: - Google Sign-In
@@ -236,6 +277,11 @@ class AuthenticationService: ObservableObject {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         print("📤 Validating session with backend...")
+        
+        // Record validation attempt time
+        await MainActor.run {
+            self.lastValidationTime = Date()
+        }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
