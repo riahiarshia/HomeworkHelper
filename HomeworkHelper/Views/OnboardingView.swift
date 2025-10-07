@@ -140,13 +140,23 @@ struct OnboardingView: View {
     private func saveUserInfo() {
         guard !username.isEmpty else { return }
         
-        let user = User(
-            username: username,
-            age: useGrade ? nil : selectedAge,
-            grade: useGrade ? selectedGrade : nil
-        )
+        // Update existing user instead of creating a new one to preserve auth data
+        if var user = dataManager.currentUser {
+            // Update the onboarding fields
+            user.username = username
+            user.age = useGrade ? nil : selectedAge
+            user.grade = useGrade ? selectedGrade : nil
+            dataManager.currentUser = user
+        } else {
+            // Fallback: create new user if none exists
+            let user = User(
+                username: username,
+                age: useGrade ? nil : selectedAge,
+                grade: useGrade ? selectedGrade : nil
+            )
+            dataManager.currentUser = user
+        }
         
-        dataManager.currentUser = user
         dataManager.saveData()
         isCompleted = true
     }
