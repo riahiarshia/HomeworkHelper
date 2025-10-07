@@ -10,7 +10,7 @@ class BackendAPIService: ObservableObject {
     @Published var isAnalyzing = false
     
     // Update this URL to your deployed backend
-    private let baseURL = "https://homework-helper-backend-1759603081.azurewebsites.net" // Replace with your actual backend URL
+    private let baseURL = "https://homework-helper-api.azurewebsites.net" // Your actual backend URL
     private let session: URLSession
     
     private init() {
@@ -109,7 +109,7 @@ class BackendAPIService: ObservableObject {
             }
         }
         
-        let url = URL(string: "\(baseURL)/api/analyze")!
+        let url = URL(string: "\(baseURL)/api/analyze-homework")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         
