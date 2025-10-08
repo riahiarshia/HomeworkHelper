@@ -4,6 +4,7 @@ import MessageUI
 struct SettingsView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var authService: AuthenticationService
+    @EnvironmentObject var subscriptionService: SubscriptionService
     @State private var apiKey: String = ""
     @State private var azureClientSecret: String = ""
     @State private var showingAPIKeyAlert = false
@@ -17,6 +18,7 @@ struct SettingsView: View {
     @State private var userIdCopied = false
     @State private var supportEmailCopied = false
     @State private var showingSignOutAlert = false
+    @State private var showPaywall = false
     
     var body: some View {
         NavigationView {
@@ -85,6 +87,129 @@ struct SettingsView: View {
                     Text("API key management is now handled by the backend server.")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                }
+                
+                // Subscription Section
+                Section(header: Text("Subscription")) {
+                    switch subscriptionService.subscriptionStatus {
+                    case .trial(let daysRemaining):
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "gift.fill")
+                                    .foregroundColor(.blue)
+                                Text("Free Trial")
+                                    .font(.headline)
+                                Spacer()
+                                Text("\(daysRemaining) days left")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Button {
+                                showPaywall = true
+                            } label: {
+                                HStack {
+                                    Text("Upgrade to Premium")
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    Image(systemName: "arrow.right")
+                                }
+                            }
+                        }
+                        
+                    case .active(let renewalDate):
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .foregroundColor(.green)
+                                Text("Premium Active")
+                                    .font(.headline)
+                            }
+                            
+                            Text("Renews on \(renewalDate, style: .date)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Button {
+                                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack {
+                                    Text("Manage Subscription")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right.square")
+                                }
+                            }
+                        }
+                        
+                    case .expired:
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "exclamationmark.circle.fill")
+                                    .foregroundColor(.red)
+                                Text("Subscription Expired")
+                                    .font(.headline)
+                            }
+                            
+                            Button {
+                                showPaywall = true
+                            } label: {
+                                HStack {
+                                    Text("Renew Subscription")
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    Image(systemName: "arrow.right")
+                                }
+                            }
+                        }
+                        
+                    case .gracePeriod(let daysRemaining):
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Payment Issue")
+                                    .font(.headline)
+                            }
+                            
+                            Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") of access remaining")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Button {
+                                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack {
+                                    Text("Update Payment Method")
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right.square")
+                                }
+                            }
+                        }
+                        
+                    case .unknown:
+                        HStack {
+                            ProgressView()
+                            Text("Loading subscription status...")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        Task {
+                            await subscriptionService.restorePurchases()
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Restore Purchases")
+                        }
+                    }
+                    .disabled(subscriptionService.isLoading)
                 }
                 
                 Section(header: Text("Account")) {
@@ -336,6 +461,9 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
             .alert("API Key Saved", isPresented: $showingAPIKeyAlert) {
                 Button("OK") { }
             } message: {

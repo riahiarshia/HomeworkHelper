@@ -19,7 +19,9 @@ private let logger = Logger(subsystem: "com.homeworkhelper.app", category: "Home
 
 struct HomeView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var subscriptionService: SubscriptionService
     @StateObject private var backendService = BackendAPIService.shared
+    @State private var showPaywall = false
     
     init() {
         logger.critical("🚨 CRITICAL DEBUG: HomeView init called!")
@@ -63,6 +65,9 @@ struct HomeView: View {
                             processingView
                         }
                         
+                        // Subscription status banner
+                        subscriptionBanner
+                        
                         headerView
                         
                         uploadSection
@@ -77,6 +82,9 @@ struct HomeView: View {
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("home_view")
                 .opacity(showLaunchAnimation ? 0.0 : 1.0)
+                .sheet(isPresented: $showPaywall) {
+                    PaywallView()
+                }
                 
                 if showLaunchAnimation {
                     launchAnimationView
@@ -967,6 +975,144 @@ struct HomeView: View {
                 showAlert = true
                 isProcessing = false
             }
+        }
+    }
+    
+    // MARK: - Subscription Banner
+    @ViewBuilder
+    private var subscriptionBanner: some View {
+        switch subscriptionService.subscriptionStatus {
+        case .trial(let daysRemaining):
+            if daysRemaining <= 3 {
+                // Show warning when trial is ending soon
+                Button {
+                    showPaywall = true
+                } label: {
+                    HStack {
+                        Image(systemName: "clock.badge.exclamationmark")
+                            .font(.title3)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Trial Ending Soon")
+                                .font(.headline)
+                            Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") remaining")
+                                .font(.caption)
+                        }
+                        
+                        Spacer()
+                        
+                        Text("Upgrade")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.orange, Color.red]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal)
+            }
+            
+        case .active(let renewalDate):
+            // Show active subscription status
+            HStack {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.title3)
+                    .foregroundColor(.green)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Premium Active")
+                        .font(.headline)
+                    Text("Renews \(renewalDate, style: .date)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color.green.opacity(0.1))
+            .cornerRadius(12)
+            .padding(.horizontal)
+            
+        case .expired:
+            // Show upgrade prompt
+            Button {
+                showPaywall = true
+            } label: {
+                HStack {
+                    Image(systemName: "lock.fill")
+                        .font(.title3)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Subscription Expired")
+                            .font(.headline)
+                        Text("Tap to renew and continue learning")
+                            .font(.caption)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("Renew")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                }
+                .foregroundColor(.white)
+                .padding()
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.purple, Color.blue]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            
+        case .gracePeriod(let daysRemaining):
+            // Show grace period warning
+            HStack {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.title3)
+                    .foregroundColor(.orange)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Payment Issue")
+                        .font(.headline)
+                    Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") of access remaining")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Button("Fix") {
+                    showPaywall = true
+                }
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.orange)
+            }
+            .padding()
+            .background(Color.orange.opacity(0.1))
+            .cornerRadius(12)
+            .padding(.horizontal)
+            
+        case .unknown:
+            EmptyView()
         }
     }
 }
