@@ -240,26 +240,34 @@ class SubscriptionService: ObservableObject {
             let (data, _) = try await URLSession.shared.data(for: request)
             
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let subscriptionStatus = json["subscription_status"] as? String,
-               let subscriptionEndDateString = json["subscription_end_date"] as? String {
+               let subscriptionStatus = json["subscription_status"] as? String {
                 
-                let dateFormatter = ISO8601DateFormatter()
-                if let endDate = dateFormatter.date(from: subscriptionEndDateString) {
-                    let now = Date()
-                    let daysRemaining = Calendar.current.dateComponents([.day], from: now, to: endDate).day ?? 0
-                    
-                    if subscriptionStatus == "trial" && daysRemaining > 0 {
-                        self.subscriptionStatus = .trial(daysRemaining: daysRemaining)
-                        print("✅ Trial active: \(daysRemaining) days remaining")
+                // Use days_remaining from backend (matches admin portal calculation)
+                let daysRemaining = json["days_remaining"] as? Int ?? 0
+                
+                print("📊 Backend subscription data:")
+                print("   Status: \(subscriptionStatus)")
+                print("   Days remaining: \(daysRemaining)")
+                
+                if subscriptionStatus == "trial" && daysRemaining > 0 {
+                    self.subscriptionStatus = .trial(daysRemaining: daysRemaining)
+                    print("✅ Trial active: \(daysRemaining) days remaining")
+                } else if subscriptionStatus == "active" {
+                    // Parse end date for active subscriptions
+                    if let subscriptionEndDateString = json["subscription_end_date"] as? String,
+                       let endDate = ISO8601DateFormatter().date(from: subscriptionEndDateString) {
+                        self.subscriptionStatus = .active(renewalDate: endDate)
+                        print("✅ Active subscription until: \(endDate)")
                     } else {
-                        self.subscriptionStatus = .expired
-                        print("⚠️ Trial expired")
+                        self.subscriptionStatus = .active(renewalDate: Date().addingTimeInterval(86400 * Double(daysRemaining)))
                     }
                 } else {
                     self.subscriptionStatus = .expired
+                    print("⚠️ Subscription expired or inactive")
                 }
             } else {
                 self.subscriptionStatus = .expired
+                print("❌ Failed to parse subscription data from backend")
             }
         } catch {
             print("❌ Error checking trial status: \(error)")
