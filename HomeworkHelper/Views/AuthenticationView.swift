@@ -133,7 +133,7 @@ struct AuthenticationView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green)
-                        Text("14-day free trial")
+                        Text("7-day free trial")
                             .fontWeight(.medium)
                     }
                     .foregroundColor(.white)
