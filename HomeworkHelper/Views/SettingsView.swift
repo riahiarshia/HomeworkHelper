@@ -96,14 +96,18 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Image(systemName: "gift.fill")
-                                    .foregroundColor(.blue)
-                                Text("Free Trial")
+                                    .foregroundColor(.green)
+                                Text("Trial Active")
                                     .font(.headline)
                                 Spacer()
-                                Text("\(daysRemaining) days left")
+                                Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
+                            
+                            Text("Enjoy full access to your AI tutor")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             
                             Button {
                                 showPaywall = true
