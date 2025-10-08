@@ -21,6 +21,12 @@ struct StepGuidanceView: View {
     @State private var debugInfo = ""
     @State private var showCompletionView = false
     
+    // New tutor flow states
+    @State private var showOptions = false
+    @State private var shuffledOptions: [String] = []
+    @State private var attemptCount = 0
+    @State private var hasShownInitialHint = false
+    
     private var steps: [GuidanceStep] {
         dataManager.steps[problemId.uuidString]?.sorted(by: { $0.stepNumber < $1.stepNumber }) ?? []
     }
@@ -73,20 +79,75 @@ struct StepGuidanceView: View {
                             
                             stepContent(step)
                             
-                            optionsView(step)
+                            // Show hint first (before options)
+                            if !hasShownInitialHint || (attemptCount > 0 && !showOptions) {
+                                if isLoadingHint {
+                                    VStack(spacing: 12) {
+                                        ProgressView()
+                                        Text("Generating hint...")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.orange.opacity(0.1))
+                                    .cornerRadius(12)
+                                } else if !hintText.isEmpty {
+                                    tutorHintView
+                                }
+                            }
+                            
+                            // Show Continue button to reveal options (or after wrong answer)
+                            if !showOptions && hasShownInitialHint && !isLoadingHint {
+                                Button {
+                                    showMultipleChoice(step)
+                                } label: {
+                                    Text("Continue")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .cornerRadius(12)
+                                }
+                            }
+                            
+                            // Show options after Continue is pressed
+                            if showOptions {
+                                optionsView(step)
+                            }
                             
                             questionArea
                             
-                            actionButtons(step)
-                            
-                            if showHint {
-                                hintView
+                            // Only show skip button, not hint button (hint is automatic)
+                            if showOptions {
+                                Button {
+                                    skipStep(step)
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "forward.fill")
+                                        Text("Skip This Step")
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.gray)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                }
                             }
                         } else if showCompletion {
                             completionView
                         }
                     }
                     .padding()
+                }
+                .onAppear {
+                    // Load initial hint when step appears
+                    if let step = currentStep, !hasShownInitialHint {
+                        Task {
+                            await loadInitialHint(step)
+                        }
+                    }
                 }
             }
         }
@@ -166,7 +227,7 @@ struct StepGuidanceView: View {
         .alert("Feedback", isPresented: $showFeedback) {
             Button("Continue") {
                 if feedbackMessage.contains("Correct") || feedbackMessage.contains("skipped") {
-                    moveToNextStep()
+                    advanceToNextStep()
                 }
             }
         } message: {
@@ -201,9 +262,12 @@ struct StepGuidanceView: View {
     
     private func optionsView(_ step: GuidanceStep) -> some View {
         VStack(spacing: 12) {
-            ForEach(step.options, id: \.self) { option in
+            // Use shuffled options instead of original order
+            let optionsToShow = shuffledOptions.isEmpty ? step.options : shuffledOptions
+            
+            ForEach(optionsToShow, id: \.self) { option in
                 Button {
-                    selectedAnswer = option
+                    handleAnswerSelection(option, step: step)
                 } label: {
                     HStack {
                         Text(option)
@@ -357,6 +421,38 @@ struct StepGuidanceView: View {
         .padding()
         .background(Color.orange.opacity(0.1))
         .cornerRadius(10)
+    }
+    
+    private var tutorHintView: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "lightbulb.fill")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                Text("💡 Think About This...")
+                    .font(.headline)
+                    .foregroundColor(.orange)
+            }
+            
+            Text(hintText)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            if attemptCount > 0 {
+                Text("Attempt \(attemptCount + 1)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.orange.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
+                )
+        )
     }
     
     private var completionView: some View {
@@ -624,35 +720,147 @@ struct StepGuidanceView: View {
         }
     }
     
+    // MARK: - New Tutor Flow Functions
+    
+    private func loadInitialHint(_ step: GuidanceStep) async {
+        isLoadingHint = true
+        
+        do {
+            let problemContext = buildProblemContext()
+            let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
+            hasShownInitialHint = true
+            
+            var updatedStep = step
+            updatedStep.hintsUsed += 1
+            dataManager.updateStep(updatedStep, for: problemId)
+        } catch {
+            hintText = "Think about what the question is asking. Read it carefully and consider what you already know about this topic."
+            hasShownInitialHint = true
+        }
+        
+        isLoadingHint = false
+    }
+    
+    private func showMultipleChoice(_ step: GuidanceStep) {
+        // Shuffle options on first display or after wrong answer
+        shuffledOptions = step.options.shuffled()
+        showOptions = true
+        selectedAnswer = nil
+    }
+    
+    private func handleAnswerSelection(_ answer: String, step: GuidanceStep) {
+        selectedAnswer = answer
+        
+        // Check if answer is correct
+        if answer == step.correctAnswer {
+            // Correct answer!
+            feedbackMessage = "✅ Correct! \(step.explanation)"
+            showFeedback = true
+            
+            var updatedStep = step
+            updatedStep.userAnswer = answer
+            updatedStep.isCompleted = true
+            dataManager.updateStep(updatedStep, for: problemId)
+            
+            if var problem = problem {
+                problem.completedSteps += 1
+                dataManager.updateProblem(problem)
+            }
+        } else {
+            // Wrong answer - show new hint
+            attemptCount += 1
+            showOptions = false
+            selectedAnswer = nil
+            
+            // Generate new hint with different approach
+            Task {
+                await loadHintAfterWrongAnswer(step)
+            }
+        }
+    }
+    
+    private func loadHintAfterWrongAnswer(_ step: GuidanceStep) async {
+        isLoadingHint = true
+        
+        do {
+            let problemContext = buildProblemContext()
+            let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            
+            // Request a different hint approach
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext + "\n\nNote: Student attempted but got it wrong. Provide a DIFFERENT hint with a new approach or perspective.", userGradeLevel: userGradeLevel)
+            
+            var updatedStep = step
+            updatedStep.hintsUsed += 1
+            dataManager.updateStep(updatedStep, for: problemId)
+        } catch {
+            hintText = "Let's try thinking about it differently. What is the main concept in this question?"
+        }
+        
+        isLoadingHint = false
+    }
+    
+    private func buildProblemContext() -> String {
+        var contextParts: [String] = []
+        
+        if let prob = problem {
+            // Add subject
+            if let subject = prob.subject {
+                contextParts.append("Subject: \(subject)")
+            }
+            
+            // Add problem text
+            if let text = prob.problemText {
+                contextParts.append("Problem: \(text)")
+            }
+            
+            // Add all previous steps for context
+            let completedSteps = steps.prefix(currentStepIndex)
+            if !completedSteps.isEmpty {
+                let stepsContext = completedSteps.map { s in
+                    "Step \(s.stepNumber): \(s.question) → Answer: \(s.correctAnswer)"
+                }.joined(separator: "\n")
+                contextParts.append("Previous steps:\n\(stepsContext)")
+            }
+        }
+        
+        return contextParts.isEmpty ? "homework problem" : contextParts.joined(separator: "\n\n")
+    }
+    
+    private func advanceToNextStep() {
+        if currentStepIndex < steps.count - 1 {
+            // Move to next step
+            currentStepIndex += 1
+            
+            // Reset tutor flow states for new step
+            showOptions = false
+            shuffledOptions = []
+            selectedAnswer = nil
+            hasShownInitialHint = false
+            attemptCount = 0
+            hintText = ""
+            showHint = false
+            feedbackMessage = ""
+            showFeedback = false
+            
+            // Load initial hint for new step
+            if let step = currentStep {
+                Task {
+                    await loadInitialHint(step)
+                }
+            }
+        } else {
+            // All steps completed
+            completeProblem()
+        }
+    }
+    
     private func loadHint(_ step: GuidanceStep) async {
         isLoadingHint = true
         
         do {
-            // Build comprehensive problem context
-            var contextParts: [String] = []
-            
-            if let prob = problem {
-                // Add subject
-                if let subject = prob.subject {
-                    contextParts.append("Subject: \(subject)")
-                }
-                
-                // Add problem text
-                if let text = prob.problemText {
-                    contextParts.append("Problem: \(text)")
-                }
-                
-                // Add all previous steps for context
-                let completedSteps = steps.prefix(currentStepIndex)
-                if !completedSteps.isEmpty {
-                    let stepsContext = completedSteps.map { s in
-                        "Step \(s.stepNumber): \(s.question) → Answer: \(s.correctAnswer)"
-                    }.joined(separator: "\n")
-                    contextParts.append("Previous steps:\n\(stepsContext)")
-                }
-            }
-            
-            let problemContext = contextParts.isEmpty ? "homework problem" : contextParts.joined(separator: "\n\n")
+            let problemContext = buildProblemContext()
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
             
             hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
