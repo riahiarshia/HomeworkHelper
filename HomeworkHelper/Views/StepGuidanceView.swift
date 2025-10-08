@@ -628,8 +628,33 @@ struct StepGuidanceView: View {
         isLoadingHint = true
         
         do {
-            let problemContext = problem?.problemText ?? "homework problem"
+            // Build comprehensive problem context
+            var contextParts: [String] = []
+            
+            if let prob = problem {
+                // Add subject
+                if let subject = prob.subject {
+                    contextParts.append("Subject: \(subject)")
+                }
+                
+                // Add problem text
+                if let text = prob.problemText {
+                    contextParts.append("Problem: \(text)")
+                }
+                
+                // Add all previous steps for context
+                let completedSteps = steps.prefix(currentStepIndex)
+                if !completedSteps.isEmpty {
+                    let stepsContext = completedSteps.map { s in
+                        "Step \(s.stepNumber): \(s.question) → Answer: \(s.correctAnswer)"
+                    }.joined(separator: "\n")
+                    contextParts.append("Previous steps:\n\(stepsContext)")
+                }
+            }
+            
+            let problemContext = contextParts.isEmpty ? "homework problem" : contextParts.joined(separator: "\n\n")
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            
             hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
             showHint = true
             
