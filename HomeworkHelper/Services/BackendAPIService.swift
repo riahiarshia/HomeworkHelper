@@ -12,6 +12,7 @@ class BackendAPIService: ObservableObject {
     // Update this URL to your deployed backend
     private let baseURL = "https://homework-helper-api.azurewebsites.net" // Your actual backend URL
     private let session: URLSession
+    private let keychain = KeychainHelper.shared
     
     private init() {
         let config = URLSessionConfiguration.default
@@ -27,6 +28,17 @@ class BackendAPIService: ObservableObject {
         print("   Timeout settings: Request=\(config.timeoutIntervalForRequest)s, Resource=\(config.timeoutIntervalForResource)s")
     }
     
+    // MARK: - Authentication Helper
+    
+    private func addAuthHeader(to request: inout URLRequest) {
+        if let token = keychain.load(forKey: "authToken") {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            print("🔐 Added auth token to request")
+        } else {
+            print("⚠️ No auth token found in keychain")
+        }
+    }
+    
     // MARK: - Image Quality Validation
     
     func validateImageQuality(imageData: Data) async throws -> ImageQualityValidation {
@@ -40,6 +52,7 @@ class BackendAPIService: ObservableObject {
         let url = URL(string: "\(baseURL)/api/validate-image")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        addAuthHeader(to: &request)
         
         let boundary = UUID().uuidString
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
@@ -112,6 +125,7 @@ class BackendAPIService: ObservableObject {
         let url = URL(string: "\(baseURL)/api/analyze-homework")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        addAuthHeader(to: &request)
         
         let boundary = UUID().uuidString
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
@@ -267,6 +281,7 @@ class BackendAPIService: ObservableObject {
         let url = URL(string: "\(baseURL)/api/hint")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let requestBody: [String: Any] = [
@@ -327,6 +342,7 @@ class BackendAPIService: ObservableObject {
         let url = URL(string: "\(baseURL)/api/verify")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let requestBody: [String: Any] = [
@@ -414,6 +430,7 @@ class BackendAPIService: ObservableObject {
         let url = URL(string: "\(baseURL)/api/chat")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let requestBody = ChatRequest(

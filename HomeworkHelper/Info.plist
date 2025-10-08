@@ -50,6 +50,16 @@
 	<string>We need access to your photo library to select homework images.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need access to save homework images to your photo library.</string>
+	<!-- Google Sign-In Configuration -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.512059909634-l5u3o9uej9n9jo02k9pt7iko465q7aem</string>
+			</array>
+		</dict>
+	</array>
 	<!-- Azure Key Vault Configuration -->
 	<!-- INSTRUCTIONS: After setting up Azure Key Vault (see AZURE_KEYVAULT_SETUP.md), -->
 	<!-- uncomment and fill in these values from your Azure setup: -->

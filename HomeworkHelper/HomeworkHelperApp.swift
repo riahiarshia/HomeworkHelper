@@ -1,4 +1,5 @@
 import SwiftUI
+import GoogleSignIn
 
 @main
 struct HomeworkHelperApp: App {
@@ -15,6 +16,10 @@ struct HomeworkHelperApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(dataManager)
+                .onOpenURL { url in
+                    // Handle Google Sign-In callback
+                    GIDSignIn.sharedInstance.handle(url)
+                }
         }
     }
     

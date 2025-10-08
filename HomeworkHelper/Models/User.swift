@@ -1,6 +1,6 @@
 import Foundation
 
-struct User: Codable, Identifiable {
+struct User: Codable, Identifiable, Equatable {
     let id: UUID
     var username: String
     var age: Int?
@@ -9,7 +9,17 @@ struct User: Codable, Identifiable {
     var streak: Int
     var lastActive: Date
     
-    init(id: UUID = UUID(), username: String, age: Int? = nil, grade: String? = nil, points: Int = 0, streak: Int = 0, lastActive: Date = Date()) {
+    // Authentication fields
+    var userId: String?  // Backend user ID
+    var email: String?
+    var authToken: String?
+    
+    // Subscription fields
+    var subscriptionStatus: String?  // 'trial', 'active', 'expired'
+    var subscriptionEndDate: Date?
+    var daysRemaining: Int?
+    
+    init(id: UUID = UUID(), username: String, age: Int? = nil, grade: String? = nil, points: Int = 0, streak: Int = 0, lastActive: Date = Date(), userId: String? = nil, email: String? = nil, authToken: String? = nil, subscriptionStatus: String? = nil, subscriptionEndDate: Date? = nil, daysRemaining: Int? = nil) {
         self.id = id
         self.username = username
         self.age = age
@@ -17,6 +27,12 @@ struct User: Codable, Identifiable {
         self.points = points
         self.streak = streak
         self.lastActive = lastActive
+        self.userId = userId
+        self.email = email
+        self.authToken = authToken
+        self.subscriptionStatus = subscriptionStatus
+        self.subscriptionEndDate = subscriptionEndDate
+        self.daysRemaining = daysRemaining
     }
     
     // Helper function to get grade level for AI prompts

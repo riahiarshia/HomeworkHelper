@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68163CCC2E95CC7D000E7318 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 68163CCB2E95CC7D000E7318 /* GoogleSignIn */; };
+		68163CCE2E95CC7D000E7318 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 68163CCD2E95CC7D000E7318 /* GoogleSignInSwift */; };
+		68163CD02E95CCA5000E7318 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */; };
+		68163CD22E95CE0D000E7318 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD12E95CE0D000E7318 /* AuthenticationService.swift */; };
+		68163CD42E95CEBE000E7318 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD32E95CEBE000E7318 /* AuthenticationView.swift */; };
 		A1000001 /* HomeworkHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* HomeworkHelperApp.swift */; };
 		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
 		A1000003 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* HomeView.swift */; };
@@ -23,16 +28,19 @@
 		A1000014 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* DataManager.swift */; };
 		A1000015 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* OpenAIService.swift */; };
 		A1000016 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* KeychainHelper.swift */; };
-		A1000020 /* AzureKeyVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* AzureKeyVaultService.swift */; };
-		A1000022 /* BackendAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* BackendAPIService.swift */; };
 		A1000017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000017 /* Assets.xcassets */; };
+		A1000018 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018 /* OnboardingView.swift */; };
+		A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000019 /* EditProfileView.swift */; };
+		A1000020 /* AzureKeyVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* AzureKeyVaultService.swift */; };
 		A1000021 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A4000002 /* PrivacyInfo.xcprivacy */; };
-A1000018 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018 /* OnboardingView.swift */; };
-A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000019 /* EditProfileView.swift */; };
-                				E7B00A400C6E40FD9B3D9789 /* HomeworkCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC9F8B0EB554EA8BBA9A36B /* HomeworkCompletionView.swift */; };
-	/* End PBXBuildFile section */
+		A1000022 /* BackendAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* BackendAPIService.swift */; };
+		A1000023 /* ImageCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* ImageCropperView.swift */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		68163CD12E95CE0D000E7318 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		68163CD32E95CEBE000E7318 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		A2000001 /* HomeworkHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeworkHelperApp.swift; sourceTree = "<group>"; };
 		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A2000003 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -49,23 +57,24 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 		A2000014 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		A2000015 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		A2000016 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		A2000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2000018 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A2000019 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		A2000020 /* AzureKeyVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureKeyVaultService.swift; sourceTree = "<group>"; };
 		A2000022 /* BackendAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPIService.swift; sourceTree = "<group>"; };
-		A2000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2000023 /* ImageCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropperView.swift; sourceTree = "<group>"; };
 		A3000001 /* HomeworkHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeworkHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-
-                A2000018 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-                A2000019 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
-				EAC9F8B0EB554EA8BBA9A36B /* HomeworkCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeworkCompletionView.swift; sourceTree = "<group>"; };
-	/* End PBXFileReference section */
+/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A5000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68163CCC2E95CC7D000E7318 /* GoogleSignIn in Frameworks */,
+				68163CCE2E95CC7D000E7318 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +92,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 		A6000002 /* HomeworkHelper */ = {
 			isa = PBXGroup;
 			children = (
+				68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */,
 				A2000001 /* HomeworkHelperApp.swift */,
 				A6000004 /* Views */,
 				A6000005 /* Models */,
@@ -105,6 +115,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 		A6000004 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				68163CD32E95CEBE000E7318 /* AuthenticationView.swift */,
 				A2000002 /* ContentView.swift */,
 				A2000003 /* HomeView.swift */,
 				A2000004 /* StepGuidanceView.swift */,
@@ -112,13 +123,13 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 				A2000006 /* ProgressStatsView.swift */,
 				A2000007 /* ProblemsListView.swift */,
 				A2000008 /* SettingsView.swift */,
-                                A2000018 /* OnboardingView.swift */,
-                                A2000019 /* EditProfileView.swift */,
+				A2000023 /* ImageCropperView.swift */,
+				A2000018 /* OnboardingView.swift */,
+				A2000019 /* EditProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
-						EAC9F8B0EB554EA8BBA9A36B /* HomeworkCompletionView.swift */;
-			};
+		};
 		A6000005 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +145,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 		A6000006 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				68163CD12E95CE0D000E7318 /* AuthenticationService.swift */,
 				A2000014 /* DataManager.swift */,
 				A2000015 /* OpenAIService.swift */,
 				A2000016 /* KeychainHelper.swift */,
@@ -190,6 +202,9 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 				Base,
 			);
 			mainGroup = A6000001;
+			packageReferences = (
+				68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			productRefGroup = A6000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -206,6 +221,7 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 			files = (
 				A1000017 /* Assets.xcassets in Resources */,
 				A1000021 /* PrivacyInfo.xcprivacy in Resources */,
+				68163CD02E95CCA5000E7318 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,14 +240,17 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 				A1000006 /* ProgressStatsView.swift in Sources */,
 				A1000007 /* ProblemsListView.swift in Sources */,
 				A1000008 /* SettingsView.swift in Sources */,
-                                A1000018 /* OnboardingView.swift in Sources */,
-                                A1000019 /* EditProfileView.swift in Sources */,
+				A1000023 /* ImageCropperView.swift in Sources */,
+				A1000018 /* OnboardingView.swift in Sources */,
+				A1000019 /* EditProfileView.swift in Sources */,
 				A1000009 /* User.swift in Sources */,
 				A1000010 /* HomeworkProblem.swift in Sources */,
 				A1000011 /* GuidanceStep.swift in Sources */,
 				A1000012 /* ChatMessage.swift in Sources */,
+				68163CD22E95CE0D000E7318 /* AuthenticationService.swift in Sources */,
 				A1000013 /* UserProgress.swift in Sources */,
 				A1000014 /* DataManager.swift in Sources */,
+				68163CD42E95CEBE000E7318 /* AuthenticationView.swift in Sources */,
 				A1000015 /* OpenAIService.swift in Sources */,
 				A1000016 /* KeychainHelper.swift in Sources */,
 				A1000020 /* AzureKeyVaultService.swift in Sources */,
@@ -447,6 +466,30 @@ A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef =
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		68163CCB2E95CC7D000E7318 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		68163CCD2E95CC7D000E7318 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB000001 /* Project object */;
 }

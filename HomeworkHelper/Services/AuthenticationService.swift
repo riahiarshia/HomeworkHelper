@@ -11,7 +11,7 @@ class AuthenticationService: ObservableObject {
     private let backendURL = "https://homework-helper-api.azurewebsites.net"
     private let keychain = KeychainHelper.shared
     private var lastValidationTime: Date?
-    private let validationInterval: TimeInterval = 300 // 5 minutes
+    private let validationInterval: TimeInterval = 10 // 10 seconds for immediate detection
     
     init() {
         // Check if user is already authenticated
@@ -24,6 +24,14 @@ class AuthenticationService: ObservableObject {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
+        
+        // Also listen for app entering foreground
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
     
     deinit {
@@ -31,17 +39,33 @@ class AuthenticationService: ObservableObject {
     }
     
     @objc private func appDidBecomeActive() {
-        // Only validate if user is authenticated and enough time has passed
-        guard isAuthenticated else { return }
-        
-        // Check if we need to validate (avoid too frequent validations)
-        if let lastValidation = lastValidationTime,
-           Date().timeIntervalSince(lastValidation) < validationInterval {
-            print("⏭️ Skipping validation - too soon since last check")
-            return
+        validateIfNeeded(trigger: "app became active")
+    }
+    
+    @objc private func appWillEnterForeground() {
+        validateIfNeeded(trigger: "app entering foreground")
+    }
+    
+    private func validateIfNeeded(trigger: String) {
+        // Only validate if user is authenticated
+        guard isAuthenticated else { 
+            print("⏭️ Skipping validation (\(trigger)) - not authenticated")
+            return 
         }
         
-        print("🔄 App became active - validating session...")
+        // TEMPORARILY DISABLED THROTTLE FOR DEBUGGING
+        // Check if we need to validate (avoid too frequent validations)
+        // if let lastValidation = lastValidationTime,
+        //    Date().timeIntervalSince(lastValidation) < validationInterval {
+        //     let elapsed = Date().timeIntervalSince(lastValidation)
+        //     print("⏭️ Skipping validation (\(trigger)) - last check was \(Int(elapsed))s ago (need \(Int(validationInterval))s)")
+        //     return
+        // }
+        
+        print("🔄 Validation triggered: \(trigger)")
+        print("🔍 Current user: \(currentUser?.email ?? "nil")")
+        print("🔍 Is authenticated: \(isAuthenticated)")
+        
         Task {
             await revalidateSession()
         }
@@ -152,6 +176,24 @@ class AuthenticationService: ObservableObject {
                     return
                 }
                 
+                // Check HTTP status code
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("🔍 HTTP Status Code: \(httpResponse.statusCode)")
+                    
+                    if httpResponse.statusCode == 403 {
+                        // Account is banned or inactive
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = error
+                            if let reason = json["reason"] as? String {
+                                self.errorMessage = "\(error)\nReason: \(reason)"
+                            }
+                            print("❌ Account blocked: \(error)")
+                            return
+                        }
+                    }
+                }
+                
                 // Debug: Print response
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("📥 Backend response: \(responseString)")
@@ -167,6 +209,9 @@ class AuthenticationService: ObservableObject {
                     // Check for error in response
                     if let error = json["error"] as? String {
                         self.errorMessage = error
+                        if let reason = json["reason"] as? String {
+                            self.errorMessage = "\(error)\nReason: \(reason)"
+                        }
                         print("❌ Backend error: \(error)")
                         return
                     }
@@ -213,6 +258,12 @@ class AuthenticationService: ObservableObject {
                     
                     print("🔄 State updated: isAuthenticated = \(self.isAuthenticated)")
                     print("🔄 Current user: \(self.currentUser?.email ?? "nil")")
+                    
+                    // Validate session immediately after login to check account status
+                    Task {
+                        print("🔄 Validating newly authenticated user...")
+                        await self.validateSession(token: token)
+                    }
                     
                 } catch {
                     self.errorMessage = "Failed to parse response: \(error.localizedDescription)"
@@ -277,6 +328,8 @@ class AuthenticationService: ObservableObject {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         print("📤 Validating session with backend...")
+        print("🔍 URL: \(url.absoluteString)")
+        print("🔍 Token: \(token.prefix(20))...")
         
         // Record validation attempt time
         await MainActor.run {
@@ -284,11 +337,20 @@ class AuthenticationService: ObservableObject {
         }
         
         do {
+            print("🔍 Sending request...")
             let (data, response) = try await URLSession.shared.data(for: request)
+            print("🔍 Received response")
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("⚠️ Invalid response from server")
                 return
+            }
+            
+            print("🔍 Status code: \(httpResponse.statusCode)")
+            
+            // Print response body for debugging
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("🔍 Response body: \(responseString)")
             }
             
             if httpResponse.statusCode == 200 {
@@ -354,7 +416,8 @@ class AuthenticationService: ObservableObject {
             }
             
         } catch {
-            print("⚠️ Session validation network error: \(error.localizedDescription)")
+            print("❌ Session validation network error: \(error.localizedDescription)")
+            print("❌ Error details: \(error)")
             // Don't sign out on network errors - user can still use the app
             // The validation will happen again next time they have connectivity
         }

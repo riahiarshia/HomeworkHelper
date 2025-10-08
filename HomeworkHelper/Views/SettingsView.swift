@@ -3,6 +3,7 @@ import MessageUI
 
 struct SettingsView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var authService: AuthenticationService
     @State private var apiKey: String = ""
     @State private var azureClientSecret: String = ""
     @State private var showingAPIKeyAlert = false
@@ -13,6 +14,7 @@ struct SettingsView: View {
     @State private var showingTermsOfUse = false
     @State private var showingDisclaimer = false
     @State private var emailCopied = false
+    @State private var showingSignOutAlert = false
     
     var body: some View {
         NavigationView {
@@ -85,6 +87,52 @@ struct SettingsView: View {
                 
                 Section(header: Text("Account")) {
                     if let user = dataManager.currentUser {
+                        // Email
+                        if let email = user.email {
+                            HStack {
+                                Text("Email")
+                                Spacer()
+                                Text(email)
+                                    .foregroundColor(.secondary)
+                                    .font(.caption)
+                            }
+                        }
+                        
+                        // Subscription Status
+                        if let status = user.subscriptionStatus {
+                            HStack {
+                                Text("Subscription")
+                                Spacer()
+                                HStack(spacing: 4) {
+                                    if status == "trial" {
+                                        Image(systemName: "clock.fill")
+                                            .foregroundColor(.orange)
+                                            .font(.caption)
+                                    } else if status == "active" {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                            .font(.caption)
+                                    } else {
+                                        Image(systemName: "exclamationmark.circle.fill")
+                                            .foregroundColor(.red)
+                                            .font(.caption)
+                                    }
+                                    Text(status.capitalized)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            
+                            // Days remaining
+                            if let days = user.daysRemaining {
+                                HStack {
+                                    Text("Days Remaining")
+                                    Spacer()
+                                    Text("\(days) days")
+                                        .foregroundColor(days <= 3 ? .red : .secondary)
+                                }
+                            }
+                        }
+                        
                         NavigationLink(destination: EditProfileView()) {
                             HStack {
                                 Text("Profile")
@@ -113,6 +161,18 @@ struct SettingsView: View {
                             Spacer()
                             Text("\(user.streak) days")
                                 .foregroundColor(.secondary)
+                        }
+                        
+                        // Sign Out Button
+                        Button(action: {
+                            showingSignOutAlert = true
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.right.square")
+                                    .foregroundColor(.red)
+                                Text("Sign Out")
+                                    .foregroundColor(.red)
+                            }
                         }
                     }
                 }
@@ -235,6 +295,15 @@ struct SettingsView: View {
                 }
             } message: {
                 Text("This will permanently delete all your homework problems, progress, and chat history. This action cannot be undone.")
+            }
+            .alert("Sign Out?", isPresented: $showingSignOutAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Sign Out", role: .destructive) {
+                    authService.signOut()
+                    dataManager.currentUser = nil
+                }
+            } message: {
+                Text("Are you sure you want to sign out? Your data will be saved.")
             }
             .sheet(isPresented: $showingDisclaimer) {
                 DisclaimerView()
