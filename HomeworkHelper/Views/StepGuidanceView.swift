@@ -179,7 +179,7 @@ struct StepGuidanceView: View {
                 }
             }
         }
-        .navigationTitle("Problem \(problem?.id.uuidString.prefix(8) ?? "Unknown") - Step \(currentStepIndex + 1) of \(steps.count)")
+        .navigationTitle("Step \(currentStepIndex + 1) of \(steps.count)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
