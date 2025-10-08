@@ -281,6 +281,22 @@ struct HomeView: View {
                 .foregroundColor(.secondary)
                 .accessibilityIdentifier("learn_by_solving")
             
+            // Tagline
+            VStack(spacing: 4) {
+                Text("Your AI Tutor for Step-by-Step Learning")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                    .multilineTextAlignment(.center)
+                
+                Text("No Cheating - Real Learning")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.blue)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal)
+            
             if let user = dataManager.currentUser {
                 HStack(spacing: 16) {
                     Label("\(user.points)", systemImage: "star.fill")

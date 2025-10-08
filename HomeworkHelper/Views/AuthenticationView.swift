@@ -41,7 +41,7 @@ struct AuthenticationView: View {
                     Text("No Cheating - Real Learning")
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundColor(.green.opacity(0.9))
+                        .foregroundColor(.white.opacity(0.9))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
