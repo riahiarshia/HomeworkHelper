@@ -1,0 +1,92 @@
+2025-10-06T19:34:17  Fetching changes.
+2025-10-06T19:34:17    Starting  LocalZipHandler
+2025-10-06T19:34:17    Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/85143b99-c9bb-4a29-abfb-7a444583b7d0.zip (0.05 MB) to /tmp/zipdeploy/extracted
+2025-10-06T19:34:21  Updating submodules.
+2025-10-06T19:34:21  Preparing deployment for commit id 'fd91e6e4-c'.
+2025-10-06T19:34:21  PreDeployment: context.CleanOutputPath False
+2025-10-06T19:34:21  PreDeployment: context.OutputPath /home/site/wwwroot
+2025-10-06T19:34:21  Repository path is /tmp/zipdeploy/extracted
+2025-10-06T19:34:22  Running oryx build...
+2025-10-06T19:34:22    Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 20 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8de050f594547c6 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log
+2025-10-06T19:34:27    Operation performed by Microsoft Oryx, https://github.com/Microsoft/Oryx
+2025-10-06T19:34:28    You can report issues at https://github.com/Microsoft/Oryx/issues
+2025-10-06T19:34:28    
+2025-10-06T19:34:28    Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493, Commit: 0649de32f1279969c9023dd41b389cce4bb94493, ReleaseTagName: 20250611.1
+2025-10-06T19:34:28    
+2025-10-06T19:34:28    Build Operation ID: 11043f8912403836
+2025-10-06T19:34:28    Repository Commit : fd91e6e4-cfec-4474-a90a-deb0aaf9defd
+2025-10-06T19:34:28    OS Type           : bookworm
+2025-10-06T19:34:28    Image Type        : githubactions
+2025-10-06T19:34:28    
+2025-10-06T19:34:28    Primary SDK Storage URL: https://oryx-cdn.microsoft.io
+2025-10-06T19:34:28    Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net
+2025-10-06T19:34:28    Detecting platforms...
+2025-10-06T19:34:33    Detected following platforms:
+2025-10-06T19:34:33      nodejs: 20.19.3
+2025-10-06T19:34:33    Version '20.19.3' of platform 'nodejs' is not installed. Generating script to install it...
+2025-10-06T19:34:34    Detected the following frameworks: Express
+2025-10-06T19:34:34    
+2025-10-06T19:34:34    Using intermediate directory '/tmp/8de050f594547c6'.
+2025-10-06T19:34:35    
+2025-10-06T19:34:35    Copying files to the intermediate directory...
+2025-10-06T19:34:35    Done in 1 sec(s).
+2025-10-06T19:34:35    
+2025-10-06T19:34:35    Source directory     : /tmp/8de050f594547c6
+2025-10-06T19:34:35    Destination directory: /home/site/wwwroot
+2025-10-06T19:34:35    
+2025-10-06T19:34:35    
+2025-10-06T19:34:35    Downloading and extracting 'nodejs' version '20.19.3' to '/tmp/oryx/platforms/nodejs/20.19.3'...
+2025-10-06T19:34:35    Detected image debian flavor: bookworm.
+2025-10-06T19:34:37    Downloaded in 2 sec(s).
+2025-10-06T19:34:37    Verifying checksum...
+2025-10-06T19:34:37    Extracting contents...
+2025-10-06T19:34:44    performing sha512 checksum for: nodejs...
+2025-10-06T19:34:45    Done in 10 sec(s).
+2025-10-06T19:34:45    
+2025-10-06T19:34:46    Removing existing manifest file
+2025-10-06T19:34:46    Creating directory for command manifest file if it does not exist
+2025-10-06T19:34:46    Creating a manifest file...
+2025-10-06T19:34:46    Node Build Command Manifest file created.
+2025-10-06T19:34:46    
+2025-10-06T19:34:46    Using Node version:
+2025-10-06T19:34:46    v20.19.3
+2025-10-06T19:34:46    
+2025-10-06T19:34:46    Using Npm version:
+2025-10-06T19:34:47    10.8.2
+2025-10-06T19:34:47    
+2025-10-06T19:34:47    Running 'npm install'...
+2025-10-06T19:34:47    
+2025-10-06T19:36:23    
+2025-10-06T19:36:23    added 140 packages, and audited 141 packages in 2m
+2025-10-06T19:36:23    
+2025-10-06T19:36:23    25 packages are looking for funding
+2025-10-06T19:36:24      run `npm fund` for details
+2025-10-06T19:36:24    
+2025-10-06T19:36:24    found 0 vulnerabilities
+2025-10-06T19:36:24    
+2025-10-06T19:36:24    Zipping existing node_modules folder...
+2025-10-06T19:36:32    Done in 9 sec(s).
+2025-10-06T19:36:33    Preparing output...
+2025-10-06T19:36:33    
+2025-10-06T19:36:33    Copying files to destination directory '/home/site/wwwroot'...
+2025-10-06T19:36:34    Done in 1 sec(s).
+2025-10-06T19:36:34    
+2025-10-06T19:36:34    Removing existing manifest file
+2025-10-06T19:36:34    Creating a manifest file...
+2025-10-06T19:36:34    Manifest file created.
+2025-10-06T19:36:34    Copying .ostype to manifest output directory.
+2025-10-06T19:36:34    
+2025-10-06T19:36:34    Done in 120 sec(s).
+2025-10-06T19:36:36  Running post deployment command(s)...
+2025-10-06T19:36:36  
+2025-10-06T19:36:36  Generating summary of Oryx build
+2025-10-06T19:36:37  Parsing the build logs
+2025-10-06T19:36:37  Found 0 issue(s)
+2025-10-06T19:36:38  
+2025-10-06T19:36:38  Build Summary :
+2025-10-06T19:36:38  ===============
+2025-10-06T19:36:38  Errors (0)
+2025-10-06T19:36:39  Warnings (0)
+2025-10-06T19:36:39  
+2025-10-06T19:36:40  Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path
+2025-10-06T19:36:40  Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy

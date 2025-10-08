@@ -1,0 +1,1336 @@
+2025-10-06T18:16:53.384808361Z    _____                               
+2025-10-06T18:16:53.391382306Z   /  _  \ __________ _________   ____  
+2025-10-06T18:16:53.391416006Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:16:53.391423106Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:16:53.391426706Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:16:53.391430206Z         \/      \/                  \/ 
+2025-10-06T18:16:53.391433006Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:16:53.391435706Z 
+2025-10-06T18:16:53.391438206Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:16:53.391440806Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:16:53.391459206Z NodeJS Version : v20.19.3
+2025-10-06T18:16:53.391462206Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:16:53.391464806Z 
+2025-10-06T18:16:55.945379466Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:16:56.047430756Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:16:56.115443715Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:17:14.381759409Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:17:14.459590252Z 4 added, 0 removed; done.
+2025-10-06T18:17:14.466225198Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:17:14.486604341Z done.
+2025-10-06T18:17:14.561445463Z CA certificates copied and updated successfully.
+2025-10-06T18:17:14.866565991Z Starting periodic command scheduler: cron.
+2025-10-06T18:17:15.190085148Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:17:15.213601812Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:17:15.213630112Z Build Operation ID: b8f41f60-08c5-4060-9123-0412a6b7d8b4
+2025-10-06T18:17:16.144930353Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:17:16.208794902Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:17:16.370864041Z Running #!/bin/sh
+2025-10-06T18:17:16.370923642Z 
+2025-10-06T18:17:16.370927742Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:17:16.370930842Z cd "/home/site/wwwroot"
+2025-10-06T18:17:16.370933642Z 
+2025-10-06T18:17:16.370936142Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:17:16.370938842Z if [ -z "$PORT" ]; then
+2025-10-06T18:17:16.370941542Z 		export PORT=8080
+2025-10-06T18:17:16.370944642Z fi
+2025-10-06T18:17:16.370947142Z 
+2025-10-06T18:17:16.370949642Z npm start
+2025-10-06T18:17:19.320531173Z npm info using npm@10.9.2
+2025-10-06T18:17:19.320565474Z npm info using node@v20.19.3
+2025-10-06T18:17:27.998518627Z 
+2025-10-06T18:17:27.998541428Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:17:27.998575928Z > node server.js
+2025-10-06T18:17:27.998579928Z 
+2025-10-06T18:17:29.123034600Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:17:29.123273101Z   throw err;
+2025-10-06T18:17:29.123278201Z   ^
+2025-10-06T18:17:29.123282101Z 
+2025-10-06T18:17:29.123285401Z Error: Cannot find module 'express'
+2025-10-06T18:17:29.123288801Z Require stack:
+2025-10-06T18:17:29.123292101Z - /home/site/wwwroot/server.js
+2025-10-06T18:17:29.123295501Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:17:29.123299201Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:17:29.123302702Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:17:29.132847367Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:17:29.132873868Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:17:29.132879368Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:17:29.132883268Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:17:29.132886868Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:17:29.132900068Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:17:29.132903668Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:17:29.325372598Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:17:29.325398598Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:17:29.325404098Z }
+2025-10-06T18:17:29.325407598Z 
+2025-10-06T18:17:29.325410998Z Node.js v20.19.3
+2025-10-06T18:17:29.963688410Z npm http fetch GET 200 https://registry.npmjs.org/npm 2524ms
+2025-10-06T18:17:30.069887144Z npm notice
+2025-10-06T18:17:30.069914244Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:17:30.069920544Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:17:30.069924344Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:17:30.069927944Z npm notice
+
+2025-10-06T18:17:50.846356320Z    _____                               
+2025-10-06T18:17:50.846444121Z   /  _  \ __________ _________   ____  
+2025-10-06T18:17:50.846454421Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:17:50.846458421Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:17:50.846477921Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:17:50.846481821Z         \/      \/                  \/ 
+2025-10-06T18:17:50.846484521Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:17:50.846487221Z 
+2025-10-06T18:17:50.846489621Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:17:50.846492221Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:17:50.846494821Z NodeJS Version : v20.19.3
+2025-10-06T18:17:50.846497421Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:17:50.846500121Z 
+2025-10-06T18:17:56.854185536Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:17:56.873699773Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:17:56.918505887Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:18:11.352191366Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:18:11.379246752Z 4 added, 0 removed; done.
+2025-10-06T18:18:11.379269552Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:18:11.380614861Z done.
+2025-10-06T18:18:11.406862741Z CA certificates copied and updated successfully.
+2025-10-06T18:18:11.599810465Z Starting periodic command scheduler: cron.
+2025-10-06T18:18:11.679151909Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:18:11.753861821Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:18:11.753868321Z Build Operation ID: 7a0b35a2-773f-46f4-9659-00fbdabd32ab
+2025-10-06T18:18:12.258410187Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:18:12.308724054Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:18:12.429351434Z Running #!/bin/sh
+2025-10-06T18:18:12.430305541Z 
+2025-10-06T18:18:12.430319441Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:18:12.430324841Z cd "/home/site/wwwroot"
+2025-10-06T18:18:12.430328941Z 
+2025-10-06T18:18:12.430332141Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:18:12.430335541Z if [ -z "$PORT" ]; then
+2025-10-06T18:18:12.430338942Z 		export PORT=8080
+2025-10-06T18:18:12.430342442Z fi
+2025-10-06T18:18:12.430345542Z 
+2025-10-06T18:18:12.430348542Z npm start
+2025-10-06T18:18:13.604586312Z npm info using npm@10.9.2
+2025-10-06T18:18:13.620664230Z npm info using node@v20.19.3
+2025-10-06T18:18:20.306516825Z 
+2025-10-06T18:18:20.306605226Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:18:20.306610826Z > node server.js
+2025-10-06T18:18:20.306613626Z 
+2025-10-06T18:18:21.299294932Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:18:21.299716535Z   throw err;
+2025-10-06T18:18:21.299726235Z   ^
+2025-10-06T18:18:21.299729135Z 
+2025-10-06T18:18:21.299731835Z Error: Cannot find module 'express'
+2025-10-06T18:18:21.299734535Z Require stack:
+2025-10-06T18:18:21.299737035Z - /home/site/wwwroot/server.js
+2025-10-06T18:18:21.299739635Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:18:21.299742535Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:18:21.299749135Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:18:21.299752035Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:18:21.299754535Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:18:21.299757835Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:18:21.299760535Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:18:21.305899478Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:18:21.305903578Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:18:21.305906478Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:18:21.305909279Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:18:21.305911879Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:18:21.305914579Z }
+2025-10-06T18:18:21.305917279Z 
+2025-10-06T18:18:21.305919879Z Node.js v20.19.3
+2025-10-06T18:18:21.852326535Z npm http fetch GET 200 https://registry.npmjs.org/npm 2282ms
+2025-10-06T18:18:21.910503745Z npm notice
+2025-10-06T18:18:21.910562646Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:18:21.910567346Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:18:21.910570546Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:18:21.910573146Z npm notice
+
+2025-10-06T18:18:35.664237969Z    _____                               
+2025-10-06T18:18:35.664303170Z   /  _  \ __________ _________   ____  
+2025-10-06T18:18:35.664309270Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:18:35.664312470Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:18:35.664315270Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:18:35.664318370Z         \/      \/                  \/ 
+2025-10-06T18:18:35.664321170Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:18:35.664323870Z 
+2025-10-06T18:18:35.664329170Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:18:35.664331770Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:18:35.664334370Z NodeJS Version : v20.19.3
+2025-10-06T18:18:35.664336870Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:18:35.664339670Z 
+2025-10-06T18:18:40.037171028Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:18:40.057092565Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:18:40.113914556Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:18:51.480356525Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:18:51.555599244Z 4 added, 0 removed; done.
+2025-10-06T18:18:51.563552499Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:18:51.574172872Z done.
+2025-10-06T18:18:51.593451405Z CA certificates copied and updated successfully.
+2025-10-06T18:18:51.792894681Z Starting periodic command scheduler: cron.
+2025-10-06T18:18:51.905603959Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:18:51.911741101Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:18:51.912023703Z Build Operation ID: e118ff5b-9fd4-4ea9-8bbd-ef9f3a76746f
+2025-10-06T18:18:52.548908000Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:18:52.588713674Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:18:52.675600175Z Running #!/bin/sh
+2025-10-06T18:18:52.675626575Z 
+2025-10-06T18:18:52.675629975Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:18:52.675632875Z cd "/home/site/wwwroot"
+2025-10-06T18:18:52.675635475Z 
+2025-10-06T18:18:52.675637675Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:18:52.675640175Z if [ -z "$PORT" ]; then
+2025-10-06T18:18:52.675642575Z 		export PORT=8080
+2025-10-06T18:18:52.675645575Z fi
+2025-10-06T18:18:52.675647775Z 
+2025-10-06T18:18:52.696132616Z npm start
+2025-10-06T18:18:53.996429396Z npm info using npm@10.9.2
+2025-10-06T18:18:54.013480014Z npm info using node@v20.19.3
+2025-10-06T18:18:57.317495032Z 
+2025-10-06T18:18:57.317741034Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:18:57.317749734Z > node server.js
+2025-10-06T18:18:57.317752834Z 
+2025-10-06T18:18:57.908924017Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:18:57.908975017Z   throw err;
+2025-10-06T18:18:57.908978817Z   ^
+2025-10-06T18:18:57.908981517Z 
+2025-10-06T18:18:57.908984017Z Error: Cannot find module 'express'
+2025-10-06T18:18:57.908986717Z Require stack:
+2025-10-06T18:18:57.908989117Z - /home/site/wwwroot/server.js
+2025-10-06T18:18:57.908991917Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:18:57.908994817Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:18:57.908997517Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:18:57.909000017Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:18:57.909002617Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:18:57.909006217Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:18:57.909008817Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:18:57.909011317Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:18:57.909013917Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:18:57.909016417Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:18:57.909019117Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:18:57.909021517Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:18:57.909024117Z }
+2025-10-06T18:18:57.909026517Z 
+2025-10-06T18:18:57.909028917Z Node.js v20.19.3
+2025-10-06T18:18:57.968063525Z npm http fetch GET 200 https://registry.npmjs.org/npm 1008ms
+2025-10-06T18:18:57.997936531Z npm notice
+2025-10-06T18:18:57.997950532Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:18:57.997954132Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:18:57.997956832Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:18:57.997959432Z npm notice
+
+2025-10-06T18:19:11.768539204Z    _____                               
+2025-10-06T18:19:11.768626205Z   /  _  \ __________ _________   ____  
+2025-10-06T18:19:11.768632005Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:19:11.768635005Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:19:11.768637805Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:19:11.768640805Z         \/      \/                  \/ 
+2025-10-06T18:19:11.768643605Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:19:11.768646405Z 
+2025-10-06T18:19:11.768649005Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:19:11.768669305Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:19:11.768672705Z NodeJS Version : v20.19.3
+2025-10-06T18:19:11.768675205Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:19:11.768678005Z 
+2025-10-06T18:19:16.165005639Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:19:16.183815668Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:19:16.237028633Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:19:28.885882208Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:19:28.933266439Z 4 added, 0 removed; done.
+2025-10-06T18:19:28.943125107Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:19:28.943139907Z done.
+2025-10-06T18:19:28.961679437Z CA certificates copied and updated successfully.
+2025-10-06T18:19:29.210431272Z Starting periodic command scheduler: cron.
+2025-10-06T18:19:29.287869512Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:19:29.288287315Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:19:29.288612417Z Build Operation ID: 8666b8f6-ef49-42b7-aa16-20330ef1640a
+2025-10-06T18:19:29.875339909Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:19:29.905621920Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:19:29.963247022Z Running #!/bin/sh
+2025-10-06T18:19:29.963272222Z 
+2025-10-06T18:19:29.963276122Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:19:29.963279322Z cd "/home/site/wwwroot"
+2025-10-06T18:19:29.963282122Z 
+2025-10-06T18:19:29.963284622Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:19:29.963287622Z if [ -z "$PORT" ]; then
+2025-10-06T18:19:29.963290522Z 		export PORT=8080
+2025-10-06T18:19:29.963293522Z fi
+2025-10-06T18:19:29.963306122Z 
+2025-10-06T18:19:29.974598001Z npm start
+2025-10-06T18:19:31.454731923Z npm info using npm@10.9.2
+2025-10-06T18:19:31.454794924Z npm info using node@v20.19.3
+2025-10-06T18:19:35.149577208Z 
+2025-10-06T18:19:35.149614108Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:19:35.149620308Z > node server.js
+2025-10-06T18:19:35.149624108Z 
+2025-10-06T18:19:35.778210317Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:19:35.778250317Z   throw err;
+2025-10-06T18:19:35.778255117Z   ^
+2025-10-06T18:19:35.778258718Z 
+2025-10-06T18:19:35.778262118Z Error: Cannot find module 'express'
+2025-10-06T18:19:35.778265618Z Require stack:
+2025-10-06T18:19:35.778268918Z - /home/site/wwwroot/server.js
+2025-10-06T18:19:35.778272518Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:19:35.778276318Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:19:35.778279918Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:19:35.778283318Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:19:35.778286818Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:19:35.778290818Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:19:35.778294218Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:19:35.778297718Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:19:35.778301118Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:19:35.778304718Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:19:35.778308218Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:19:35.778318318Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:19:35.778321718Z }
+2025-10-06T18:19:35.778325018Z 
+2025-10-06T18:19:35.778328318Z Node.js v20.19.3
+2025-10-06T18:19:35.800948880Z npm http fetch GET 200 https://registry.npmjs.org/npm 982ms
+2025-10-06T18:19:35.975311931Z npm notice
+2025-10-06T18:19:35.975350531Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:19:35.975356331Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:19:35.975360831Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:19:35.975364931Z npm notice
+
+2025-10-06T18:21:59.786912921Z    _____                               
+2025-10-06T18:21:59.786986721Z   /  _  \ __________ _________   ____  
+2025-10-06T18:21:59.786992121Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:21:59.786995021Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:21:59.786997821Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:21:59.787001321Z         \/      \/                  \/ 
+2025-10-06T18:21:59.787004121Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:21:59.787006721Z 
+2025-10-06T18:21:59.787009121Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:21:59.787011621Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:21:59.787014321Z NodeJS Version : v20.19.3
+2025-10-06T18:21:59.787016721Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:21:59.787019421Z 
+2025-10-06T18:22:03.298075238Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:22:03.326071040Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:22:03.491878436Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:22:22.599772905Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:22:22.821600775Z 4 added, 0 removed; done.
+2025-10-06T18:22:22.821631976Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:22:22.821635776Z done.
+2025-10-06T18:22:22.890002460Z CA certificates copied and updated successfully.
+2025-10-06T18:22:23.179555309Z Starting periodic command scheduler: cron.
+2025-10-06T18:22:23.405044505Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:22:23.405080906Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:22:23.405086206Z Build Operation ID: 11be827f-8a92-4a65-b1c0-b852af4d30fa
+2025-10-06T18:22:24.192268378Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:22:24.257132137Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:22:24.402890968Z Running #!/bin/sh
+2025-10-06T18:22:24.402917269Z 
+2025-10-06T18:22:24.402920869Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:22:24.402923969Z cd "/home/site/wwwroot"
+2025-10-06T18:22:24.402926869Z 
+2025-10-06T18:22:24.402929369Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:22:24.402932169Z if [ -z "$PORT" ]; then
+2025-10-06T18:22:24.402935069Z 		export PORT=8080
+2025-10-06T18:22:24.402938169Z fi
+2025-10-06T18:22:24.402940669Z 
+2025-10-06T18:22:24.402943169Z npm start
+2025-10-06T18:22:29.561846786Z npm info using npm@10.9.2
+2025-10-06T18:22:29.683753349Z npm info using node@v20.19.3
+2025-10-06T18:22:39.844643757Z 
+2025-10-06T18:22:39.844694157Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:22:39.844699957Z > node server.js
+2025-10-06T18:22:39.844710657Z 
+2025-10-06T18:22:41.622585741Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:22:41.622620142Z   throw err;
+2025-10-06T18:22:41.622624942Z   ^
+2025-10-06T18:22:41.623002844Z 
+2025-10-06T18:22:41.623007844Z Error: Cannot find module 'express'
+2025-10-06T18:22:41.623011844Z Require stack:
+2025-10-06T18:22:41.623015244Z - /home/site/wwwroot/server.js
+2025-10-06T18:22:41.623019344Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:22:41.623023144Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:22:41.623026744Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:22:41.623030444Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:22:41.623033744Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:22:41.623047845Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:22:41.623051445Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:22:41.650797238Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:22:41.650839738Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:22:41.650879138Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:22:41.650884438Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:22:41.650887939Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:22:41.650891539Z }
+2025-10-06T18:22:41.650895039Z 
+2025-10-06T18:22:41.650898739Z Node.js v20.19.3
+2025-10-06T18:22:42.092918318Z npm http fetch GET 200 https://registry.npmjs.org/npm 4097ms
+2025-10-06T18:22:42.160627289Z npm notice
+2025-10-06T18:22:42.160722890Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:22:42.160731590Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:22:42.160735490Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:22:42.160739390Z npm notice
+
+2025-10-06T18:25:13.130759233Z    _____                               
+2025-10-06T18:25:13.130936034Z   /  _  \ __________ _________   ____  
+2025-10-06T18:25:13.130943234Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:25:13.130946234Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:25:13.130949034Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:25:13.130952234Z         \/      \/                  \/ 
+2025-10-06T18:25:13.130954934Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:25:13.130957534Z 
+2025-10-06T18:25:13.130960134Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:25:13.130962634Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:25:13.130965334Z NodeJS Version : v20.19.3
+2025-10-06T18:25:13.130967834Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:25:13.130970634Z 
+2025-10-06T18:25:19.017309399Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:25:19.044957327Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:25:19.100690186Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:25:30.974830705Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:25:31.012090087Z 4 added, 0 removed; done.
+2025-10-06T18:25:31.018828938Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:25:31.028301310Z done.
+2025-10-06T18:25:31.061317660Z CA certificates copied and updated successfully.
+2025-10-06T18:25:31.226326709Z Starting periodic command scheduler: cron.
+2025-10-06T18:25:31.392542266Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:25:31.400742229Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:25:31.400761929Z Build Operation ID: 7b9db983-c7f9-4c48-8a3e-4f35f5f50236
+2025-10-06T18:25:32.036384839Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:25:32.072914515Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:25:32.130421750Z Running #!/bin/sh
+2025-10-06T18:25:32.139940722Z 
+2025-10-06T18:25:32.139966623Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:25:32.139972123Z cd "/home/site/wwwroot"
+2025-10-06T18:25:32.139982523Z 
+2025-10-06T18:25:32.139986023Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:25:32.139989723Z if [ -z "$PORT" ]; then
+2025-10-06T18:25:32.139993323Z 		export PORT=8080
+2025-10-06T18:25:32.141628135Z fi
+2025-10-06T18:25:32.141635735Z 
+2025-10-06T18:25:32.141639435Z npm start
+2025-10-06T18:25:34.262817687Z npm info using npm@10.9.2
+2025-10-06T18:25:34.273830871Z npm info using node@v20.19.3
+2025-10-06T18:25:38.036081797Z 
+2025-10-06T18:25:38.036105097Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:25:38.036109597Z > node server.js
+2025-10-06T18:25:38.036112397Z 
+2025-10-06T18:25:38.461913188Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:25:38.461940788Z   throw err;
+2025-10-06T18:25:38.461944688Z   ^
+2025-10-06T18:25:38.461947288Z 
+2025-10-06T18:25:38.461949688Z Error: Cannot find module 'express'
+2025-10-06T18:25:38.461952088Z Require stack:
+2025-10-06T18:25:38.461964189Z - /home/site/wwwroot/server.js
+2025-10-06T18:25:38.461967389Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:25:38.461974589Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:25:38.461977189Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:25:38.461979889Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:25:38.461982189Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:25:38.461985289Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:25:38.461987789Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:25:38.461990189Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:25:38.461992489Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:25:38.461994789Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:25:38.461997189Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:25:38.461999589Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:25:38.462001989Z }
+2025-10-06T18:25:38.469648948Z 
+2025-10-06T18:25:38.469664348Z Node.js v20.19.3
+2025-10-06T18:25:38.790661329Z npm http fetch GET 200 https://registry.npmjs.org/npm 1421ms
+2025-10-06T18:25:38.862480284Z npm notice
+2025-10-06T18:25:38.862566085Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:25:38.862571185Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:25:38.862574285Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:25:38.862577185Z npm notice
+
+2025-10-06T18:27:54.413061878Z    _____                               
+2025-10-06T18:27:54.413109679Z   /  _  \ __________ _________   ____  
+2025-10-06T18:27:54.413113779Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:27:54.413115979Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:27:54.413118079Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:27:54.413120279Z         \/      \/                  \/ 
+2025-10-06T18:27:54.413122679Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:27:54.413124579Z 
+2025-10-06T18:27:54.413135579Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:27:54.413137779Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:27:54.413139679Z NodeJS Version : v20.19.3
+2025-10-06T18:27:54.413141479Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:27:54.413143579Z 
+2025-10-06T18:27:56.695780270Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:27:56.737523579Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:27:56.805316480Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:28:11.245230513Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:28:11.297394553Z 4 added, 0 removed; done.
+2025-10-06T18:28:11.298511666Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:28:11.308060184Z done.
+2025-10-06T18:28:11.349065986Z CA certificates copied and updated successfully.
+2025-10-06T18:28:11.540895539Z Starting periodic command scheduler: cron.
+2025-10-06T18:28:11.721820457Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:28:11.721872058Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:28:11.721876058Z Build Operation ID: 1a08174d-0f70-477e-8105-500a091ee922
+2025-10-06T18:28:12.196523378Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:28:12.225237030Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:28:12.306155123Z Running #!/bin/sh
+2025-10-06T18:28:12.306214323Z 
+2025-10-06T18:28:12.306223123Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:28:12.306226923Z cd "/home/site/wwwroot"
+2025-10-06T18:28:12.306230123Z 
+2025-10-06T18:28:12.306233223Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:28:12.306236724Z if [ -z "$PORT" ]; then
+2025-10-06T18:28:12.306239924Z 		export PORT=8080
+2025-10-06T18:28:12.306243524Z fi
+2025-10-06T18:28:12.306246624Z 
+2025-10-06T18:28:12.332433545Z npm start
+2025-10-06T18:28:15.374589453Z npm info using npm@10.9.2
+2025-10-06T18:28:15.374618753Z npm info using node@v20.19.3
+2025-10-06T18:28:19.717297779Z 
+2025-10-06T18:28:19.717346979Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:28:19.717351979Z > node server.js
+2025-10-06T18:28:19.717354879Z 
+2025-10-06T18:28:20.400804813Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:28:20.400847813Z   throw err;
+2025-10-06T18:28:20.400851613Z   ^
+2025-10-06T18:28:20.400854313Z 
+2025-10-06T18:28:20.400856813Z Error: Cannot find module 'express'
+2025-10-06T18:28:20.400859413Z Require stack:
+2025-10-06T18:28:20.400862013Z - /home/site/wwwroot/server.js
+2025-10-06T18:28:20.400864713Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:28:20.400867713Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:28:20.400870513Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:28:20.400873113Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:28:20.400875813Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:28:20.400879013Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:28:20.400881613Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:28:20.400884213Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:28:20.400886813Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:28:20.400889513Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:28:20.400892113Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:28:20.400894713Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:28:20.400897513Z }
+2025-10-06T18:28:20.417972171Z 
+2025-10-06T18:28:20.417998871Z Node.js v20.19.3
+2025-10-06T18:28:20.593967172Z npm http fetch GET 200 https://registry.npmjs.org/npm 1490ms
+2025-10-06T18:28:20.711006772Z npm notice
+2025-10-06T18:28:20.711074572Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:28:20.711079572Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:28:20.711082472Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:28:20.711085172Z npm notice
+
+2025-10-06T18:37:40.326007178Z    _____                               
+2025-10-06T18:37:40.326076379Z   /  _  \ __________ _________   ____  
+2025-10-06T18:37:40.326081679Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:37:40.326084679Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:37:40.326087479Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:37:40.326090579Z         \/      \/                  \/ 
+2025-10-06T18:37:40.326093279Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:37:40.326095880Z 
+2025-10-06T18:37:40.326098580Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:37:40.326101180Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:37:40.326103680Z NodeJS Version : v20.19.3
+2025-10-06T18:37:40.326106180Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:37:40.326108780Z 
+2025-10-06T18:37:43.625483559Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:37:43.691410515Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:37:43.747422903Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:37:56.943986015Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:37:56.981826895Z 4 added, 0 removed; done.
+2025-10-06T18:37:56.982833502Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:37:56.991196164Z done.
+2025-10-06T18:37:57.018636567Z CA certificates copied and updated successfully.
+2025-10-06T18:37:57.220858161Z Starting periodic command scheduler: cron.
+2025-10-06T18:37:57.432462225Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:37:57.432491925Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:37:57.432496325Z Build Operation ID: 1beb3ca3-b686-48d0-9f75-2ea0c231334a
+2025-10-06T18:37:57.982750591Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:37:58.009627889Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:37:58.070322138Z Running #!/bin/sh
+2025-10-06T18:37:58.070341338Z 
+2025-10-06T18:37:58.070346138Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:37:58.070350338Z cd "/home/site/wwwroot"
+2025-10-06T18:37:58.078897301Z 
+2025-10-06T18:37:58.078916401Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:37:58.078920802Z if [ -z "$PORT" ]; then
+2025-10-06T18:37:58.078924402Z 		export PORT=8080
+2025-10-06T18:37:58.078928202Z fi
+2025-10-06T18:37:58.078931402Z 
+2025-10-06T18:37:58.079189003Z npm start
+2025-10-06T18:38:00.251253253Z npm info using npm@10.9.2
+2025-10-06T18:38:00.253612571Z npm info using node@v20.19.3
+2025-10-06T18:38:06.610767858Z 
+2025-10-06T18:38:06.610818458Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:38:06.610823958Z > node server.js
+2025-10-06T18:38:06.610827358Z 
+2025-10-06T18:38:07.061544588Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:38:07.061572488Z   throw err;
+2025-10-06T18:38:07.061576388Z   ^
+2025-10-06T18:38:07.061579088Z 
+2025-10-06T18:38:07.061581888Z Error: Cannot find module 'express'
+2025-10-06T18:38:07.061584588Z Require stack:
+2025-10-06T18:38:07.061587688Z - /home/site/wwwroot/server.js
+2025-10-06T18:38:07.061590488Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:38:07.061593488Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:38:07.061596288Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:38:07.061603588Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:38:07.061606388Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:38:07.061609888Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:38:07.061612688Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:38:07.061615588Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:38:07.061618388Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:38:07.061621088Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:38:07.061624088Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:38:07.061626588Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:38:07.061629388Z }
+2025-10-06T18:38:07.106440909Z 
+2025-10-06T18:38:07.106460510Z Node.js v20.19.3
+2025-10-06T18:38:07.338451872Z npm http fetch GET 200 https://registry.npmjs.org/npm 1667ms
+2025-10-06T18:38:07.386111713Z npm notice
+2025-10-06T18:38:07.386138514Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:38:07.386153214Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:38:07.386156414Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:38:07.386159714Z npm notice
+
+2025-10-06T18:46:28.771436960Z    _____                               
+2025-10-06T18:46:28.771492460Z   /  _  \ __________ _________   ____  
+2025-10-06T18:46:28.771497860Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:46:28.771500860Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:46:28.771503660Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:46:28.771506660Z         \/      \/                  \/ 
+2025-10-06T18:46:28.771509860Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:46:28.771512560Z 
+2025-10-06T18:46:28.771515060Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:46:28.771517660Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:46:28.771520260Z NodeJS Version : v20.19.3
+2025-10-06T18:46:28.771522760Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:46:28.771525860Z 
+2025-10-06T18:46:32.075175096Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:46:32.096082445Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:46:32.143545585Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:46:48.612376405Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:46:48.713635129Z 4 added, 0 removed; done.
+2025-10-06T18:46:48.713698930Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:46:48.731376656Z done.
+2025-10-06T18:46:48.843121356Z CA certificates copied and updated successfully.
+2025-10-06T18:46:49.123867665Z Starting periodic command scheduler: cron.
+2025-10-06T18:46:49.368887119Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:46:49.370585831Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:46:49.370599331Z Build Operation ID: f56375a5-9d69-43f8-881a-11ff69797459
+2025-10-06T18:46:50.078926400Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:46:50.146343883Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:46:50.320202627Z Running #!/bin/sh
+2025-10-06T18:46:50.320248927Z 
+2025-10-06T18:46:50.320253927Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:46:50.320257827Z cd "/home/site/wwwroot"
+2025-10-06T18:46:50.320261327Z 
+2025-10-06T18:46:50.320264627Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:46:50.320270027Z if [ -z "$PORT" ]; then
+2025-10-06T18:46:50.320273927Z 		export PORT=8080
+2025-10-06T18:46:50.320277627Z fi
+2025-10-06T18:46:50.320280927Z 
+2025-10-06T18:46:50.320284127Z npm start
+2025-10-06T18:46:52.301404306Z npm info using npm@10.9.2
+2025-10-06T18:46:52.303415220Z npm info using node@v20.19.3
+2025-10-06T18:46:56.435553711Z 
+2025-10-06T18:46:56.435613811Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:46:56.435619812Z > node server.js
+2025-10-06T18:46:56.435623512Z 
+2025-10-06T18:46:56.993068804Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:46:56.993104304Z   throw err;
+2025-10-06T18:46:56.993108104Z   ^
+2025-10-06T18:46:56.993110804Z 
+2025-10-06T18:46:56.993113404Z Error: Cannot find module 'express'
+2025-10-06T18:46:56.993116004Z Require stack:
+2025-10-06T18:46:56.993119304Z - /home/site/wwwroot/server.js
+2025-10-06T18:46:56.993122104Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:46:56.993124804Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:46:56.993127604Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:46:56.993130104Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:46:56.993132604Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:46:56.993135704Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:46:56.993138404Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:46:56.993140904Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:46:56.993143404Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:46:56.993146004Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:46:56.993148604Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:46:56.993151104Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:46:56.993153604Z }
+2025-10-06T18:46:56.993156504Z 
+2025-10-06T18:46:56.993158904Z Node.js v20.19.3
+2025-10-06T18:46:57.388354535Z npm http fetch GET 200 https://registry.npmjs.org/npm 1284ms
+2025-10-06T18:46:57.388398135Z npm notice
+2025-10-06T18:46:57.388402035Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:46:57.388405935Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:46:57.388408735Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:46:57.388412135Z npm notice
+
+2025-10-06T18:50:55.279653127Z    _____                               
+2025-10-06T18:50:55.279723928Z   /  _  \ __________ _________   ____  
+2025-10-06T18:50:55.279744528Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T18:50:55.279747528Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T18:50:55.279750128Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T18:50:55.279753128Z         \/      \/                  \/ 
+2025-10-06T18:50:55.279755828Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T18:50:55.279758228Z 
+2025-10-06T18:50:55.279760728Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T18:50:55.279763228Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T18:50:55.279765728Z NodeJS Version : v20.19.3
+2025-10-06T18:50:55.279768128Z Note: Any data outside '/home' is not persisted
+2025-10-06T18:50:55.279770728Z 
+2025-10-06T18:51:00.098787817Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T18:51:00.129217524Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T18:51:00.215070108Z Updating certificates in /etc/ssl/certs...
+2025-10-06T18:51:12.808619762Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T18:51:12.865770045Z 4 added, 0 removed; done.
+2025-10-06T18:51:12.872870592Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T18:51:12.891609918Z done.
+2025-10-06T18:51:12.929835174Z CA certificates copied and updated successfully.
+2025-10-06T18:51:13.391981372Z Starting periodic command scheduler: cron.
+2025-10-06T18:51:13.785538909Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-06T18:51:13.785594110Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-06T18:51:13.785601910Z Build Operation ID: d1d51fda-4294-4528-acd6-49ac930ffbc2
+2025-10-06T18:51:14.257562173Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T18:51:14.301966171Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T18:51:14.381508504Z Running #!/bin/sh
+2025-10-06T18:51:14.381532904Z 
+2025-10-06T18:51:14.381537504Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T18:51:14.381541604Z cd "/home/site/wwwroot"
+2025-10-06T18:51:14.381545304Z 
+2025-10-06T18:51:14.381548604Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T18:51:14.381552204Z if [ -z "$PORT" ]; then
+2025-10-06T18:51:14.381555904Z 		export PORT=8080
+2025-10-06T18:51:14.381559604Z fi
+2025-10-06T18:51:14.381563104Z 
+2025-10-06T18:51:14.381566304Z npm start
+2025-10-06T18:51:17.644452072Z npm info using npm@10.9.2
+2025-10-06T18:51:17.700017945Z npm info using node@v20.19.3
+2025-10-06T18:51:24.201746827Z 
+2025-10-06T18:51:24.201783927Z > homework-helper-backend@1.0.0 start
+2025-10-06T18:51:24.219430051Z > node server.js
+2025-10-06T18:51:24.219450851Z 
+2025-10-06T18:51:24.716644747Z node:internal/modules/cjs/loader:1215
+2025-10-06T18:51:24.716681247Z   throw err;
+2025-10-06T18:51:24.716685147Z   ^
+2025-10-06T18:51:24.716688047Z 
+2025-10-06T18:51:24.716690547Z Error: Cannot find module 'express'
+2025-10-06T18:51:24.716693647Z Require stack:
+2025-10-06T18:51:24.716696148Z - /home/site/wwwroot/server.js
+2025-10-06T18:51:24.716698948Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T18:51:24.716701948Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T18:51:24.716704648Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T18:51:24.716707248Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T18:51:24.716709848Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-06T18:51:24.716713048Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T18:51:24.716715748Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T18:51:24.716718348Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T18:51:24.716720948Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T18:51:24.716723548Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+2025-10-06T18:51:24.716726148Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T18:51:24.716743848Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-06T18:51:24.716746848Z }
+2025-10-06T18:51:24.744713945Z 
+2025-10-06T18:51:24.744737745Z Node.js v20.19.3
+2025-10-06T18:51:25.039422817Z npm http fetch GET 200 https://registry.npmjs.org/npm 1186ms
+2025-10-06T18:51:25.103860270Z npm notice
+2025-10-06T18:51:25.103935870Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T18:51:25.103939970Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T18:51:25.103946370Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T18:51:25.103948870Z npm notice
+
+2025-10-06T19:00:50.948168930Z    _____                               
+2025-10-06T19:00:50.948210431Z   /  _  \ __________ _________   ____  
+2025-10-06T19:00:50.948228531Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T19:00:50.948232331Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T19:00:50.948235231Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T19:00:50.948238131Z         \/      \/                  \/ 
+2025-10-06T19:00:50.948240631Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T19:00:50.948243131Z 
+2025-10-06T19:00:50.948245431Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T19:00:50.948247831Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T19:00:50.948250231Z NodeJS Version : v20.19.3
+2025-10-06T19:00:50.948252631Z Note: Any data outside '/home' is not persisted
+2025-10-06T19:00:50.948255131Z 
+2025-10-06T19:01:04.234546188Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T19:01:04.291278002Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T19:01:04.354657264Z Updating certificates in /etc/ssl/certs...
+2025-10-06T19:01:29.625769238Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T19:01:29.693319527Z 4 added, 0 removed; done.
+2025-10-06T19:01:29.694417635Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T19:01:29.713636575Z done.
+2025-10-06T19:01:29.769309278Z CA certificates copied and updated successfully.
+2025-10-06T19:01:30.094235633Z Starting periodic command scheduler: cron.
+2025-10-06T19:01:30.645258621Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-06T19:01:30.692052956Z Build Operation ID: a1bd98cdb1429c84
+2025-10-06T19:01:30.710412987Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T19:01:31.613823149Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T19:01:31.745945794Z Running #!/bin/sh
+2025-10-06T19:01:31.745968594Z 
+2025-10-06T19:01:31.745972894Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T19:01:31.745976794Z cd "/home/site/wwwroot"
+2025-10-06T19:01:31.745980694Z 
+2025-10-06T19:01:31.745984194Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T19:01:31.745987794Z if [ -z "$PORT" ]; then
+2025-10-06T19:01:31.745991394Z 		export PORT=8080
+2025-10-06T19:01:31.745994994Z fi
+2025-10-06T19:01:31.745998394Z 
+2025-10-06T19:01:31.746001594Z echo Found tar.gz based node_modules.
+2025-10-06T19:01:31.746004994Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-06T19:01:31.746020794Z echo "Removing existing modules directory from root..."
+2025-10-06T19:01:31.746024494Z rm -fr /node_modules
+2025-10-06T19:01:31.746026994Z mkdir -p /node_modules
+2025-10-06T19:01:31.746029594Z echo Extracting modules...
+2025-10-06T19:01:31.746032094Z $extractionCommand
+2025-10-06T19:01:31.746034594Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-06T19:01:31.746037494Z export PATH=/node_modules/.bin:$PATH
+2025-10-06T19:01:31.746040094Z if [ -d node_modules ]; then
+2025-10-06T19:01:31.746042694Z     mv -f node_modules _del_node_modules || true
+2025-10-06T19:01:31.746045294Z fi
+2025-10-06T19:01:31.746047694Z 
+2025-10-06T19:01:31.746050194Z if [ -d /node_modules ]; then
+2025-10-06T19:01:31.746052695Z     ln -sfn /node_modules ./node_modules 
+2025-10-06T19:01:31.746055295Z fi
+2025-10-06T19:01:31.746057695Z 
+2025-10-06T19:01:31.746060095Z echo "Done."
+2025-10-06T19:01:31.746062695Z PATH="$PATH:/home/site/wwwroot" npm install && npm start
+2025-10-06T19:01:31.791797522Z Found tar.gz based node_modules.
+2025-10-06T19:01:31.791878822Z Removing existing modules directory from root...
+2025-10-06T19:01:31.935238648Z Extracting modules...
+2025-10-06T19:01:56.570947299Z Done.
+2025-10-06T19:02:10.116285710Z npm info using npm@10.9.2
+2025-10-06T19:02:10.116325210Z npm info using node@v20.19.3
+2025-10-06T19:02:42.399414363Z npm warn reify Removing non-directory /home/site/wwwroot/node_modules
+2025-10-06T19:03:02.434341756Z npm http fetch GET 200 https://registry.npmjs.org/npm 21589ms
+2025-10-06T19:03:26.772722185Z npm http cache wsl-utils@https://registry.npmjs.org/wsl-utils/-/wsl-utils-0.1.0.tgz 1ms (cache hit)
+2025-10-06T19:03:26.772768186Z npm http cache whatwg-url@https://registry.npmjs.org/whatwg-url/-/whatwg-url-5.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:26.772773086Z npm http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 7205ms
+2025-10-06T19:03:26.772777086Z npm http cache vary@https://registry.npmjs.org/vary/-/vary-1.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139090900Z npm http cache util-deprecate@https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139141700Z npm http cache webidl-conversions@https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-3.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139147400Z npm http cache undici-types@https://registry.npmjs.org/undici-types/-/undici-types-7.14.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139151200Z npm http cache tr46@https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139155200Z npm http cache uuid@https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz 7ms (cache hit)
+2025-10-06T19:03:27.139165500Z npm http cache utils-merge@https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139202600Z npm http cache unpipe@https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz 7ms (cache hit)
+2025-10-06T19:03:27.139206500Z npm http cache tslib@https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139209301Z npm http cache toidentifier@https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz 1ms (cache hit)
+2025-10-06T19:03:27.139212101Z npm http cache type-is@https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139214801Z npm http cache xtend@https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139218301Z npm http cache tar@https://registry.npmjs.org/tar/-/tar-6.2.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139221101Z npm http cache wrappy@https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz 28ms (cache hit)
+2025-10-06T19:03:27.139223801Z npm http cache stripe@https://registry.npmjs.org/stripe/-/stripe-14.25.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139226401Z npm http cache string-width@https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.139229201Z npm http cache string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.200662356Z npm http cache strip-ansi@https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423743009Z npm http cache mkdirp@https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423784109Z npm http cache statuses@https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423789409Z npm http cache split2@https://registry.npmjs.org/split2/-/split2-4.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423793609Z npm http cache signal-exit@https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.7.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423797709Z npm http cache side-channel-weakmap@https://registry.npmjs.org/side-channel-weakmap/-/side-channel-weakmap-1.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423801709Z npm http cache side-channel@https://registry.npmjs.org/side-channel/-/side-channel-1.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423805409Z npm http cache side-channel-map@https://registry.npmjs.org/side-channel-map/-/side-channel-map-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423809109Z npm http cache setprototypeof@https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423812709Z npm http cache set-blocking@https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423816309Z npm http cache serve-static@https://registry.npmjs.org/serve-static/-/serve-static-1.16.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423819809Z npm http cache yallist@https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423823409Z npm http cache side-channel-list@https://registry.npmjs.org/side-channel-list/-/side-channel-list-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423853009Z npm http cache send@https://registry.npmjs.org/send/-/send-0.19.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423856609Z npm http cache safe-buffer@https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423859309Z npm http cache wide-align@https://registry.npmjs.org/wide-align/-/wide-align-1.1.5.tgz 0ms (cache hit)
+2025-10-06T19:03:27.423862109Z npm http cache semver@https://registry.npmjs.org/semver/-/semver-7.7.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.642922632Z npm http cache safe-buffer@https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651363795Z npm http cache safer-buffer@https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651380595Z npm http cache run-applescript@https://registry.npmjs.org/run-applescript/-/run-applescript-7.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651384695Z npm http cache raw-body@https://registry.npmjs.org/raw-body/-/raw-body-2.5.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651388095Z npm http cache qs@https://registry.npmjs.org/qs/-/qs-6.13.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651391195Z npm http cache proxy-addr@https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.7.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651399995Z npm http cache postgres-interval@https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651403395Z npm http cache postgres-bytea@https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651406595Z npm http cache postgres-date@https://registry.npmjs.org/postgres-date/-/postgres-date-1.0.7.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651409695Z npm http cache pgpass@https://registry.npmjs.org/pgpass/-/pgpass-1.0.5.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651412995Z npm http cache pg-types@https://registry.npmjs.org/pg-types/-/pg-types-2.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651416095Z npm http cache postgres-array@https://registry.npmjs.org/postgres-array/-/postgres-array-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651419095Z npm http cache pg-protocol@https://registry.npmjs.org/pg-protocol/-/pg-protocol-1.10.3.tgz 1ms (cache hit)
+2025-10-06T19:03:27.651422195Z npm http cache pg-int8@https://registry.npmjs.org/pg-int8/-/pg-int8-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651425095Z npm http cache pg@https://registry.npmjs.org/pg/-/pg-8.16.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651427995Z npm http cache pg-pool@https://registry.npmjs.org/pg-pool/-/pg-pool-3.10.1.tgz 1ms (cache hit)
+2025-10-06T19:03:27.651430895Z npm http cache path-to-regexp@https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.12.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651433895Z npm http cache pg-cloudflare@https://registry.npmjs.org/pg-cloudflare/-/pg-cloudflare-1.2.7.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651436795Z npm http cache path-is-absolute@https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651442196Z npm http cache pg-connection-string@https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-2.9.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651456096Z npm http cache parseurl@https://registry.npmjs.org/parseurl/-/parseurl-1.3.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651459696Z npm http cache on-finished@https://registry.npmjs.org/on-finished/-/on-finished-2.4.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651462696Z npm http cache once@https://registry.npmjs.org/once/-/once-1.4.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651465596Z npm http cache open@https://registry.npmjs.org/open/-/open-10.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651468496Z npm http cache npmlog@https://registry.npmjs.org/npmlog/-/npmlog-5.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651471496Z npm http cache node-addon-api@https://registry.npmjs.org/node-addon-api/-/node-addon-api-5.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651474496Z npm http cache object-assign@https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651477496Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.1.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651480296Z npm http cache node-fetch@https://registry.npmjs.org/node-fetch/-/node-fetch-2.7.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.651483296Z npm http cache object-inspect@https://registry.npmjs.org/object-inspect/-/object-inspect-1.13.4.tgz 0ms (cache hit)
+2025-10-06T19:03:27.689723779Z npm http cache encodeurl@https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.700024155Z npm http cache nopt@https://registry.npmjs.org/nopt/-/nopt-5.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.700045456Z npm http cache minipass@https://registry.npmjs.org/minipass/-/minipass-5.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.703290980Z npm http cache negotiator@https://registry.npmjs.org/negotiator/-/negotiator-0.6.3.tgz 1ms (cache hit)
+2025-10-06T19:03:27.719232498Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.719265698Z npm http cache mime-db@https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.729974677Z npm http cache methods@https://registry.npmjs.org/methods/-/methods-1.1.2.tgz 1ms (cache hit)
+2025-10-06T19:03:27.732014992Z npm http cache minizlib@https://registry.npmjs.org/minizlib/-/minizlib-2.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.766242746Z npm http cache media-typer@https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.766266846Z npm http cache minimatch@https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.766270646Z npm http cache mime-types@https://registry.npmjs.org/mime-types/-/mime-types-2.1.35.tgz 0ms (cache hit)
+2025-10-06T19:03:27.766273646Z npm http cache merge-descriptors@https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942433051Z npm http cache mime@https://registry.npmjs.org/mime/-/mime-1.6.0.tgz 1ms (cache hit)
+2025-10-06T19:03:27.942465752Z npm http cache lodash.isstring@https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942490352Z npm http cache make-dir@https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942493952Z npm http cache lodash.isnumber@https://registry.npmjs.org/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942496652Z npm http cache math-intrinsics@https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942499352Z npm http cache lodash.once@https://registry.npmjs.org/lodash.once/-/lodash.once-4.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942502052Z npm http cache semver@https://registry.npmjs.org/semver/-/semver-6.3.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942504852Z npm http cache lodash.isplainobject@https://registry.npmjs.org/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942507752Z npm http cache lodash.isboolean@https://registry.npmjs.org/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942510452Z npm http cache yallist@https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942513152Z npm http cache jsonwebtoken@https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942515852Z npm http cache lodash.isinteger@https://registry.npmjs.org/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942518552Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.1.3.tgz 1ms (cache hit)
+2025-10-06T19:03:27.942521252Z npm http cache is-inside-container@https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942533152Z npm http cache lodash.includes@https://registry.npmjs.org/lodash.includes/-/lodash.includes-4.3.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942537152Z npm http cache ipaddr.js@https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942540452Z npm http cache jws@https://registry.npmjs.org/jws/-/jws-3.2.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942543152Z npm http cache is-wsl@https://registry.npmjs.org/is-wsl/-/is-wsl-3.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942545852Z npm http cache jwa@https://registry.npmjs.org/jwa/-/jwa-1.4.2.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942549552Z npm http cache inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942552252Z npm http cache minipass@https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz 0ms (cache hit)
+2025-10-06T19:03:27.942554852Z npm http cache is-docker@https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164328895Z npm http cache http-proxy-agent@https://registry.npmjs.org/http-proxy-agent/-/http-proxy-agent-7.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164364096Z npm http cache is-fullwidth-code-point@https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164368596Z npm http cache https-proxy-agent@https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164388396Z npm http cache inflight@https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz 26ms (cache hit)
+2025-10-06T19:03:28.164391796Z npm http cache iconv-lite@https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164394496Z npm http cache http-errors@https://registry.npmjs.org/http-errors/-/http-errors-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164397296Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.1.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164399896Z npm http cache hasown@https://registry.npmjs.org/hasown/-/hasown-2.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164402596Z npm http cache has-unicode@https://registry.npmjs.org/has-unicode/-/has-unicode-2.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164405296Z npm http cache gauge@https://registry.npmjs.org/gauge/-/gauge-3.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164407996Z npm http cache has-symbols@https://registry.npmjs.org/has-symbols/-/has-symbols-1.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164410696Z npm http cache get-proto@https://registry.npmjs.org/get-proto/-/get-proto-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164413296Z npm http cache gopd@https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164415896Z npm http cache get-intrinsic@https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.3.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164418696Z npm http cache function-bind@https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164421396Z npm http cache glob@https://registry.npmjs.org/glob/-/glob-7.2.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164423996Z npm http cache fs.realpath@https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164426796Z npm http cache debug@https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164429396Z npm http cache fs-minipass@https://registry.npmjs.org/fs-minipass/-/fs-minipass-2.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164432096Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.1.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164436096Z npm http cache forwarded@https://registry.npmjs.org/forwarded/-/forwarded-0.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164438796Z npm http cache fresh@https://registry.npmjs.org/fresh/-/fresh-0.5.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164441496Z npm http cache escape-html@https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164444196Z npm http cache finalhandler@https://registry.npmjs.org/finalhandler/-/finalhandler-1.3.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164446896Z npm http cache es-errors@https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164449596Z npm http cache etag@https://registry.npmjs.org/etag/-/etag-1.8.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164452196Z npm http cache emoji-regex@https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164458696Z npm http cache express@https://registry.npmjs.org/express/-/express-4.21.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164461496Z npm http cache dotenv@https://registry.npmjs.org/dotenv/-/dotenv-16.6.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164464696Z npm http cache es-object-atoms@https://registry.npmjs.org/es-object-atoms/-/es-object-atoms-1.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164467896Z npm http cache dunder-proto@https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164470596Z npm http cache es-define-property@https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164473396Z npm http cache delegates@https://registry.npmjs.org/delegates/-/delegates-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164476097Z npm http cache encodeurl@https://registry.npmjs.org/encodeurl/-/encodeurl-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.164478797Z npm http cache ee-first@https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.324981486Z npm http cache destroy@https://registry.npmjs.org/destroy/-/destroy-1.2.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325026786Z npm http cache depd@https://registry.npmjs.org/depd/-/depd-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325032086Z npm http cache detect-libc@https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325036186Z npm http cache ecdsa-sig-formatter@https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325040086Z npm http cache default-browser@https://registry.npmjs.org/default-browser/-/default-browser-5.2.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325050186Z npm http cache default-browser-id@https://registry.npmjs.org/default-browser-id/-/default-browser-id-5.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325053986Z npm http cache debug@https://registry.npmjs.org/debug/-/debug-2.6.9.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325057586Z npm http cache cookie@https://registry.npmjs.org/cookie/-/cookie-0.7.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325061086Z npm http cache define-lazy-prop@https://registry.npmjs.org/define-lazy-prop/-/define-lazy-prop-3.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325064686Z npm http cache cors@https://registry.npmjs.org/cors/-/cors-2.8.5.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325068086Z npm http cache cookie-signature@https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325071886Z npm http cache chownr@https://registry.npmjs.org/chownr/-/chownr-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325075386Z npm http cache concat-map@https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325078986Z npm http cache call-bound@https://registry.npmjs.org/call-bound/-/call-bound-1.0.4.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325082586Z npm http cache console-control-strings@https://registry.npmjs.org/console-control-strings/-/console-control-strings-1.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325086186Z npm http cache debug@https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325117087Z npm http cache content-disposition@https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.4.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325120687Z npm http cache call-bind-apply-helpers@https://registry.npmjs.org/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz 1ms (cache hit)
+2025-10-06T19:03:28.325124287Z npm http cache content-type@https://registry.npmjs.org/content-type/-/content-type-1.0.5.tgz 0ms (cache hit)
+2025-10-06T19:03:28.325127187Z npm http cache buffer-equal-constant-time@https://registry.npmjs.org/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391754680Z npm http cache color-support@https://registry.npmjs.org/color-support/-/color-support-1.1.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391785481Z npm http cache body-parser@https://registry.npmjs.org/body-parser/-/body-parser-1.20.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391789281Z npm http cache bundle-name@https://registry.npmjs.org/bundle-name/-/bundle-name-4.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391791681Z npm http cache bytes@https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391800981Z npm http cache bcrypt@https://registry.npmjs.org/bcrypt/-/bcrypt-5.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391803281Z npm http cache brace-expansion@https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.12.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391805681Z npm http cache yallist@https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391807981Z npm http cache array-flatten@https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391810681Z npm http cache minipass@https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz 1ms (cache hit)
+2025-10-06T19:03:28.391812681Z npm http cache accepts@https://registry.npmjs.org/accepts/-/accepts-1.3.8.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391814881Z npm http cache balanced-match@https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz 1ms (cache hit)
+2025-10-06T19:03:28.391816881Z npm http cache are-we-there-yet@https://registry.npmjs.org/are-we-there-yet/-/are-we-there-yet-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391818981Z npm http cache agent-base@https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391820981Z npm http cache ansi-regex@https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391823081Z npm http cache @types/node@https://registry.npmjs.org/@types/node/-/node-24.7.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391825181Z npm http cache aproba@https://registry.npmjs.org/aproba/-/aproba-2.1.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.391827281Z npm http cache @typespec/ts-http-runtime@https://registry.npmjs.org/@typespec/ts-http-runtime/-/ts-http-runtime-0.3.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.418330077Z npm http cache abbrev@https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.418362477Z npm http cache readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.418380378Z npm http cache @azure/msal-common@https://registry.npmjs.org/@azure/msal-common/-/msal-common-15.13.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.420819796Z npm http cache @mapbox/node-pre-gyp@https://registry.npmjs.org/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.11.tgz 0ms (cache hit)
+2025-10-06T19:03:28.508434445Z npm http cache @azure/msal-node@https://registry.npmjs.org/@azure/msal-node/-/msal-node-3.8.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.508512745Z npm http cache @azure/logger@https://registry.npmjs.org/@azure/logger/-/logger-1.3.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.508516745Z npm http cache @azure/msal-browser@https://registry.npmjs.org/@azure/msal-browser/-/msal-browser-4.24.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.508519945Z npm http cache agent-base@https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576025746Z npm http cache @azure/keyvault-common@https://registry.npmjs.org/@azure/keyvault-common/-/keyvault-common-2.0.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576066646Z npm http cache @azure/keyvault-secrets@https://registry.npmjs.org/@azure/keyvault-secrets/-/keyvault-secrets-4.10.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576071346Z npm http cache @azure/core-tracing@https://registry.npmjs.org/@azure/core-tracing/-/core-tracing-1.3.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576074746Z npm http cache @azure/core-util@https://registry.npmjs.org/@azure/core-util/-/core-util-1.13.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576077846Z npm http cache @azure/identity@https://registry.npmjs.org/@azure/identity/-/identity-4.12.0.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576080846Z npm http cache @azure/core-rest-pipeline@https://registry.npmjs.org/@azure/core-rest-pipeline/-/core-rest-pipeline-1.22.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576084046Z npm http cache @azure/core-lro@https://registry.npmjs.org/@azure/core-lro/-/core-lro-2.7.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576086746Z npm http cache @azure/core-paging@https://registry.npmjs.org/@azure/core-paging/-/core-paging-1.6.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576089546Z npm http cache @azure-rest/core-client@https://registry.npmjs.org/@azure-rest/core-client/-/core-client-2.5.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576092346Z npm http cache @azure/core-client@https://registry.npmjs.org/@azure/core-client/-/core-client-1.10.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576095046Z npm http cache @azure/core-http-compat@https://registry.npmjs.org/@azure/core-http-compat/-/core-http-compat-2.3.1.tgz 0ms (cache hit)
+2025-10-06T19:03:28.576097746Z npm http cache ms@https://registry.npmjs.org/ms/-/ms-2.1.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.602910345Z npm http cache debug@https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 0ms (cache hit)
+2025-10-06T19:03:28.612516616Z npm http cache range-parser@https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz 1ms (cache hit)
+2025-10-06T19:03:28.649161187Z npm http cache rimraf@https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz 0ms (cache hit)
+2025-10-06T19:03:28.649189988Z npm http cache https-proxy-agent@https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz 0ms (cache hit)
+2025-10-06T19:03:29.293210759Z npm http cache @azure/abort-controller@https://registry.npmjs.org/@azure/abort-controller/-/abort-controller-2.1.2.tgz 0ms (cache hit)
+2025-10-06T19:03:32.350121492Z npm http cache @azure/core-auth@https://registry.npmjs.org/@azure/core-auth/-/core-auth-1.10.1.tgz 0ms (cache hit)
+2025-10-06T19:04:21.016490559Z npm http fetch GET 200 https://registry.npmjs.org/serve-static/-/serve-static-1.16.2.tgz 51839ms (cache miss)
+2025-10-06T19:04:21.144513102Z npm http fetch GET 200 https://registry.npmjs.org/wsl-utils/-/wsl-utils-0.1.0.tgz 52495ms (cache miss)
+2025-10-06T19:04:22.487946789Z npm http fetch GET 200 https://registry.npmjs.org/send/-/send-0.19.0.tgz 53273ms (cache miss)
+2025-10-06T19:04:23.978528658Z npm http fetch GET 200 https://registry.npmjs.org/wide-align/-/wide-align-1.1.5.tgz 54655ms (cache miss)
+2025-10-06T19:04:24.244154213Z npm http fetch GET 200 https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.0.0.tgz 54623ms (cache miss)
+2025-10-06T19:04:24.251423067Z npm http fetch GET 200 https://registry.npmjs.org/pg-int8/-/pg-int8-1.0.1.tgz 54706ms (cache miss)
+2025-10-06T19:04:24.718614505Z npm http fetch GET 200 https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz 55497ms (cache miss)
+2025-10-06T19:04:26.690395816Z npm http fetch GET 200 https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-2.9.1.tgz 56974ms (cache miss)
+2025-10-06T19:04:26.725821477Z npm http fetch GET 200 https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz 57103ms (cache miss)
+2025-10-06T19:04:27.318175136Z npm http fetch GET 200 https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz 57152ms (cache miss)
+2025-10-06T19:04:27.370182219Z npm http fetch GET 200 https://registry.npmjs.org/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz 57223ms (cache miss)
+2025-10-06T19:04:27.424997122Z npm http fetch GET 200 https://registry.npmjs.org/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz 57222ms (cache miss)
+2025-10-06T19:04:27.470413357Z npm http fetch GET 200 https://registry.npmjs.org/run-applescript/-/run-applescript-7.1.0.tgz 58154ms (cache miss)
+2025-10-06T19:04:28.114674398Z npm http fetch GET 200 https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz 58882ms (cache miss)
+2025-10-06T19:04:28.119197031Z npm http fetch GET 200 https://registry.npmjs.org/split2/-/split2-4.2.0.tgz 58718ms (cache miss)
+2025-10-06T19:04:28.119221632Z npm http fetch GET 200 https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz 58949ms (cache miss)
+2025-10-06T19:04:28.119227032Z npm http fetch GET 200 https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz 57774ms (cache miss)
+2025-10-06T19:04:28.194411085Z npm http fetch GET 200 https://registry.npmjs.org/pg-types/-/pg-types-2.2.0.tgz 58467ms (cache miss)
+2025-10-06T19:04:28.257535050Z npm http fetch GET 200 https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.12.tgz 58598ms (cache miss)
+2025-10-06T19:04:28.609151437Z npm http fetch GET 200 https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz 57965ms (cache miss)
+2025-10-06T19:04:28.619416913Z npm http fetch GET 200 https://registry.npmjs.org/define-lazy-prop/-/define-lazy-prop-3.0.0.tgz 57754ms (cache miss)
+2025-10-06T19:04:29.608861096Z npm http fetch GET 200 https://registry.npmjs.org/pgpass/-/pgpass-1.0.5.tgz 60044ms (cache miss)
+2025-10-06T19:04:29.928270947Z npm http fetch GET 200 https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz 60123ms (cache miss)
+2025-10-06T19:04:29.976487302Z npm http fetch GET 200 https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz 61246ms (cache miss)
+2025-10-06T19:04:30.032851717Z npm http fetch GET 200 https://registry.npmjs.org/jwa/-/jwa-1.4.2.tgz 59653ms (cache miss)
+2025-10-06T19:04:30.032883317Z npm http fetch GET 200 https://registry.npmjs.org/chownr/-/chownr-2.0.0.tgz 59151ms (cache miss)
+2025-10-06T19:04:30.046360516Z npm http fetch GET 200 https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz 59152ms (cache miss)
+2025-10-06T19:04:30.457801745Z npm http fetch GET 200 https://registry.npmjs.org/default-browser-id/-/default-browser-id-5.0.0.tgz 59601ms (cache miss)
+2025-10-06T19:04:31.028421145Z npm http fetch GET 200 https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz 60009ms (cache miss)
+2025-10-06T19:04:31.119196514Z npm http fetch GET 200 https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz 61112ms (cache miss)
+2025-10-06T19:04:31.119294814Z npm http fetch GET 200 https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.3.tgz 61027ms (cache miss)
+2025-10-06T19:04:31.403521307Z npm http fetch GET 200 https://registry.npmjs.org/color-support/-/color-support-1.1.3.tgz 59825ms (cache miss)
+2025-10-06T19:04:31.439636572Z npm http fetch GET 200 https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz 59786ms (cache miss)
+2025-10-06T19:04:31.593389204Z npm http fetch GET 200 https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz 59819ms (cache miss)
+2025-10-06T19:04:31.593911508Z npm http fetch GET 200 https://registry.npmjs.org/bundle-name/-/bundle-name-4.1.0.tgz 60177ms (cache miss)
+2025-10-06T19:04:31.614766762Z npm http fetch GET 200 https://registry.npmjs.org/postgres-array/-/postgres-array-2.0.0.tgz 62155ms (cache miss)
+2025-10-06T19:04:31.614796862Z npm http fetch GET 200 https://registry.npmjs.org/postgres-date/-/postgres-date-1.0.7.tgz 62214ms (cache miss)
+2025-10-06T19:04:31.640675152Z npm http fetch GET 200 https://registry.npmjs.org/minizlib/-/minizlib-2.1.2.tgz 61692ms (cache miss)
+2025-10-06T19:04:31.676559817Z npm http fetch GET 200 https://registry.npmjs.org/is-wsl/-/is-wsl-3.1.0.tgz 61348ms (cache miss)
+2025-10-06T19:04:32.325396393Z npm http fetch GET 200 https://registry.npmjs.org/fs-minipass/-/fs-minipass-2.1.0.tgz 61650ms (cache miss)
+2025-10-06T19:04:32.446926687Z npm http fetch GET 200 https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz 61545ms (cache miss)
+2025-10-06T19:04:32.641871822Z npm http fetch GET 200 https://registry.npmjs.org/lodash.once/-/lodash.once-4.1.1.tgz 62378ms (cache miss)
+2025-10-06T19:04:32.668472618Z npm http fetch GET 200 https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.12.tgz 61031ms (cache miss)
+2025-10-06T19:04:32.687814760Z npm http fetch GET 200 https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-3.0.1.tgz 63950ms (cache miss)
+2025-10-06T19:04:32.837166860Z npm http fetch GET 200 https://registry.npmjs.org/negotiator/-/negotiator-0.6.3.tgz 62898ms (cache miss)
+2025-10-06T19:04:32.946783967Z npm http fetch GET 200 https://registry.npmjs.org/call-bound/-/call-bound-1.0.4.tgz 62034ms (cache miss)
+2025-10-06T19:04:33.001438769Z npm http fetch GET 200 https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz 62102ms (cache miss)
+2025-10-06T19:04:33.198321418Z npm http fetch GET 200 https://registry.npmjs.org/console-control-strings/-/console-control-strings-1.1.0.tgz 62159ms (cache miss)
+2025-10-06T19:04:33.198407919Z npm http fetch GET 200 https://registry.npmjs.org/delegates/-/delegates-1.0.0.tgz 62230ms (cache miss)
+2025-10-06T19:04:33.198413419Z npm http fetch GET 200 https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz 62671ms (cache miss)
+2025-10-06T19:04:33.520096287Z npm http fetch GET 200 https://registry.npmjs.org/npmlog/-/npmlog-5.0.1.tgz 63739ms (cache miss)
+2025-10-06T19:04:33.520125387Z npm warn deprecated npmlog@5.0.1: This package is no longer supported.
+2025-10-06T19:04:33.520129687Z npm http fetch GET 200 https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz 63064ms (cache miss)
+2025-10-06T19:04:33.611737462Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-10-06T19:04:33.690609142Z npm http fetch GET 200 https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz 62005ms (cache miss)
+2025-10-06T19:04:33.708912877Z npm http fetch GET 200 https://registry.npmjs.org/@azure/core-paging/-/core-paging-1.6.2.tgz 61910ms (cache miss)
+2025-10-06T19:04:33.728517921Z npm http fetch GET 200 https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 63071ms (cache miss)
+2025-10-06T19:04:33.855418755Z npm http fetch GET 200 https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz 65074ms (cache miss)
+2025-10-06T19:04:33.919376726Z npm http fetch GET 200 https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz 65086ms (cache miss)
+2025-10-06T19:04:33.919382026Z npm http fetch GET 200 https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.2.0.tgz 64550ms (cache miss)
+2025-10-06T19:04:34.019662364Z npm http fetch GET 200 https://registry.npmjs.org/accepts/-/accepts-1.3.8.tgz 62374ms (cache miss)
+2025-10-06T19:04:34.136355223Z npm http fetch GET 200 https://registry.npmjs.org/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz 62794ms (cache miss)
+2025-10-06T19:04:34.207079444Z npm http fetch GET 200 https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz 62472ms (cache miss)
+2025-10-06T19:04:34.482430871Z npm http fetch GET 200 https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz 65554ms (cache miss)
+2025-10-06T19:04:34.557234921Z npm http fetch GET 200 https://registry.npmjs.org/cors/-/cors-2.8.5.tgz 63691ms (cache miss)
+2025-10-06T19:04:34.751449951Z npm http fetch GET 200 https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz 64233ms (cache miss)
+2025-10-06T19:04:34.751500451Z npm http fetch GET 200 https://registry.npmjs.org/jws/-/jws-3.2.2.tgz 64278ms (cache miss)
+2025-10-06T19:04:34.751505451Z npm http fetch GET 200 https://registry.npmjs.org/has-unicode/-/has-unicode-2.0.1.tgz 64251ms (cache miss)
+2025-10-06T19:04:34.916285364Z npm http fetch GET 200 https://registry.npmjs.org/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz 64568ms (cache miss)
+2025-10-06T19:04:34.916403265Z npm http fetch GET 200 https://registry.npmjs.org/lodash.includes/-/lodash.includes-4.3.0.tgz 64615ms (cache miss)
+2025-10-06T19:04:35.424505805Z npm http fetch GET 200 https://registry.npmjs.org/finalhandler/-/finalhandler-1.3.1.tgz 64597ms (cache miss)
+2025-10-06T19:04:35.424538406Z npm http fetch GET 200 https://registry.npmjs.org/default-browser/-/default-browser-5.2.1.tgz 64531ms (cache miss)
+2025-10-06T19:04:35.424542906Z npm http fetch GET 200 https://registry.npmjs.org/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz 65206ms (cache miss)
+2025-10-06T19:04:35.424551706Z npm http fetch GET 200 https://registry.npmjs.org/are-we-there-yet/-/are-we-there-yet-2.0.0.tgz 63763ms (cache miss)
+2025-10-06T19:04:35.588054509Z npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+2025-10-06T19:04:35.723408806Z npm http fetch GET 200 https://registry.npmjs.org/node-fetch/-/node-fetch-2.7.0.tgz 65833ms (cache miss)
+2025-10-06T19:04:36.531322853Z npm http fetch GET 200 https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz 64669ms (cache miss)
+2025-10-06T19:04:36.677371828Z npm http fetch GET 200 https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz 64927ms (cache miss)
+2025-10-06T19:04:37.252442365Z npm http fetch GET 200 https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz 66328ms (cache miss)
+2025-10-06T19:04:37.252523966Z npm http fetch GET 200 https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz 66749ms (cache miss)
+2025-10-06T19:04:37.394063609Z npm http fetch GET 200 https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.4.tgz 66409ms (cache miss)
+2025-10-06T19:04:38.213659950Z npm http fetch GET 200 https://registry.npmjs.org/aproba/-/aproba-2.1.0.tgz 66533ms (cache miss)
+2025-10-06T19:04:38.645036430Z npm http fetch GET 200 https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 66820ms (cache miss)
+2025-10-06T19:04:38.673076937Z npm http fetch GET 200 https://registry.npmjs.org/debug/-/debug-4.4.3.tgz 67759ms (cache miss)
+2025-10-06T19:04:39.584043752Z npm http fetch GET 200 https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz 69646ms (cache miss)
+2025-10-06T19:04:39.818795082Z npm http fetch GET 200 https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz 68147ms (cache miss)
+2025-10-06T19:04:39.957614205Z npm http fetch GET 200 https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz 68125ms (cache miss)
+2025-10-06T19:04:39.966035667Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-10-06T19:04:40.705317317Z npm http fetch GET 200 https://registry.npmjs.org/semver/-/semver-6.3.1.tgz 70304ms (cache miss)
+2025-10-06T19:04:40.989006408Z npm http fetch GET 200 https://registry.npmjs.org/nopt/-/nopt-5.0.0.tgz 71120ms (cache miss)
+2025-10-06T19:04:41.938036403Z npm http fetch GET 200 https://registry.npmjs.org/pg-pool/-/pg-pool-3.10.1.tgz 72349ms (cache miss)
+2025-10-06T19:04:42.230618760Z npm http fetch GET 200 https://registry.npmjs.org/pg-cloudflare/-/pg-cloudflare-1.2.7.tgz 72431ms (cache miss)
+2025-10-06T19:04:42.450330379Z npm http fetch GET 200 https://registry.npmjs.org/raw-body/-/raw-body-2.5.2.tgz 73031ms (cache miss)
+2025-10-06T19:04:42.996995609Z npm http fetch GET 200 https://registry.npmjs.org/open/-/open-10.2.0.tgz 73262ms (cache miss)
+
+2025-10-06T19:04:44.601151033Z npm http fetch GET 200 https://registry.npmjs.org/whatwg-url/-/whatwg-url-5.0.0.tgz 75908ms (cache miss)
+2025-10-06T19:04:45.422986581Z npm http fetch GET 200 https://registry.npmjs.org/dotenv/-/dotenv-16.6.1.tgz 74538ms (cache miss)
+2025-10-06T19:04:46.211422177Z npm http fetch GET 200 https://registry.npmjs.org/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz 74996ms (cache miss)
+
+2025-10-06T19:16:36.446307808Z    _____                               
+2025-10-06T19:16:36.446381609Z   /  _  \ __________ _________   ____  
+2025-10-06T19:16:36.446387609Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T19:16:36.446390709Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T19:16:36.446393509Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T19:16:36.446396609Z         \/      \/                  \/ 
+2025-10-06T19:16:36.446399409Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T19:16:36.446402009Z 
+2025-10-06T19:16:36.446404509Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T19:16:36.446428509Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T19:16:36.446432009Z NodeJS Version : v20.19.3
+2025-10-06T19:16:36.446434609Z Note: Any data outside '/home' is not persisted
+2025-10-06T19:16:36.446437309Z 
+2025-10-06T19:16:42.389259177Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T19:16:42.418165283Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T19:16:42.474788688Z Updating certificates in /etc/ssl/certs...
+2025-10-06T19:16:59.321888505Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T19:16:59.441652768Z 4 added, 0 removed; done.
+2025-10-06T19:16:59.441710469Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T19:16:59.469169981Z done.
+2025-10-06T19:16:59.514326996Z CA certificates copied and updated successfully.
+2025-10-06T19:16:59.813846906Z Starting periodic command scheduler: cron.
+2025-10-06T19:17:00.073391261Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-06T19:17:00.090613557Z Build Operation ID: a1bd98cdb1429c84
+2025-10-06T19:17:00.123172028Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T19:17:00.592249168Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T19:17:00.806772811Z Running #!/bin/sh
+2025-10-06T19:17:00.806818811Z 
+2025-10-06T19:17:00.806824511Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T19:17:00.806828611Z cd "/home/site/wwwroot"
+2025-10-06T19:17:00.806832311Z 
+2025-10-06T19:17:00.806835712Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T19:17:00.815516210Z if [ -z "$PORT" ]; then
+2025-10-06T19:17:00.815549711Z 		export PORT=8080
+2025-10-06T19:17:00.815554911Z fi
+2025-10-06T19:17:00.815558411Z 
+2025-10-06T19:17:00.815562011Z echo Found tar.gz based node_modules.
+2025-10-06T19:17:00.815565711Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-06T19:17:00.815604711Z echo "Removing existing modules directory from root..."
+2025-10-06T19:17:00.815609711Z rm -fr /node_modules
+2025-10-06T19:17:00.815612211Z mkdir -p /node_modules
+2025-10-06T19:17:00.815614711Z echo Extracting modules...
+2025-10-06T19:17:00.815617211Z $extractionCommand
+2025-10-06T19:17:00.815619912Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-06T19:17:00.815622812Z export PATH=/node_modules/.bin:$PATH
+2025-10-06T19:17:00.815625312Z if [ -d node_modules ]; then
+2025-10-06T19:17:00.815628412Z     mv -f node_modules _del_node_modules || true
+2025-10-06T19:17:00.815635312Z fi
+2025-10-06T19:17:00.815637912Z 
+2025-10-06T19:17:00.815640512Z if [ -d /node_modules ]; then
+2025-10-06T19:17:00.815643112Z     ln -sfn /node_modules ./node_modules 
+2025-10-06T19:17:00.815645612Z fi
+2025-10-06T19:17:00.815648112Z 
+2025-10-06T19:17:00.815650612Z echo "Done."
+2025-10-06T19:17:00.815653312Z PATH="$PATH:/home/site/wwwroot" npm install && npm start
+2025-10-06T19:17:00.815656212Z Found tar.gz based node_modules.
+2025-10-06T19:17:00.815658712Z Removing existing modules directory from root...
+2025-10-06T19:17:00.815661412Z Extracting modules...
+2025-10-06T19:17:13.179353999Z mv: cannot move 'node_modules' to '_del_node_modules/node_modules': Permission denied
+2025-10-06T19:17:13.229622003Z Done.
+2025-10-06T19:17:18.714260071Z npm info using npm@10.9.2
+2025-10-06T19:17:18.714299572Z npm info using node@v20.19.3
+2025-10-06T19:17:40.622071534Z npm http fetch GET 200 https://registry.npmjs.org/npm 9722ms
+2025-10-06T19:17:56.799415470Z npm http cache semver@https://registry.npmjs.org/semver/-/semver-7.7.2.tgz 6ms (cache hit)
+2025-10-06T19:17:56.821673568Z npm http cache uuid@https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz 0ms (cache hit)
+2025-10-06T19:17:56.821708468Z npm http cache is-docker@https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz 0ms (cache hit)
+2025-10-06T19:17:56.821713768Z npm http cache rimraf@https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz 0ms (cache hit)
+2025-10-06T19:17:56.821718068Z npm http cache nopt@https://registry.npmjs.org/nopt/-/nopt-5.0.0.tgz 0ms (cache hit)
+2025-10-06T19:17:56.821727468Z npm http cache @mapbox/node-pre-gyp@https://registry.npmjs.org/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.11.tgz 0ms (cache hit)
+2025-10-06T19:17:56.832601365Z npm http cache is-inside-container@https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz 0ms (cache hit)
+2025-10-06T19:17:56.840410034Z npm http cache mime@https://registry.npmjs.org/mime/-/mime-1.6.0.tgz 0ms (cache hit)
+2025-10-06T19:17:56.938668405Z npm http cache color-support@https://registry.npmjs.org/color-support/-/color-support-1.1.3.tgz 1ms (cache hit)
+2025-10-06T19:17:56.947933087Z npm http cache mkdirp@https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz 0ms (cache hit)
+2025-10-06T19:17:56.955486654Z npm http cache semver@https://registry.npmjs.org/semver/-/semver-6.3.1.tgz 5ms (cache hit)
+2025-10-06T19:17:57.125106657Z npm http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 415ms
+2025-10-06T19:17:58.260088418Z npm http fetch GET 200 https://registry.npmjs.org/mime/-/mime-1.6.0.tgz 1375ms (cache miss)
+2025-10-06T19:17:58.499731942Z npm http fetch GET 200 https://registry.npmjs.org/is-inside-container/-/is-inside-container-1.0.0.tgz 1616ms (cache miss)
+2025-10-06T19:17:58.536782970Z npm http fetch GET 200 https://registry.npmjs.org/is-docker/-/is-docker-3.0.0.tgz 1662ms (cache miss)
+2025-10-06T19:17:58.588188426Z npm http fetch GET 200 https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz 1739ms (cache miss)
+2025-10-06T19:17:58.589672139Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-10-06T19:17:58.601956648Z npm http fetch GET 200 https://registry.npmjs.org/color-support/-/color-support-1.1.3.tgz 1539ms (cache miss)
+2025-10-06T19:17:58.836996632Z npm http fetch GET 200 https://registry.npmjs.org/nopt/-/nopt-5.0.0.tgz 1977ms (cache miss)
+2025-10-06T19:17:59.122624863Z npm http fetch GET 200 https://registry.npmjs.org/semver/-/semver-6.3.1.tgz 2050ms (cache miss)
+2025-10-06T19:17:59.902716678Z npm http fetch GET 200 https://registry.npmjs.org/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.11.tgz 3036ms (cache miss)
+2025-10-06T19:18:00.121392316Z npm http fetch GET 200 https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz 3254ms (cache miss)
+2025-10-06T19:18:07.090981012Z 
+2025-10-06T19:18:07.091017112Z removed 1 package, changed 280 packages, and audited 199 packages in 50s
+2025-10-06T19:18:07.091021412Z 
+2025-10-06T19:18:07.091024112Z 28 packages are looking for funding
+2025-10-06T19:18:07.091027012Z   run `npm fund` for details
+2025-10-06T19:18:07.100052984Z 
+2025-10-06T19:18:07.100122585Z found 0 vulnerabilities
+2025-10-06T19:18:07.118572332Z npm notice
+2025-10-06T19:18:07.118620532Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T19:18:07.118625932Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T19:18:07.118628932Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T19:18:07.118631732Z npm notice
+2025-10-06T19:18:07.118634232Z npm info ok
+2025-10-06T19:18:07.790633496Z npm info using npm@10.9.2
+2025-10-06T19:18:07.796801546Z npm info using node@v20.19.3
+2025-10-06T19:18:08.023557056Z 
+2025-10-06T19:18:08.023629856Z > homework-helper-backend@1.0.0 start
+2025-10-06T19:18:08.023634456Z > node server.js
+2025-10-06T19:18:08.023637656Z 
+2025-10-06T19:18:11.054598898Z node:internal/modules/cjs/loader:1215
+2025-10-06T19:18:11.054657598Z   throw err;
+2025-10-06T19:18:11.054662798Z   ^
+2025-10-06T19:18:11.054665998Z 
+2025-10-06T19:18:11.054668698Z Error: Cannot find module '/home/site/wwwroot/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node'
+2025-10-06T19:18:11.054671398Z Require stack:
+2025-10-06T19:18:11.054673898Z - /home/site/wwwroot/node_modules/bcrypt/bcrypt.js
+2025-10-06T19:18:11.054676498Z - /home/site/wwwroot/routes/auth.js
+2025-10-06T19:18:11.054686198Z - /home/site/wwwroot/server.js
+2025-10-06T19:18:11.071627032Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T19:18:11.071676632Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T19:18:11.071681833Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T19:18:11.071684933Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T19:18:11.071687733Z     at Object.<anonymous> (/home/site/wwwroot/node_modules/bcrypt/bcrypt.js:6:16)
+2025-10-06T19:18:11.071691133Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T19:18:11.071694033Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T19:18:11.071696933Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T19:18:11.071699633Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T19:18:11.071702333Z     at Module.require (node:internal/modules/cjs/loader:1298:19) {
+2025-10-06T19:18:11.071705033Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T19:18:11.071707533Z   requireStack: [
+2025-10-06T19:18:11.071710133Z     '/home/site/wwwroot/node_modules/bcrypt/bcrypt.js',
+2025-10-06T19:18:11.071712733Z     '/home/site/wwwroot/routes/auth.js',
+2025-10-06T19:18:11.071715333Z     '/home/site/wwwroot/server.js'
+2025-10-06T19:18:11.071717933Z   ]
+2025-10-06T19:18:11.071720333Z }
+2025-10-06T19:18:11.071722833Z 
+2025-10-06T19:18:11.071725433Z Node.js v20.19.3
+
+2025-10-06T19:18:30.324664000Z    _____                               
+2025-10-06T19:18:30.324755501Z   /  _  \ __________ _________   ____  
+2025-10-06T19:18:30.324761301Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-06T19:18:30.324764401Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-06T19:18:30.324767801Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-06T19:18:30.324770901Z         \/      \/                  \/ 
+2025-10-06T19:18:30.324773801Z A P P   S E R V I C E   O N   L I N U X
+2025-10-06T19:18:30.324776501Z 
+2025-10-06T19:18:30.324779801Z Documentation: http://aka.ms/webapp-linux
+2025-10-06T19:18:30.324782401Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-06T19:18:30.324785001Z NodeJS Version : v20.19.3
+2025-10-06T19:18:30.324787601Z Note: Any data outside '/home' is not persisted
+2025-10-06T19:18:30.324790401Z 
+2025-10-06T19:18:34.729516290Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-06T19:18:34.756775189Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-06T19:18:34.867115374Z Updating certificates in /etc/ssl/certs...
+2025-10-06T19:19:06.115158568Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-10-06T19:19:06.432925095Z 4 added, 0 removed; done.
+2025-10-06T19:19:06.440603466Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-06T19:19:06.460845252Z done.
+2025-10-06T19:19:06.505416462Z CA certificates copied and updated successfully.
+2025-10-06T19:19:07.024713045Z Starting periodic command scheduler: cron.
+2025-10-06T19:19:07.506895012Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-06T19:19:07.621745693Z Build Operation ID: a1bd98cdb1429c84
+2025-10-06T19:19:07.630998364Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-06T19:19:08.373388458Z Writing output script to '/opt/startup/startup.sh'
+2025-10-06T19:19:08.636487476Z Running #!/bin/sh
+2025-10-06T19:19:08.636520776Z 
+2025-10-06T19:19:08.636525976Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-06T19:19:08.636529976Z cd "/home/site/wwwroot"
+2025-10-06T19:19:08.636534077Z 
+2025-10-06T19:19:08.636537577Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-06T19:19:08.636541377Z if [ -z "$PORT" ]; then
+2025-10-06T19:19:08.636544877Z 		export PORT=8080
+2025-10-06T19:19:08.636548777Z fi
+2025-10-06T19:19:08.636552077Z 
+2025-10-06T19:19:08.636555477Z echo Found tar.gz based node_modules.
+2025-10-06T19:19:08.636558877Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-06T19:19:08.636579977Z echo "Removing existing modules directory from root..."
+2025-10-06T19:19:08.636583577Z rm -fr /node_modules
+2025-10-06T19:19:08.636586177Z mkdir -p /node_modules
+2025-10-06T19:19:08.636588677Z echo Extracting modules...
+2025-10-06T19:19:08.636591177Z $extractionCommand
+2025-10-06T19:19:08.636593677Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-06T19:19:08.636596377Z export PATH=/node_modules/.bin:$PATH
+2025-10-06T19:19:08.636598977Z if [ -d node_modules ]; then
+2025-10-06T19:19:08.636601477Z     mv -f node_modules _del_node_modules || true
+2025-10-06T19:19:08.636604077Z fi
+2025-10-06T19:19:08.636606477Z 
+2025-10-06T19:19:08.636608877Z if [ -d /node_modules ]; then
+2025-10-06T19:19:08.636611477Z     ln -sfn /node_modules ./node_modules 
+2025-10-06T19:19:08.636614077Z fi
+2025-10-06T19:19:08.636616577Z 
+2025-10-06T19:19:08.636618977Z echo "Done."
+2025-10-06T19:19:08.667580815Z PATH="$PATH:/home/site/wwwroot" npm install && npm start
+2025-10-06T19:19:08.667626115Z Found tar.gz based node_modules.
+2025-10-06T19:19:08.667629415Z Removing existing modules directory from root...
+2025-10-06T19:19:08.737871954Z Extracting modules...
+2025-10-06T19:19:33.272348149Z mv: cannot move 'node_modules' to '_del_node_modules/node_modules': Permission denied
+2025-10-06T19:19:33.306530784Z Done.
+2025-10-06T19:19:38.438976597Z npm info using npm@10.9.2
+2025-10-06T19:19:38.440612109Z npm info using node@v20.19.3
+2025-10-06T19:19:51.280912654Z npm http fetch GET 200 https://registry.npmjs.org/npm 5604ms
+2025-10-06T19:19:56.998442008Z npm http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 514ms
+2025-10-06T19:19:59.937577553Z 
+2025-10-06T19:19:59.937629054Z removed 1 package, and audited 199 packages in 23s
+2025-10-06T19:19:59.976069592Z 
+2025-10-06T19:19:59.976130592Z 28 packages are looking for funding
+2025-10-06T19:19:59.976135892Z   run `npm fund` for details
+2025-10-06T19:19:59.976139692Z 
+2025-10-06T19:19:59.976143192Z found 0 vulnerabilities
+2025-10-06T19:19:59.984640767Z npm notice
+2025-10-06T19:19:59.984713668Z npm notice New major version of npm available! 10.9.2 -> 11.6.1
+2025-10-06T19:19:59.984721268Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.1
+2025-10-06T19:19:59.984725768Z npm notice To update run: npm install -g npm@11.6.1
+2025-10-06T19:19:59.984729468Z npm notice
+2025-10-06T19:20:00.012291510Z npm info ok
+2025-10-06T19:20:01.440709471Z npm info using npm@10.9.2
+2025-10-06T19:20:01.450540258Z npm info using node@v20.19.3
+2025-10-06T19:20:01.921357889Z 
+2025-10-06T19:20:01.923023701Z > homework-helper-backend@1.0.0 start
+2025-10-06T19:20:01.923060702Z > node server.js
+2025-10-06T19:20:01.923064702Z 
+2025-10-06T19:20:09.957946371Z node:internal/modules/cjs/loader:1215
+2025-10-06T19:20:09.957989971Z   throw err;
+2025-10-06T19:20:09.957994871Z   ^
+2025-10-06T19:20:09.957998471Z 
+2025-10-06T19:20:09.958002571Z Error: Cannot find module '/home/site/wwwroot/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node'
+2025-10-06T19:20:09.958006571Z Require stack:
+2025-10-06T19:20:09.958009871Z - /home/site/wwwroot/node_modules/bcrypt/bcrypt.js
+2025-10-06T19:20:09.958013871Z - /home/site/wwwroot/routes/auth.js
+2025-10-06T19:20:09.958017371Z - /home/site/wwwroot/server.js
+2025-10-06T19:20:09.958020971Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+2025-10-06T19:20:09.958024371Z     at Module._load (node:internal/modules/cjs/loader:1043:27)
+2025-10-06T19:20:09.958027771Z     at Module.require (node:internal/modules/cjs/loader:1298:19)
+2025-10-06T19:20:09.958031471Z     at require (node:internal/modules/helpers:182:18)
+2025-10-06T19:20:09.958034871Z     at Object.<anonymous> (/home/site/wwwroot/node_modules/bcrypt/bcrypt.js:6:16)
+2025-10-06T19:20:09.958038771Z     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+2025-10-06T19:20:09.958042171Z     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+2025-10-06T19:20:09.958045771Z     at Module.load (node:internal/modules/cjs/loader:1275:32)
+2025-10-06T19:20:09.958049172Z     at Module._load (node:internal/modules/cjs/loader:1096:12)
+2025-10-06T19:20:09.958052572Z     at Module.require (node:internal/modules/cjs/loader:1298:19) {
+2025-10-06T19:20:09.958056072Z   code: 'MODULE_NOT_FOUND',
+2025-10-06T19:20:09.958059372Z   requireStack: [
+2025-10-06T19:20:09.958062672Z     '/home/site/wwwroot/node_modules/bcrypt/bcrypt.js',
+2025-10-06T19:20:09.958066172Z     '/home/site/wwwroot/routes/auth.js',
+2025-10-06T19:20:09.958069572Z     '/home/site/wwwroot/server.js'
+2025-10-06T19:20:09.958072972Z   ]
+2025-10-06T19:20:09.958076272Z }
+2025-10-06T19:20:09.958079472Z 
+2025-10-06T19:20:09.958082772Z Node.js v20.19.3
+

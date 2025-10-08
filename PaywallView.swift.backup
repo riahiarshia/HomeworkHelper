@@ -1,0 +1,220 @@
+import SwiftUI
+
+struct PaywallView: View {
+    @EnvironmentObject var subscriptionService: SubscriptionService
+    @EnvironmentObject var authService: AuthenticationService
+    @State private var showPromoCode = false
+    @State private var promoCode = ""
+    @State private var isActivating = false
+    @State private var promoMessage = ""
+    @State private var showPromoAlert = false
+    @State private var promoAlertIsError = false
+    
+    var body: some View {
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.purple.opacity(0.6)]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 30) {
+                    // Header
+                    VStack(spacing: 15) {
+                        Image(systemName: "star.circle.fill")
+                            .font(.system(size: 80))
+                            .foregroundColor(.white)
+                        
+                        Text("Upgrade to Premium")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text(subscriptionService.getDisplayMessage())
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.9))
+                    }
+                    .padding(.top, 50)
+                    
+                    // Features
+                    VStack(alignment: .leading, spacing: 20) {
+                        FeatureRow(icon: "checkmark.circle.fill", text: "Unlimited homework problems")
+                        FeatureRow(icon: "checkmark.circle.fill", text: "AI-powered step-by-step guidance")
+                        FeatureRow(icon: "checkmark.circle.fill", text: "24/7 chat support")
+                        FeatureRow(icon: "checkmark.circle.fill", text: "Progress tracking")
+                        FeatureRow(icon: "checkmark.circle.fill", text: "Priority support")
+                    }
+                    .padding(30)
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .shadow(radius: 10)
+                    
+                    // Pricing
+                    VStack(spacing: 15) {
+                        Text("Premium Subscription")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        HStack(alignment: .firstTextBaseline, spacing: 5) {
+                            Text("$9.99")
+                                .font(.system(size: 48, weight: .bold))
+                                .foregroundColor(.white)
+                            Text("/month")
+                                .font(.title3)
+                                .foregroundColor(.white.opacity(0.9))
+                        }
+                        
+                        Text("Cancel anytime")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding(25)
+                    .background(Color.white.opacity(0.2))
+                    .cornerRadius(20)
+                    
+                    // Subscribe Button
+                    Button(action: {
+                        Task {
+                            if let userId = authService.currentUser?.id.uuidString {
+                                try? await subscriptionService.initiateSubscription(userId: userId)
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                            Text("Subscribe Now")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.purple)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(15)
+                        .shadow(radius: 5)
+                    }
+                    .padding(.horizontal)
+                    .disabled(subscriptionService.isLoading)
+                    
+                    // Promo Code Section
+                    VStack(spacing: 15) {
+                        Button(action: {
+                            showPromoCode.toggle()
+                        }) {
+                            HStack {
+                                Image(systemName: "ticket.fill")
+                                Text("Have a promo code?")
+                            }
+                            .foregroundColor(.white)
+                            .font(.headline)
+                        }
+                        
+                        if showPromoCode {
+                            VStack(spacing: 12) {
+                                HStack {
+                                    TextField("Enter code", text: $promoCode)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .autocapitalization(.allCharacters)
+                                        .disableAutocorrection(true)
+                                    
+                                    Button(action: activatePromoCode) {
+                                        if isActivating {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        } else {
+                                            Text("Apply")
+                                                .fontWeight(.semibold)
+                                        }
+                                    }
+                                    .padding(.horizontal, 20)
+                                    .padding(.vertical, 10)
+                                    .background(Color.green)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                                    .disabled(promoCode.isEmpty || isActivating)
+                                }
+                                .padding()
+                                .background(Color.white.opacity(0.9))
+                                .cornerRadius(12)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Terms
+                    Text("By subscribing, you agree to our Terms of Service and Privacy Policy")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 30)
+                }
+                .padding()
+            }
+        }
+        .alert(promoAlertIsError ? "Error" : "Success", isPresented: $showPromoAlert) {
+            Button("OK") {
+                if !promoAlertIsError {
+                    // Promo code worked, user now has access
+                    promoCode = ""
+                }
+            }
+        } message: {
+            Text(promoMessage)
+        }
+    }
+    
+    private func activatePromoCode() {
+        guard let userId = authService.currentUser?.id.uuidString else { return }
+        
+        isActivating = true
+        
+        Task {
+            do {
+                let message = try await subscriptionService.activatePromoCode(promoCode.uppercased(), userId: userId)
+                
+                await MainActor.run {
+                    promoMessage = message
+                    promoAlertIsError = false
+                    showPromoAlert = true
+                    isActivating = false
+                }
+                
+            } catch {
+                await MainActor.run {
+                    promoMessage = error.localizedDescription
+                    promoAlertIsError = true
+                    showPromoAlert = true
+                    isActivating = false
+                }
+            }
+        }
+    }
+}
+
+struct FeatureRow: View {
+    let icon: String
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.green)
+            Text(text)
+                .font(.body)
+                .foregroundColor(.primary)
+            Spacer()
+        }
+    }
+}
+
+#Preview {
+    PaywallView()
+        .environmentObject(SubscriptionService.shared)
+        .environmentObject(AuthenticationService())
+}
+

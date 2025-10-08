@@ -1,0 +1,85 @@
+2025-10-07T16:02:54.0815103Z,Updating submodules.,ffbbe78f-582d-49c0-b64d-332f0c96916e,0
+2025-10-07T16:02:55.2747965Z,Preparing deployment for commit id '14ab55ff-1'.,5a686a40-a24b-42f5-b566-4f0f9fa15741,0
+2025-10-07T16:02:55.8008421Z,PreDeployment: context.CleanOutputPath False,5226a476-0206-4a9a-8af8-efc436664e26,0
+2025-10-07T16:02:55.9820758Z,PreDeployment: context.OutputPath /home/site/wwwroot,63e3fc21-bfc3-4ce3-96a0-f13d3bac0b96,0
+2025-10-07T16:02:56.5130715Z,Repository path is /tmp/zipdeploy/extracted,30a05f2c-7d22-4cea-859a-df107c8606ef,0
+2025-10-07T16:02:56.7228155Z,Running oryx build...,b04a66de-4733-4430-a576-296350d3fd10,0
+	2025-10-07T16:02:56.7384379Z,Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 20 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8de05bafa5c0941 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log,,0
+	2025-10-07T16:02:59.8885136Z,Operation performed by Microsoft Oryx&comma; https://github.com/Microsoft/Oryx,,0
+	2025-10-07T16:02:59.9447139Z,You can report issues at https://github.com/Microsoft/Oryx/issues,,0
+	2025-10-07T16:02:59.9806408Z,,,0
+	2025-10-07T16:03:00.1007833Z,Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493&comma; Commit: 0649de32f1279969c9023dd41b389cce4bb94493&comma; ReleaseTagName: 20250611.1,,0
+	2025-10-07T16:03:00.1263200Z,,,0
+	2025-10-07T16:03:00.1695471Z,Build Operation ID: d85339c60b0a1652,,0
+	2025-10-07T16:03:00.2060357Z,Repository Commit : 14ab55ff-1b36-4889-978d-f209330ddc2e,,0
+	2025-10-07T16:03:00.2675595Z,OS Type           : bookworm,,0
+	2025-10-07T16:03:00.3324591Z,Image Type        : githubactions,,0
+	2025-10-07T16:03:00.3668293Z,,,0
+	2025-10-07T16:03:00.3982879Z,Primary SDK Storage URL: https://oryx-cdn.microsoft.io,,0
+	2025-10-07T16:03:00.4178443Z,Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net,,0
+	2025-10-07T16:03:00.4659926Z,Detecting platforms...,,0
+	2025-10-07T16:03:03.0186394Z,Detected following platforms:,,0
+	2025-10-07T16:03:03.0701613Z,  nodejs: 20.19.3,,0
+	2025-10-07T16:03:03.3339414Z,Detected the following frameworks: Express,,0
+	2025-10-07T16:03:03.8442517Z,,,0
+	2025-10-07T16:03:04.0483266Z,Using intermediate directory '/tmp/8de05bafa5c0941'.,,0
+	2025-10-07T16:03:04.1026293Z,,,0
+	2025-10-07T16:03:04.1618160Z,Copying files to the intermediate directory...,,0
+	2025-10-07T16:03:04.2690129Z,Done in 0 sec(s).,,0
+	2025-10-07T16:03:04.2982464Z,,,0
+	2025-10-07T16:03:04.3523302Z,Source directory     : /tmp/8de05bafa5c0941,,0
+	2025-10-07T16:03:04.3958269Z,Destination directory: /home/site/wwwroot,,0
+	2025-10-07T16:03:04.4344619Z,,,0
+	2025-10-07T16:03:04.8196071Z,Removing existing manifest file,,0
+	2025-10-07T16:03:04.8622195Z,Creating directory for command manifest file if it does not exist,,0
+	2025-10-07T16:03:04.9044770Z,Creating a manifest file...,,0
+	2025-10-07T16:03:04.9306784Z,Node Build Command Manifest file created.,,0
+	2025-10-07T16:03:04.9502774Z,,,0
+	2025-10-07T16:03:04.9705333Z,Using Node version:,,0
+	2025-10-07T16:03:05.1386285Z,v20.19.3,,0
+	2025-10-07T16:03:05.1620242Z,,,0
+	2025-10-07T16:03:05.2433936Z,Using Npm version:,,0
+	2025-10-07T16:03:06.3751924Z,10.8.2,,0
+	2025-10-07T16:03:06.4387779Z,,,0
+	2025-10-07T16:03:06.4705797Z,Running 'npm install'...,,0
+	2025-10-07T16:03:06.5068482Z,,,0
+	2025-10-07T16:03:20.4108293Z,npm warn deprecated inflight@1.0.6: This module is not supported&comma; and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value&comma; which is much more comprehensive and powerful.,,1
+	2025-10-07T16:03:20.6085413Z,npm warn deprecated npmlog@5.0.1: This package is no longer supported.,,1
+	2025-10-07T16:03:20.9482664Z,npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported,,1
+	2025-10-07T16:03:21.2253640Z,npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.,,1
+	2025-10-07T16:03:21.3068442Z,npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported,,1
+	2025-10-07T16:03:22.0770623Z,npm warn deprecated gauge@3.0.2: This package is no longer supported.,,1
+	2025-10-07T16:03:41.8230376Z,,,0
+	2025-10-07T16:03:41.8719178Z,added 221 packages&comma; and audited 222 packages in 35s,,0
+	2025-10-07T16:03:41.9229491Z,,,0
+	2025-10-07T16:03:41.9699662Z,32 packages are looking for funding,,0
+	2025-10-07T16:03:41.9969255Z,  run `npm fund` for details,,0
+	2025-10-07T16:03:42.0494527Z,,,0
+	2025-10-07T16:03:42.0961981Z,found 0 vulnerabilities,,0
+	2025-10-07T16:03:42.1443440Z,,,0
+	2025-10-07T16:03:42.1714114Z,Zipping existing node_modules folder...,,0
+	2025-10-07T16:03:49.9353891Z,Done in 7 sec(s).,,0
+	2025-10-07T16:03:50.0183097Z,Preparing output...,,0
+	2025-10-07T16:03:50.0664617Z,,,0
+	2025-10-07T16:03:50.0968779Z,Copying files to destination directory '/home/site/wwwroot'...,,0
+	2025-10-07T16:03:50.5263629Z,Done in 1 sec(s).,,0
+	2025-10-07T16:03:50.6325438Z,,,0
+	2025-10-07T16:03:50.6801413Z,Removing existing manifest file,,0
+	2025-10-07T16:03:50.7417802Z,Creating a manifest file...,,0
+	2025-10-07T16:03:50.8261780Z,Manifest file created.,,0
+	2025-10-07T16:03:51.0591440Z,Copying .ostype to manifest output directory.,,0
+	2025-10-07T16:03:51.2082805Z,,,0
+	2025-10-07T16:03:51.3138203Z,Done in 47 sec(s).,,0
+2025-10-07T16:03:51.7505208Z,Running post deployment command(s)...,358d5d71-1806-4975-95d5-7ede699a4d88,0
+2025-10-07T16:03:51.9625047Z,,8a045cdf-6560-456a-8b44-bc31d94c2648,0
+2025-10-07T16:03:52.1603495Z,Generating summary of Oryx build,63a6b3b0-31b2-41fd-ad2b-a22d373b6c18,0
+2025-10-07T16:03:52.3688265Z,Parsing the build logs,c5db40b3-f98a-4fb5-80db-6d7d593a3701,0
+2025-10-07T16:03:52.5405517Z,Found 0 issue(s),8e169340-0afc-427a-8cc4-a275e29c0949,0
+2025-10-07T16:03:52.6911727Z,,49b1006a-01e2-49a4-91fe-1e2408821c6b,0
+2025-10-07T16:03:52.8575490Z,Build Summary :,f829cef6-fd8c-4c88-b26d-7c38f7b61a33,0
+2025-10-07T16:03:53.0195274Z,===============,af66b8ef-c5fc-450a-bc04-1ba4f909aaaf,0
+2025-10-07T16:03:53.1852304Z,Errors (0),bcce47d8-142c-4e4d-8ce1-77042fadabd5,0
+2025-10-07T16:03:53.3301049Z,Warnings (0),44af16a3-e9a3-46cb-b369-95ea347f3a67,0
+2025-10-07T16:03:53.4744563Z,,92d22b4b-16ed-4358-8610-dd771b88be74,0
+2025-10-07T16:03:53.6511041Z,Triggering recycle (preview mode disabled).,39e4b422-c1cd-4e45-a0ec-31c5b4bffaa8,0
+2025-10-07T16:03:53.8823323Z,Deployment successful. deployer = Push-Deployer deploymentPath = ZipDeploy. Extract zip. Remote build.,488ae5ab-666e-4b1c-bda6-f45c494ede02,0

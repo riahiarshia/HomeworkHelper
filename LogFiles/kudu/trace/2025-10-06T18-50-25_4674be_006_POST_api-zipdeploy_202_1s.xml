@@ -1,0 +1,18 @@
+<step title="Incoming Request" date="2025-10-06T18:50:25.955" instance="4674be" url="/api/zipdeploy?isAsync=true" method="POST" type="request" pid="823,1,26" Accept="*/*" Host="homework-helper-api.scm.azurewebsites.net" User-Agent="AZURECLI/2.67.0 (HOMEBREW)" Accept-Encoding="gzip, deflate" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="55385" x-ms-client-request-id="5078c2cc-a2e5-11f0-b5c7-9ebfc73c1928" x-ms-artifact-checksum="898b047e343deca835cc7d69393c2c775465a7d8d735ee9b665bb5a04444ebde" X-ARR-LOG-ID="5078c2cc-a2e5-11f0-b5c7-9ebfc73c1928" CLIENT-IP="174.26.129.107:58368" X-SITE-DEPLOYMENT-ID="homework-helper-api" WAS-DEFAULT-HOSTNAME="homework-helper-api.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true" X-Client-IP="174.26.129.107" X-Client-Port="58368" >
+  <step title="Cleanup Xml Logs" date="2025-10-06T18:50:25.958" /><!-- duration: 6ms -->
+  <step title="ZipPushDeploy" date="2025-10-06T18:50:25.985" >
+    <step title="ZipDeploy. Extract zip." date="2025-10-06T18:50:25.996" /><!-- duration: 3ms -->
+    <step title="None repository commit" date="2025-10-06T18:50:26.010" >
+      <step title="Commit id: ff992ac2-488b-45c0-abcd-a03cedc45c5d" date="2025-10-06T18:50:26.015" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 8ms -->
+    </step><!-- duration: 16ms -->
+    <step title="Starting PushDeployAsync" date="2025-10-06T18:50:26.030" /><!-- duration: 4ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/421e7400-f95c-4cf6-9cf8-a8f659f85cea.zip" date="2025-10-06T18:50:26.067" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/421e7400-f95c-4cf6-9cf8-a8f659f85cea.zip" date="2025-10-06T18:50:26.087" /><!-- duration: 6ms -->
+    </step><!-- duration: 123ms -->
+    <step title="Start deployment in the background" date="2025-10-06T18:50:26.203" >
+      <step title="Acquiring Deployment Lock" date="2025-10-06T18:50:26.283" /><!-- duration: 11ms -->
+      <step title="Acquired Deployment Lock" date="2025-10-06T18:50:26.335" /><!-- duration: 3ms -->
+    </step><!-- duration: 229ms -->
+  </step><!-- duration: 457ms -->
+  <step title="Outgoing response" date="2025-10-06T18:50:26.451" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 3ms -->
+</step><!-- duration: 502ms -->

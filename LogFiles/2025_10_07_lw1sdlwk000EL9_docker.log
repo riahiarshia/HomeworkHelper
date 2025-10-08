@@ -1,0 +1,75 @@
+2025-10-07T00:35:43.443Z INFO  - Recycling container because of AppSettingsChange and isMainSite = True
+2025-10-07T00:35:44.583Z INFO  - Starting container for site
+2025-10-07T00:35:44.583Z INFO  - docker run -d -p 9013:8080 --name homework-helper-api_7_c7ad3189 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T00:35:44.583Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T00:35:51.257Z INFO  - Initiating warmup request to container homework-helper-api_7_c7ad3189 for site homework-helper-api
+2025-10-07T00:36:13.686Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 22.4297584 sec
+2025-10-07T00:36:34.630Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 43.3733829 sec
+2025-10-07T00:37:00.016Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 68.7593543 sec
+2025-10-07T00:37:23.750Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 92.4935932 sec
+2025-10-07T00:37:43.707Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 112.4504875 sec
+2025-10-07T00:38:06.934Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 135.6777083 sec
+2025-10-07T00:38:27.051Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 155.7945851 sec
+2025-10-07T00:38:48.702Z INFO  - Waiting for response to warmup request for container homework-helper-api_7_c7ad3189. Elapsed time = 177.4453783 sec
+2025-10-07T00:38:51.418Z INFO  - Container homework-helper-api_7_c7ad3189 for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T00:39:01.020Z INFO  - Starting container for site
+2025-10-07T00:39:01.020Z INFO  - docker run -d -p 5120:8080 --name homework-helper-api_8_a300841a -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T00:39:01.021Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T00:39:11.921Z INFO  - Initiating warmup request to container homework-helper-api_8_a300841a for site homework-helper-api
+2025-10-07T00:39:30.404Z INFO  - Waiting for response to warmup request for container homework-helper-api_8_a300841a. Elapsed time = 18.4830304 sec
+2025-10-07T00:39:49.404Z INFO  - Waiting for response to warmup request for container homework-helper-api_8_a300841a. Elapsed time = 37.4826873 sec
+2025-10-07T00:40:08.362Z INFO  - Waiting for response to warmup request for container homework-helper-api_8_a300841a. Elapsed time = 56.4405497 sec
+2025-10-07T00:40:25.410Z INFO  - Waiting for response to warmup request for container homework-helper-api_8_a300841a. Elapsed time = 73.4887964 sec
+2025-10-07T00:40:26.491Z INFO  - Container homework-helper-api_8_a300841a for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T05:58:36.113Z INFO  - 
+
+2025-10-07T15:17:29.688Z INFO  - Starting container for site
+2025-10-07T15:17:29.697Z INFO  - docker run -d -p 6252:8080 --name homework-helper-api_9_647c447c -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T15:17:29.698Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T15:17:46.160Z INFO  - Initiating warmup request to container homework-helper-api_9_647c447c for site homework-helper-api
+2025-10-07T15:18:05.340Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 19.1713983 sec
+2025-10-07T15:18:25.251Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 39.0910421 sec
+2025-10-07T15:18:45.655Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 59.4955779 sec
+2025-10-07T15:19:03.273Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 77.1126095 sec
+2025-10-07T15:19:20.227Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 94.0676087 sec
+2025-10-07T15:19:38.306Z INFO  - Waiting for response to warmup request for container homework-helper-api_9_647c447c. Elapsed time = 112.1461659 sec
+2025-10-07T15:19:41.561Z INFO  - Container homework-helper-api_9_647c447c for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T15:19:43.347Z INFO  - Recycling container because of AppSettingsChange and isMainSite = True
+2025-10-07T15:19:46.544Z INFO  - Starting container for site
+2025-10-07T15:19:46.549Z INFO  - docker run -d -p 8484:8080 --name homework-helper-api_10_ffc88024 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T15:19:46.550Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T15:19:50.921Z INFO  - Initiating warmup request to container homework-helper-api_10_ffc88024 for site homework-helper-api
+2025-10-07T15:20:09.391Z INFO  - Waiting for response to warmup request for container homework-helper-api_10_ffc88024. Elapsed time = 18.4701413 sec
+2025-10-07T15:20:27.299Z INFO  - Waiting for response to warmup request for container homework-helper-api_10_ffc88024. Elapsed time = 36.3778603 sec
+2025-10-07T15:20:44.389Z INFO  - Waiting for response to warmup request for container homework-helper-api_10_ffc88024. Elapsed time = 53.4682377 sec
+2025-10-07T15:20:48.696Z INFO  - Container homework-helper-api_10_ffc88024 for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T15:49:03.439Z INFO  - Starting container for site
+2025-10-07T15:49:03.445Z INFO  - docker run -d -p 5252:8080 --name homework-helper-api_11_9727cbde -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T15:49:03.446Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T15:49:08.180Z INFO  - Initiating warmup request to container homework-helper-api_11_9727cbde for site homework-helper-api
+2025-10-07T15:49:25.308Z INFO  - Waiting for response to warmup request for container homework-helper-api_11_9727cbde. Elapsed time = 17.1277719 sec
+2025-10-07T15:49:45.004Z INFO  - Waiting for response to warmup request for container homework-helper-api_11_9727cbde. Elapsed time = 36.8244262 sec
+2025-10-07T15:50:02.283Z INFO  - Waiting for response to warmup request for container homework-helper-api_11_9727cbde. Elapsed time = 54.1028278 sec
+2025-10-07T15:50:18.485Z INFO  - Container homework-helper-api_11_9727cbde for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T16:03:55.733Z INFO  - Starting container for site
+2025-10-07T16:03:55.741Z INFO  - docker run -d -p 6591:8080 --name homework-helper-api_12_8f752284 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T16:03:55.741Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T16:04:04.525Z INFO  - Initiating warmup request to container homework-helper-api_12_8f752284 for site homework-helper-api
+2025-10-07T16:04:24.516Z INFO  - Waiting for response to warmup request for container homework-helper-api_12_8f752284. Elapsed time = 19.9993483 sec
+2025-10-07T16:04:44.261Z INFO  - Waiting for response to warmup request for container homework-helper-api_12_8f752284. Elapsed time = 39.7444 sec
+2025-10-07T16:05:00.567Z INFO  - Waiting for response to warmup request for container homework-helper-api_12_8f752284. Elapsed time = 56.0502912 sec
+2025-10-07T16:05:05.990Z INFO  - Container homework-helper-api_12_8f752284 for site homework-helper-api initialized successfully and is ready to serve requests.
+2025-10-07T16:18:17.640Z INFO  - Starting container for site
+2025-10-07T16:18:17.647Z INFO  - docker run -d -p 6751:8080 --name homework-helper-api_13_f9162b14 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e PORT=8080 -e WEBSITE_SITE_NAME=homework-helper-api -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=homework-helper-api.azurewebsites.net -e WEBSITE_INSTANCE_ID=4674be82b396abaf83d02ae5cb9797e3302ed577226c6d832720658f6837fffe appsvc/node:20-lts_20250724.2.tuxprod REDACTED
+2025-10-07T16:18:17.647Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-10-07T16:18:25.471Z INFO  - Initiating warmup request to container homework-helper-api_13_f9162b14 for site homework-helper-api
+2025-10-07T16:18:43.392Z INFO  - Waiting for response to warmup request for container homework-helper-api_13_f9162b14. Elapsed time = 17.9213027 sec
+2025-10-07T16:19:00.400Z INFO  - Waiting for response to warmup request for container homework-helper-api_13_f9162b14. Elapsed time = 34.929183 sec
+2025-10-07T16:19:14.328Z INFO  - Container homework-helper-api_13_f9162b14 for site homework-helper-api initialized successfully and is ready to serve requests.

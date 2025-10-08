@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct AuthenticationView: View {
     @EnvironmentObject var authService: AuthenticationService
@@ -45,6 +46,19 @@ struct AuthenticationView: View {
                     Text("Sign in to get started")
                         .font(.headline)
                         .foregroundColor(.white)
+                    
+                    // Apple Sign In Button
+                    SignInWithAppleButton(
+                        onRequest: { request in
+                            request.requestedScopes = [.fullName, .email]
+                        },
+                        onCompletion: { result in
+                            authService.handleAppleSignIn(result: result)
+                        }
+                    )
+                    .signInWithAppleButtonStyle(.white)
+                    .frame(height: 50)
+                    .disabled(authService.isLoading)
                     
                     // Google Sign In Button
                     Button(action: {

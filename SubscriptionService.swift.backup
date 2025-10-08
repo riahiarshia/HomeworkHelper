@@ -1,0 +1,264 @@
+import Foundation
+import SwiftUI
+
+// MARK: - Subscription Models
+
+struct SubscriptionStatus: Codable {
+    let userId: String
+    let subscriptionStatus: String
+    let subscriptionEndDate: String?
+    let daysRemaining: Int
+    let accessGranted: Bool
+    let trialActive: Bool
+    let promoCodeUsed: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case subscriptionStatus = "subscription_status"
+        case subscriptionEndDate = "subscription_end_date"
+        case daysRemaining = "days_remaining"
+        case accessGranted = "access_granted"
+        case trialActive = "trial_active"
+        case promoCodeUsed = "promo_code_used"
+    }
+}
+
+struct PromoCodeResponse: Codable {
+    let success: Bool
+    let message: String
+    let subscriptionEndDate: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case success
+        case message
+        case subscriptionEndDate = "subscription_end_date"
+    }
+}
+
+// MARK: - Subscription Service
+
+@MainActor
+class SubscriptionService: ObservableObject {
+    static let shared = SubscriptionService()
+    
+    // Published properties for UI updates
+    @Published var subscriptionStatus: String = "unknown"
+    @Published var hasAccess: Bool = false
+    @Published var daysRemaining: Int = 0
+    @Published var isTrialActive: Bool = false
+    @Published var promoCodeUsed: String?
+    @Published var subscriptionEndDate: Date?
+    
+    // UI state
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+    @Published var showPaywall: Bool = false
+    
+    private let apiService = BackendAPIService.shared
+    private let keychainHelper = KeychainHelper()
+    
+    private let subscriptionStatusKey = "subscription_status"
+    private let lastCheckDateKey = "last_subscription_check"
+    
+    private init() {
+        loadCachedStatus()
+    }
+    
+    // MARK: - Check Subscription Status
+    
+    func checkSubscriptionStatus(userId: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        print("🔍 Checking subscription status for user: \(userId)")
+        
+        do {
+            let endpoint = "/api/subscription/status"
+            let response: SubscriptionStatus = try await apiService.request(
+                endpoint: endpoint,
+                method: "GET",
+                authenticated: true
+            )
+            
+            // Update UI state
+            subscriptionStatus = response.subscriptionStatus
+            hasAccess = response.accessGranted
+            daysRemaining = response.daysRemaining
+            isTrialActive = response.trialActive
+            promoCodeUsed = response.promoCodeUsed
+            
+            // Parse end date
+            if let endDateString = response.subscriptionEndDate {
+                subscriptionEndDate = parseDate(endDateString)
+            }
+            
+            // Cache the status
+            cacheSubscriptionStatus()
+            
+            // Show paywall if no access
+            if !hasAccess {
+                showPaywall = true
+                print("⚠️ No access - showing paywall")
+            }
+            
+            print("✅ Subscription status: \(subscriptionStatus)")
+            print("   Access granted: \(hasAccess)")
+            print("   Days remaining: \(daysRemaining)")
+            
+            isLoading = false
+            
+        } catch {
+            print("❌ Failed to check subscription: \(error)")
+            errorMessage = "Failed to verify subscription status"
+            
+            // Use cached status as fallback
+            loadCachedStatus()
+            isLoading = false
+        }
+    }
+    
+    // MARK: - Activate Promo Code
+    
+    func activatePromoCode(_ code: String, userId: String) async throws -> String {
+        isLoading = true
+        errorMessage = nil
+        
+        print("🎟️ Activating promo code: \(code)")
+        
+        do {
+            let endpoint = "/api/subscription/activate-promo"
+            let body: [String: Any] = [
+                "promo_code": code,
+                "user_id": userId
+            ]
+            
+            let response: PromoCodeResponse = try await apiService.request(
+                endpoint: endpoint,
+                method: "POST",
+                body: body,
+                authenticated: true
+            )
+            
+            if response.success {
+                print("✅ Promo code activated: \(response.message)")
+                
+                // Refresh subscription status
+                await checkSubscriptionStatus(userId: userId)
+                
+                isLoading = false
+                return response.message
+            } else {
+                throw NSError(
+                    domain: "SubscriptionService",
+                    code: 400,
+                    userInfo: [NSLocalizedDescriptionKey: response.message]
+                )
+            }
+            
+        } catch {
+            print("❌ Failed to activate promo code: \(error)")
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw error
+        }
+    }
+    
+    // MARK: - Payment Integration
+    
+    func initiateSubscription(userId: String) async throws {
+        print("💳 Initiating subscription for user: \(userId)")
+        
+        // This will integrate with Stripe or RevenueCat
+        // For now, we'll create a checkout session
+        
+        let endpoint = "/api/payment/create-checkout-session"
+        let body: [String: Any] = [
+            "user_id": userId,
+            "price_id": "price_1234567890"  // Your Stripe price ID
+        ]
+        
+        struct CheckoutResponse: Codable {
+            let checkoutUrl: String
+            
+            enum CodingKeys: String, CodingKey {
+                case checkoutUrl = "checkout_url"
+            }
+        }
+        
+        let response: CheckoutResponse = try await apiService.request(
+            endpoint: endpoint,
+            method: "POST",
+            body: body,
+            authenticated: true
+        )
+        
+        // Open Stripe checkout in Safari
+        if let url = URL(string: response.checkoutUrl) {
+            await MainActor.run {
+                #if os(iOS)
+                UIApplication.shared.open(url)
+                #endif
+            }
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func parseDate(_ dateString: String) -> Date? {
+        let formatter = ISO8601DateFormatter()
+        return formatter.date(from: dateString)
+    }
+    
+    private func cacheSubscriptionStatus() {
+        let statusData: [String: Any] = [
+            "subscription_status": subscriptionStatus,
+            "has_access": hasAccess,
+            "days_remaining": daysRemaining,
+            "is_trial_active": isTrialActive,
+            "promo_code_used": promoCodeUsed ?? "",
+            "last_check": Date().timeIntervalSince1970
+        ]
+        
+        if let jsonData = try? JSONSerialization.data(withJSONObject: statusData),
+           let jsonString = String(data: jsonData, encoding: .utf8) {
+            _ = keychainHelper.save(jsonString, forKey: subscriptionStatusKey)
+        }
+    }
+    
+    private func loadCachedStatus() {
+        guard let jsonString = keychainHelper.load(forKey: subscriptionStatusKey),
+              let jsonData = jsonString.data(using: .utf8),
+              let statusData = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else {
+            return
+        }
+        
+        subscriptionStatus = statusData["subscription_status"] as? String ?? "unknown"
+        hasAccess = statusData["has_access"] as? Bool ?? false
+        daysRemaining = statusData["days_remaining"] as? Int ?? 0
+        isTrialActive = statusData["is_trial_active"] as? Bool ?? false
+        promoCodeUsed = statusData["promo_code_used"] as? String
+        
+        print("📦 Loaded cached subscription status: \(subscriptionStatus)")
+    }
+    
+    // MARK: - Public Helpers
+    
+    func getDisplayMessage() -> String {
+        if isTrialActive {
+            return "Free Trial: \(daysRemaining) days remaining"
+        } else if subscriptionStatus == "active" {
+            return "Premium: \(daysRemaining) days remaining"
+        } else if subscriptionStatus == "promo_active" {
+            return "Promo Active: \(daysRemaining) days remaining"
+        } else if subscriptionStatus == "expired" {
+            return "Subscription Expired"
+        } else {
+            return "Unknown Status"
+        }
+    }
+    
+    func shouldShowPaywall() -> Bool {
+        return !hasAccess && subscriptionStatus == "expired"
+    }
+}
+

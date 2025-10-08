@@ -1,0 +1,16 @@
+<step title="Incoming Request" date="2025-10-06T23:30:16.567" instance="4674be" url="/api/zipdeploy?isAsync=true" method="POST" type="request" pid="827,1,23" Accept="*/*" Host="homework-helper-api.scm.azurewebsites.net" User-Agent="AZURECLI/2.67.0 (HOMEBREW)" Accept-Encoding="gzip, deflate" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="99016" x-ms-client-request-id="655cccc0-a30c-11f0-9e86-9ebfc73c1928" x-ms-artifact-checksum="7e354318599bdafc72b16ced196e740149ef7d32dd328ad871d338b3412722ab" X-ARR-LOG-ID="655cccc0-a30c-11f0-9e86-9ebfc73c1928" CLIENT-IP="174.26.129.107:52066" X-SITE-DEPLOYMENT-ID="homework-helper-api" WAS-DEFAULT-HOSTNAME="homework-helper-api.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true" X-Client-IP="174.26.129.107" X-Client-Port="52066" >
+  <step title="Cleanup Xml Logs" date="2025-10-06T23:30:16.582" /><!-- duration: 37ms -->
+  <step title="ZipPushDeploy" date="2025-10-06T23:30:16.688" >
+    <step title="ZipDeploy. Extract zip. Remote build." date="2025-10-06T23:30:16.716" /><!-- duration: 8ms -->
+    <step title="Starting PushDeployAsync" date="2025-10-06T23:30:16.744" /><!-- duration: 45ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/d5ff6af2-92d9-488e-9f4b-bcdea783f9c7.zip" date="2025-10-06T23:30:16.835" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/d5ff6af2-92d9-488e-9f4b-bcdea783f9c7.zip" date="2025-10-06T23:30:16.860" /><!-- duration: 53ms -->
+    </step><!-- duration: 1369ms -->
+    <step title="Start deployment in the background" date="2025-10-06T23:30:18.222" >
+      <step title="Acquiring Deployment Lock" date="2025-10-06T23:30:18.305" /><!-- duration: 9ms -->
+      <step title="Cannot Acquire Deployment Lock already held" date="2025-10-06T23:30:18.336" /><!-- duration: 9ms -->
+    </step><!-- duration: 320ms -->
+    <step title="There is a deployment currently in progress. Please try again when it completes." date="2025-10-06T23:30:18.598" /><!-- duration: 9ms -->
+  </step><!-- duration: 2021ms -->
+  <step title="Outgoing response" date="2025-10-06T23:30:18.784" type="response" statusCode="409" statusText="Conflict" /><!-- duration: 29ms -->
+</step><!-- duration: 2277ms -->

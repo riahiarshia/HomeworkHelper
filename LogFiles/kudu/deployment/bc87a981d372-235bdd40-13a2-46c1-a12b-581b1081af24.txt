@@ -1,0 +1,88 @@
+2025-10-06T22:25:29  Fetching changes.
+2025-10-06T22:25:29    Starting  LocalZipHandler
+2025-10-06T22:25:29    Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/40151f01-c8e7-4dfd-9418-b57186e2f93d.zip (0.09 MB) to /tmp/zipdeploy/extracted
+2025-10-06T22:25:33  Updating submodules.
+2025-10-06T22:25:33  Preparing deployment for commit id '0ca71ce8-9'.
+2025-10-06T22:25:34  PreDeployment: context.CleanOutputPath False
+2025-10-06T22:25:34  PreDeployment: context.OutputPath /home/site/wwwroot
+2025-10-06T22:25:34  Repository path is /tmp/zipdeploy/extracted
+2025-10-06T22:25:34  Running oryx build...
+2025-10-06T22:25:34    Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 20 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8de052744399847 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log
+2025-10-06T22:25:37    Operation performed by Microsoft Oryx, https://github.com/Microsoft/Oryx
+2025-10-06T22:25:39    You can report issues at https://github.com/Microsoft/Oryx/issues
+2025-10-06T22:25:39    
+2025-10-06T22:25:39    Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493, Commit: 0649de32f1279969c9023dd41b389cce4bb94493, ReleaseTagName: 20250611.1
+2025-10-06T22:25:39    
+2025-10-06T22:25:39    Build Operation ID: 5613cad58f462209
+2025-10-06T22:25:39    Repository Commit : 0ca71ce8-9bdb-4bc1-8618-15b16ce07515
+2025-10-06T22:25:39    OS Type           : bookworm
+2025-10-06T22:25:39    Image Type        : githubactions
+2025-10-06T22:25:39    
+2025-10-06T22:25:39    Primary SDK Storage URL: https://oryx-cdn.microsoft.io
+2025-10-06T22:25:39    Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net
+2025-10-06T22:25:39    Detecting platforms...
+2025-10-06T22:25:40    Detected following platforms:
+2025-10-06T22:25:41      nodejs: 20.19.3
+2025-10-06T22:25:41    Detected the following frameworks: Express
+2025-10-06T22:25:41    
+2025-10-06T22:25:41    Using intermediate directory '/tmp/8de052744399847'.
+2025-10-06T22:25:41    
+2025-10-06T22:25:41    Copying files to the intermediate directory...
+2025-10-06T22:25:41    Done in 0 sec(s).
+2025-10-06T22:25:42    
+2025-10-06T22:25:42    Source directory     : /tmp/8de052744399847
+2025-10-06T22:25:42    Destination directory: /home/site/wwwroot
+2025-10-06T22:25:42    
+2025-10-06T22:25:42    Removing existing manifest file
+2025-10-06T22:25:42    Creating directory for command manifest file if it does not exist
+2025-10-06T22:25:42    Creating a manifest file...
+2025-10-06T22:25:42    Node Build Command Manifest file created.
+2025-10-06T22:25:42    
+2025-10-06T22:25:42    Using Node version:
+2025-10-06T22:25:42    v20.19.3
+2025-10-06T22:25:42    
+2025-10-06T22:25:42    Using Npm version:
+2025-10-06T22:25:43    10.8.2
+2025-10-06T22:25:44    
+2025-10-06T22:25:44    Running 'npm install'...
+2025-10-06T22:25:44    
+2025-10-06T22:25:58    npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-10-06T22:25:58    npm warn deprecated npmlog@5.0.1: This package is no longer supported.
+2025-10-06T22:25:58    npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-10-06T22:25:59    npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+2025-10-06T22:25:59    npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-10-06T22:25:59    npm warn deprecated gauge@3.0.2: This package is no longer supported.
+2025-10-06T22:26:20    
+2025-10-06T22:26:20    added 199 packages, and audited 200 packages in 36s
+2025-10-06T22:26:20    
+2025-10-06T22:26:20    29 packages are looking for funding
+2025-10-06T22:26:21      run `npm fund` for details
+2025-10-06T22:26:21    
+2025-10-06T22:26:21    found 0 vulnerabilities
+2025-10-06T22:26:21    
+2025-10-06T22:26:21    Zipping existing node_modules folder...
+2025-10-06T22:26:27    Done in 7 sec(s).
+2025-10-06T22:26:27    Preparing output...
+2025-10-06T22:26:27    
+2025-10-06T22:26:27    Copying files to destination directory '/home/site/wwwroot'...
+2025-10-06T22:26:28    Done in 1 sec(s).
+2025-10-06T22:26:28    
+2025-10-06T22:26:28    Removing existing manifest file
+2025-10-06T22:26:28    Creating a manifest file...
+2025-10-06T22:26:28    Manifest file created.
+2025-10-06T22:26:28    Copying .ostype to manifest output directory.
+2025-10-06T22:26:28    
+2025-10-06T22:26:28    Done in 47 sec(s).
+2025-10-06T22:26:28  Running post deployment command(s)...
+2025-10-06T22:26:28  
+2025-10-06T22:26:28  Generating summary of Oryx build
+2025-10-06T22:26:29  Parsing the build logs
+2025-10-06T22:26:29  Found 0 issue(s)
+2025-10-06T22:26:29  
+2025-10-06T22:26:29  Build Summary :
+2025-10-06T22:26:29  ===============
+2025-10-06T22:26:29  Errors (0)
+2025-10-06T22:26:30  Warnings (0)
+2025-10-06T22:26:30  
+2025-10-06T22:26:30  Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path
+2025-10-06T22:26:30  Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy

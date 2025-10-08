@@ -1,0 +1,18 @@
+<step title="Incoming Request" date="2025-10-06T18:38:11.534" instance="4674be" url="/api/zipdeploy?isAsync=true" method="POST" type="request" pid="823,1,20" Accept="*/*" Host="homework-helper-api.scm.azurewebsites.net" User-Agent="AZURECLI/2.67.0 (HOMEBREW)" Accept-Encoding="gzip, deflate" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="55385" x-ms-client-request-id="99fc22ce-a2e3-11f0-9699-9ebfc73c1928" x-ms-artifact-checksum="067e84e518504ea271ae3adfdb7ecfff727bafdebb9f4efe231086b7fa3e19af" X-ARR-LOG-ID="99fc22ce-a2e3-11f0-9699-9ebfc73c1928" CLIENT-IP="174.26.129.107:57899" X-SITE-DEPLOYMENT-ID="homework-helper-api" WAS-DEFAULT-HOSTNAME="homework-helper-api.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true" X-Client-IP="174.26.129.107" X-Client-Port="57899" >
+  <step title="Cleanup Xml Logs" date="2025-10-06T18:38:11.548" /><!-- duration: 10ms -->
+  <step title="ZipPushDeploy" date="2025-10-06T18:38:11.625" >
+    <step title="ZipDeploy. Extract zip." date="2025-10-06T18:38:11.641" /><!-- duration: 3ms -->
+    <step title="None repository commit" date="2025-10-06T18:38:11.664" >
+      <step title="Commit id: 2cb84fcf-cca2-4cd8-aa98-4c9c4cce8003" date="2025-10-06T18:38:11.673" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 9ms -->
+    </step><!-- duration: 27ms -->
+    <step title="Starting PushDeployAsync" date="2025-10-06T18:38:11.700" /><!-- duration: 19ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/5a42d91e-e087-4aa2-8c75-4a40b070cbc3.zip" date="2025-10-06T18:38:11.781" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/5a42d91e-e087-4aa2-8c75-4a40b070cbc3.zip" date="2025-10-06T18:38:11.788" /><!-- duration: 5ms -->
+    </step><!-- duration: 201ms -->
+    <step title="Start deployment in the background" date="2025-10-06T18:38:11.993" >
+      <step title="Acquiring Deployment Lock" date="2025-10-06T18:38:12.039" /><!-- duration: 3ms -->
+      <step title="Acquired Deployment Lock" date="2025-10-06T18:38:12.086" /><!-- duration: 3ms -->
+    </step><!-- duration: 193ms -->
+  </step><!-- duration: 569ms -->
+  <step title="Outgoing response" date="2025-10-06T18:38:12.211" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 3ms -->
+</step><!-- duration: 682ms -->
