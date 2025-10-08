@@ -350,11 +350,24 @@ struct StepGuidanceView: View {
     
     private var tutorHintView: some View {
         VStack(alignment: .leading, spacing: 12) {
+            // Show "Not quite" message only after wrong answer
+            if attemptCount > 0 {
+                HStack {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.red)
+                    Text("Not quite. Let's try again!")
+                        .font(.headline)
+                        .foregroundColor(.red)
+                }
+                .padding(.bottom, 8)
+            }
+            
             HStack {
                 Image(systemName: "lightbulb.fill")
                     .font(.title2)
                     .foregroundColor(.orange)
-                Text("💡 Think About This...")
+                Text(attemptCount > 0 ? "💡 Here's Another Hint..." : "💡 Think About This...")
                     .font(.headline)
                     .foregroundColor(.orange)
             }
@@ -372,10 +385,10 @@ struct StepGuidanceView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.orange.opacity(0.1))
+                .fill(attemptCount > 0 ? Color.red.opacity(0.05) : Color.orange.opacity(0.1))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
+                        .stroke(attemptCount > 0 ? Color.red.opacity(0.3) : Color.orange.opacity(0.3), lineWidth: 2)
                 )
         )
     }
