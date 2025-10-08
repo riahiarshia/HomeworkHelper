@@ -1,6 +1,8 @@
 import Foundation
 import GoogleSignIn
 import UIKit
+import AuthenticationServices
+import CryptoKit
 
 class AuthenticationService: ObservableObject {
     @Published var isAuthenticated = false
@@ -12,6 +14,9 @@ class AuthenticationService: ObservableObject {
     private let keychain = KeychainHelper.shared
     private var lastValidationTime: Date?
     private let validationInterval: TimeInterval = 10 // 10 seconds for immediate detection
+    
+    // Apple Sign-In
+    private var currentNonce: String?
     
     init() {
         // Check if user is already authenticated
@@ -81,6 +86,103 @@ class AuthenticationService: ObservableObject {
         await validateSession(token: token)
     }
     
+    // MARK: - Apple Sign-In
+    
+    func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
+        switch result {
+        case .success(let authorization):
+            guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential else {
+                self.errorMessage = "Invalid Apple ID credential"
+                return
+            }
+            
+            // Extract token
+            guard let appleIDToken = appleIDCredential.identityToken,
+                  let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                self.errorMessage = "Invalid Apple ID token"
+                print("❌ Failed to extract Apple ID token")
+                return
+            }
+            
+            // Extract user information
+            let userIdentifier = appleIDCredential.user
+            let email = appleIDCredential.email
+            let fullName = appleIDCredential.fullName
+            
+            // Create display name
+            var displayName = "Apple User"
+            if let fullName = fullName {
+                let firstName = fullName.givenName ?? ""
+                let lastName = fullName.familyName ?? ""
+                displayName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+                if displayName.isEmpty {
+                    displayName = "Apple User"
+                }
+            }
+            
+            print("✅ Apple Sign-In successful: \(userIdentifier)")
+            print("   Email: \(email ?? "not provided")")
+            print("   Name: \(displayName)")
+            print("   Token: \(idTokenString.prefix(20))...")
+            
+            isLoading = true
+            errorMessage = nil
+            
+            // Send to backend
+            authenticateWithBackendApple(
+                userIdentifier: userIdentifier,
+                email: email,
+                name: displayName,
+                appleIDToken: idTokenString
+            )
+            
+        case .failure(let error):
+            print("❌ Apple Sign-In error: \(error)")
+            self.errorMessage = "Apple Sign-In failed: \(error.localizedDescription)"
+        }
+    }
+    
+    private func randomNonce(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
+            
+            randoms.forEach { random in
+                if remainingLength == 0 {
+                    return
+                }
+                
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    private func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+    
     // MARK: - Google Sign-In
     
     func signInWithGoogle() {
@@ -130,7 +232,181 @@ class AuthenticationService: ObservableObject {
         }
     }
     
-    // MARK: - Backend Authentication
+    // MARK: - Backend Authentication (Apple)
+    
+    private func authenticateWithBackendApple(userIdentifier: String, email: String?, name: String, appleIDToken: String) {
+        guard let url = URL(string: "\(backendURL)/api/auth/apple") else {
+            self.errorMessage = "Invalid backend URL"
+            self.isLoading = false
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "userIdentifier": userIdentifier,
+            "email": email ?? "",
+            "name": name,
+            "appleIDToken": appleIDToken
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        } catch {
+            self.errorMessage = "Failed to encode request"
+            self.isLoading = false
+            return
+        }
+        
+        print("📤 Sending Apple authentication request to backend...")
+        print("🔍 URL: \(url.absoluteString)")
+        print("🔍 User ID: \(userIdentifier)")
+        print("🔍 Email: \(email ?? "none")")
+        print("🔍 Name: \(name)")
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let error = error {
+                    self.errorMessage = "Network error: \(error.localizedDescription)"
+                    print("❌ Backend Apple authentication error: \(error)")
+                    return
+                }
+                
+                guard let data = data else {
+                    self.errorMessage = "No data received from server"
+                    return
+                }
+                
+                // Check HTTP status code
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("🔍 HTTP Status Code: \(httpResponse.statusCode)")
+                    
+                    if httpResponse.statusCode == 403 {
+                        // Account is banned or inactive
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = error
+                            if let reason = json["reason"] as? String {
+                                self.errorMessage = "\(error)\nReason: \(reason)"
+                            }
+                            print("❌ Account blocked: \(error)")
+                            // Clear any saved credentials since account is blocked
+                            self.signOut()
+                            return
+                        }
+                    }
+                    
+                    if httpResponse.statusCode == 500 {
+                        // Server error - show more helpful message
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = "Server error: \(error). Please try again."
+                            print("❌ Server error during Apple authentication: \(error)")
+                            return
+                        }
+                    }
+                    
+                    if httpResponse.statusCode != 200 && httpResponse.statusCode != 201 {
+                        // Handle other error status codes
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = error
+                            print("❌ Apple authentication failed with status \(httpResponse.statusCode): \(error)")
+                            return
+                        } else {
+                            self.errorMessage = "Authentication failed. Please try again."
+                            print("❌ Apple authentication failed with status \(httpResponse.statusCode)")
+                            return
+                        }
+                    }
+                }
+                
+                // Debug: Print response
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("📥 Backend Apple response: \(responseString)")
+                }
+                
+                // Parse response
+                do {
+                    guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        self.errorMessage = "Invalid response format"
+                        return
+                    }
+                    
+                    // Check for error in response
+                    if let error = json["error"] as? String {
+                        self.errorMessage = error
+                        if let reason = json["reason"] as? String {
+                            self.errorMessage = "\(error)\nReason: \(reason)"
+                        }
+                        print("❌ Backend error: \(error)")
+                        return
+                    }
+                    
+                    // Extract user data
+                    guard let userId = json["userId"] as? String,
+                          let userEmail = json["email"] as? String,
+                          let token = json["token"] as? String else {
+                        self.errorMessage = "Missing required fields in response"
+                        return
+                    }
+                    
+                    let subscriptionStatus = json["subscription_status"] as? String
+                    let daysRemaining = json["days_remaining"] as? Int
+                    
+                    // Parse subscription end date
+                    var subscriptionEndDate: Date?
+                    if let endDateString = json["subscription_end_date"] as? String {
+                        let formatter = ISO8601DateFormatter()
+                        subscriptionEndDate = formatter.date(from: endDateString)
+                    }
+                    
+                    print("✅ Apple authentication successful!")
+                    print("   User ID: \(userId)")
+                    print("   Email: \(userEmail)")
+                    print("   Subscription: \(subscriptionStatus ?? "unknown")")
+                    print("   Days remaining: \(daysRemaining ?? 0)")
+                    
+                    // Create user object
+                    let user = User(
+                        username: name,
+                        userId: userId,
+                        email: userEmail,
+                        authToken: token,
+                        subscriptionStatus: subscriptionStatus,
+                        subscriptionEndDate: subscriptionEndDate,
+                        daysRemaining: daysRemaining
+                    )
+                    
+                    // Save to keychain and local state
+                    self.saveUser(user)
+                    self.currentUser = user
+                    self.isAuthenticated = true
+                    
+                    print("🔄 State updated: isAuthenticated = \(self.isAuthenticated)")
+                    print("🔄 Current user: \(self.currentUser?.email ?? "nil")")
+                    
+                    // Validate session immediately after login to check account status
+                    Task {
+                        print("🔄 Validating newly authenticated Apple user...")
+                        await self.validateSession(token: token)
+                    }
+                    
+                } catch {
+                    self.errorMessage = "Failed to parse response: \(error.localizedDescription)"
+                    print("❌ JSON parsing error: \(error)")
+                }
+            }
+        }.resume()
+    }
+    
+    // MARK: - Backend Authentication (Google)
     
     private func authenticateWithBackend(email: String, name: String, googleIdToken: String?) {
         guard let url = URL(string: "\(backendURL)/api/auth/google") else {

@@ -30,9 +30,15 @@ struct OnboardingView: View {
             .navigationBarHidden(true)
         }
         .onAppear {
-            // Pre-fill username if user already exists
+            // Pre-fill username if user already exists and it's not a generic name
             if let existingUser = dataManager.currentUser {
-                username = existingUser.username
+                let existingName = existingUser.username
+                // Only pre-fill if it's not a generic name
+                if existingName.lowercased() != "apple user" && 
+                   existingName.lowercased() != "google user" &&
+                   existingName.lowercased() != "user" {
+                    username = existingName
+                }
                 selectedAge = existingUser.age ?? 10
                 selectedGrade = existingUser.grade ?? "4th grade"
             }
@@ -63,9 +69,13 @@ struct OnboardingView: View {
             Text("What's your name?")
                 .font(.headline)
             
-            TextField("Enter your name", text: $username)
+            TextField("Enter your full name", text: $username)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.words)
+            
+            Text("We'll use this to personalize your experience and for account support.")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
     }
     
@@ -130,27 +140,44 @@ struct OnboardingView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(username.isEmpty ? Color.gray : Color.blue)
+                .background(isValidName ? Color.blue : Color.gray)
                 .cornerRadius(12)
         }
-        .disabled(username.isEmpty)
+        .disabled(!isValidName)
         .padding(.top, 20)
+    }
+    
+    private var isValidName: Bool {
+        let trimmed = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Require at least 2 characters and not generic names
+        let isGeneric = trimmed.lowercased() == "apple user" ||
+                       trimmed.lowercased() == "google user" ||
+                       trimmed.lowercased() == "user"
+        
+        return trimmed.count >= 2 && !isGeneric
     }
     
     private func saveUserInfo() {
         guard !username.isEmpty else { return }
         
+        let trimmedName = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        
         // Update existing user instead of creating a new one to preserve auth data
         if var user = dataManager.currentUser {
             // Update the onboarding fields
-            user.username = username
+            user.username = trimmedName
             user.age = useGrade ? nil : selectedAge
             user.grade = useGrade ? selectedGrade : nil
             dataManager.currentUser = user
+            
+            // Sync to backend if authenticated
+            if let userId = user.userId, let token = user.authToken {
+                syncProfileToBackend(userId: userId, token: token, username: trimmedName, age: user.age, grade: user.grade)
+            }
         } else {
             // Fallback: create new user if none exists
             let user = User(
-                username: username,
+                username: trimmedName,
                 age: useGrade ? nil : selectedAge,
                 grade: useGrade ? selectedGrade : nil
             )
@@ -159,6 +186,36 @@ struct OnboardingView: View {
         
         dataManager.saveData()
         isCompleted = true
+    }
+    
+    private func syncProfileToBackend(userId: String, token: String, username: String, age: Int?, grade: String?) {
+        guard let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/update-profile") else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let body: [String: Any] = [
+            "username": username,
+            "age": age as Any,
+            "grade": grade as Any
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("⚠️ Onboarding profile sync error: \(error.localizedDescription)")
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                print("✅ Onboarding profile synced to backend: \(username)")
+            } else {
+                print("⚠️ Onboarding profile sync failed with status: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+            }
+        }.resume()
     }
 }
 

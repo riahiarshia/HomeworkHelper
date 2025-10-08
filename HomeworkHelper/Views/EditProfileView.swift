@@ -91,19 +91,52 @@ struct EditProfileView: View {
     private func saveProfile() {
         guard !username.isEmpty else { return }
         
-        let updatedUser = User(
-            id: dataManager.currentUser?.id ?? UUID(),
-            username: username,
-            age: useGrade ? nil : selectedAge,
-            grade: useGrade ? selectedGrade : nil,
-            points: dataManager.currentUser?.points ?? 0,
-            streak: dataManager.currentUser?.streak ?? 0,
-            lastActive: Date()
-        )
+        // Preserve authentication fields
+        var updatedUser = dataManager.currentUser ?? User(username: username)
+        updatedUser.username = username
+        updatedUser.age = useGrade ? nil : selectedAge
+        updatedUser.grade = useGrade ? selectedGrade : nil
+        updatedUser.lastActive = Date()
         
         dataManager.currentUser = updatedUser
         dataManager.saveData()
+        
+        // Sync to backend if authenticated
+        if let userId = updatedUser.userId, let token = updatedUser.authToken {
+            syncProfileToBackend(userId: userId, token: token, username: username, age: updatedUser.age, grade: updatedUser.grade)
+        }
+        
         showingSaveAlert = true
+    }
+    
+    private func syncProfileToBackend(userId: String, token: String, username: String, age: Int?, grade: String?) {
+        guard let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/update-profile") else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let body: [String: Any] = [
+            "username": username,
+            "age": age as Any,
+            "grade": grade as Any
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("⚠️ Profile sync error: \(error.localizedDescription)")
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                print("✅ Profile synced to backend successfully")
+            } else {
+                print("⚠️ Profile sync failed with status: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+            }
+        }.resume()
     }
 }
 

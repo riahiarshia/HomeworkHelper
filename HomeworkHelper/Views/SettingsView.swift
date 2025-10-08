@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State private var showingTermsOfUse = false
     @State private var showingDisclaimer = false
     @State private var emailCopied = false
+    @State private var userIdCopied = false
+    @State private var supportEmailCopied = false
     @State private var showingSignOutAlert = false
     
     var body: some View {
@@ -89,13 +91,69 @@ struct SettingsView: View {
                     if let user = dataManager.currentUser {
                         // Email
                         if let email = user.email {
-                            HStack {
-                                Text("Email")
-                                Spacer()
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text("Email")
+                                    Spacer()
+                                    Button(action: {
+                                        UIPasteboard.general.string = email
+                                        emailCopied = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            emailCopied = false
+                                        }
+                                    }) {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: emailCopied ? "checkmark" : "doc.on.doc")
+                                                .font(.caption)
+                                            Text(emailCopied ? "Copied!" : "Copy")
+                                                .font(.caption)
+                                        }
+                                        .foregroundColor(.blue)
+                                    }
+                                }
                                 Text(email)
+                                    .font(.caption2)
                                     .foregroundColor(.secondary)
-                                    .font(.caption)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
                             }
+                        }
+                        
+                        // User ID (for support) - PRIMARY SUPPORT IDENTIFIER
+                        if let userId = user.userId {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text("User ID")
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    Button(action: {
+                                        UIPasteboard.general.string = userId
+                                        userIdCopied = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            userIdCopied = false
+                                        }
+                                    }) {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: userIdCopied ? "checkmark" : "doc.on.doc")
+                                                .font(.caption)
+                                            Text(userIdCopied ? "Copied!" : "Copy")
+                                                .font(.caption)
+                                        }
+                                        .foregroundColor(.blue)
+                                    }
+                                }
+                                Text(userId)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+                            }
+                            
+                            Text("📋 Copy this ID when contacting support")
+                                .font(.caption2)
+                                .foregroundColor(.blue)
+                                .fontWeight(.medium)
+                                .padding(.top, 4)
                         }
                         
                         // Subscription Status
@@ -195,9 +253,9 @@ struct SettingsView: View {
                         
                         Button {
                             UIPasteboard.general.string = "homework@arshia.com"
-                            emailCopied = true
+                            supportEmailCopied = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                emailCopied = false
+                                supportEmailCopied = false
                             }
                         } label: {
                             HStack {
@@ -205,7 +263,7 @@ struct SettingsView: View {
                                     .foregroundColor(.blue)
                                     .underline()
                                 Spacer()
-                                if emailCopied {
+                                if supportEmailCopied {
                                     HStack(spacing: 4) {
                                         Image(systemName: "checkmark.circle.fill")
                                             .foregroundColor(.green)
@@ -324,6 +382,25 @@ struct SettingsView: View {
         dataManager.progress = []
         dataManager.currentUser = User(username: "Student", age: nil, grade: nil, points: 0, streak: 0)
         dataManager.saveData()
+    }
+    
+    private func sendSupportEmail() {
+        guard let user = dataManager.currentUser else { return }
+        
+        // Compose email with user information
+        var emailBody = "Please describe your issue:\n\n\n\n"
+        emailBody += "--- Account Information (Do Not Delete) ---\n"
+        emailBody += "User ID: \(user.userId ?? "N/A")\n"
+        emailBody += "Email: \(user.email ?? "N/A")\n"
+        emailBody += "Username: \(user.username)\n"
+        emailBody += "Subscription: \(user.subscriptionStatus ?? "N/A")\n"
+        emailBody += "-------------------------------------------\n"
+        
+        let encoded = emailBody.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+        if let url = URL(string: "mailto:homework@arshia.com?subject=Support%20Request&body=\(encoded)") {
+            UIApplication.shared.open(url)
+        }
     }
     
 }
