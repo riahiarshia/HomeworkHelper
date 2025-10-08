@@ -22,6 +22,7 @@ struct StepGuidanceView: View {
     @State private var shuffledOptions: [String] = []
     @State private var attemptCount = 0
     @State private var hasShownInitialHint = false
+    @State private var showWrongAnswerMessage = false
     
     private var steps: [GuidanceStep] {
         dataManager.steps[problemId.uuidString]?.sorted(by: { $0.stepNumber < $1.stepNumber }) ?? []
@@ -75,8 +76,43 @@ struct StepGuidanceView: View {
                             
                             stepContent(step)
                             
+                            // Show "Not quite" message immediately after wrong answer
+                            if showWrongAnswerMessage {
+                                VStack(spacing: 12) {
+                                    HStack {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(.title2)
+                                            .foregroundColor(.red)
+                                        Text("Not quite. Let's try again!")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.red)
+                                    }
+                                    
+                                    if isLoadingHint {
+                                        VStack(spacing: 12) {
+                                            ProgressView()
+                                            Text("Generating a new hint...")
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        .padding()
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.red.opacity(0.05))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Color.red.opacity(0.3), lineWidth: 2)
+                                        )
+                                )
+                            }
+                            
                             // Show hint first (before options) - Keep visible until Continue pressed
-                            if !showOptions {
+                            if !showOptions && !showWrongAnswerMessage {
                                 if isLoadingHint {
                                     VStack(spacing: 12) {
                                         ProgressView()
@@ -350,19 +386,6 @@ struct StepGuidanceView: View {
     
     private var tutorHintView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Show "Not quite" message only after wrong answer
-            if attemptCount > 0 {
-                HStack {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title3)
-                        .foregroundColor(.red)
-                    Text("Not quite. Let's try again!")
-                        .font(.headline)
-                        .foregroundColor(.red)
-                }
-                .padding(.bottom, 8)
-            }
-            
             HStack {
                 Image(systemName: "lightbulb.fill")
                     .font(.title2)
@@ -385,10 +408,10 @@ struct StepGuidanceView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(attemptCount > 0 ? Color.red.opacity(0.05) : Color.orange.opacity(0.1))
+                .fill(Color.orange.opacity(0.1))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(attemptCount > 0 ? Color.red.opacity(0.3) : Color.orange.opacity(0.3), lineWidth: 2)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
                 )
         )
     }
@@ -707,10 +730,11 @@ struct StepGuidanceView: View {
                 dataManager.updateProblem(problem)
             }
         } else {
-            // Wrong answer - show new hint
+            // Wrong answer - show message immediately, then generate hint
             attemptCount += 1
             showOptions = false
             selectedAnswer = nil
+            showWrongAnswerMessage = true
             
             // Generate new hint with different approach
             Task {
@@ -737,6 +761,7 @@ struct StepGuidanceView: View {
         }
         
         isLoadingHint = false
+        showWrongAnswerMessage = false // Hide the "Not quite" message once hint is loaded
     }
     
     private func buildProblemContext() -> String {
@@ -781,6 +806,7 @@ struct StepGuidanceView: View {
             showHint = false
             feedbackMessage = ""
             showFeedback = false
+            showWrongAnswerMessage = false
             
             // Load initial hint for new step
             if let step = currentStep {
