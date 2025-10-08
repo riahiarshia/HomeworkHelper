@@ -14,10 +14,6 @@ struct StepGuidanceView: View {
     @State private var showFeedback = false
     @State private var feedbackMessage = ""
     @State private var showCompletion = false
-    @State private var showChat = false
-    @State private var studentQuestion = ""
-    @State private var showQuestionArea = false
-    @State private var isSubmittingQuestion = false
     @State private var debugInfo = ""
     @State private var showCompletionView = false
     
@@ -79,8 +75,8 @@ struct StepGuidanceView: View {
                             
                             stepContent(step)
                             
-                            // Show hint first (before options)
-                            if !hasShownInitialHint || (attemptCount > 0 && !showOptions) {
+                            // Show hint first (before options) - Keep visible until Continue pressed
+                            if !showOptions {
                                 if isLoadingHint {
                                     VStack(spacing: 12) {
                                         ProgressView()
@@ -94,33 +90,28 @@ struct StepGuidanceView: View {
                                     .cornerRadius(12)
                                 } else if !hintText.isEmpty {
                                     tutorHintView
-                                }
-                            }
-                            
-                            // Show Continue button to reveal options (or after wrong answer)
-                            if !showOptions && hasShownInitialHint && !isLoadingHint {
-                                Button {
-                                    showMultipleChoice(step)
-                                } label: {
-                                    Text("Continue")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .cornerRadius(12)
+                                    
+                                    // Show Continue button below the hint
+                                    Button {
+                                        showMultipleChoice(step)
+                                    } label: {
+                                        Text("Continue")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.blue)
+                                            .cornerRadius(12)
+                                    }
+                                    .padding(.top, 8)
                                 }
                             }
                             
                             // Show options after Continue is pressed
                             if showOptions {
                                 optionsView(step)
-                            }
-                            
-                            questionArea
-                            
-                            // Only show skip button, not hint button (hint is automatic)
-                            if showOptions {
+                                
+                                // Show skip button below options
                                 Button {
                                     skipStep(step)
                                 } label: {
@@ -134,6 +125,7 @@ struct StepGuidanceView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(10)
                                 }
+                                .padding(.top, 8)
                             }
                         } else if showCompletion {
                             completionView
@@ -166,16 +158,6 @@ struct StepGuidanceView: View {
                 }
             }
             
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showChat = true
-                } label: {
-                    Image(systemName: "message.fill")
-                }
-            }
-        }
-        .sheet(isPresented: $showChat) {
-            ChatView(problemId: problemId)
         }
         .sheet(isPresented: $showCompletionView) {
             VStack(spacing: 20) {
@@ -348,63 +330,6 @@ struct StepGuidanceView: View {
         }
     }
     
-    private var questionArea: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Button {
-                showQuestionArea.toggle()
-            } label: {
-                HStack {
-                    Image(systemName: "questionmark.circle.fill")
-                        .foregroundColor(.blue)
-                    Text("Ask a Question")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-                    Spacer()
-                    Image(systemName: showQuestionArea ? "chevron.up" : "chevron.down")
-                        .foregroundColor(.blue)
-                }
-            }
-            
-            if showQuestionArea {
-                VStack(spacing: 12) {
-                    TextEditor(text: $studentQuestion)
-                        .frame(height: 80)
-                        .padding(8)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
-                    
-                    Button {
-                        Task {
-                            await submitQuestion()
-                        }
-                    } label: {
-                        HStack {
-                            if isSubmittingQuestion {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            } else {
-                                Image(systemName: "paperplane.fill")
-                            }
-                            Text("Ask Question")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(studentQuestion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                    .disabled(studentQuestion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSubmittingQuestion)
-                }
-            }
-        }
-        .padding()
-        .background(Color.blue.opacity(0.05))
-        .cornerRadius(12)
-    }
     
     private var hintView: some View {
         VStack(alignment: .leading, spacing: 8) {
