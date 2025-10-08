@@ -32,10 +32,16 @@ struct AuthenticationView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                    Text("Your Step-by-Step Learning Guide")
+                    Text("Your AI Tutor for Step-by-Step Learning")
                         .font(.title3)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
                         .foregroundColor(.white.opacity(0.95))
+                        .multilineTextAlignment(.center)
+                    
+                    Text("No Cheating - Real Learning")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.green.opacity(0.9))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
