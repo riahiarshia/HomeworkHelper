@@ -1005,16 +1005,16 @@ struct HomeView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
             } else {
-                // Show friendly reminder during early trial
+                // Show trial status during active trial
                 HStack {
                     Image(systemName: "gift.fill")
                         .font(.title3)
                         .foregroundColor(.green)
                     
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Free Trial Active")
+                        Text("Trial activated - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
                             .font(.headline)
-                        Text("\(daysRemaining) days of free access remaining")
+                        Text("Enjoy full access to your AI tutor")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
