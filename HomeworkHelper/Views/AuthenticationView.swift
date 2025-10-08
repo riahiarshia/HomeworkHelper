@@ -137,9 +137,16 @@ struct AuthenticationView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
+        .onChange(of: authService.isAuthenticated) { isAuthenticated in
+            if isAuthenticated {
+                print("✅ User authenticated in view")
+            }
+        }
+    }
+}
 
 #Preview {
     AuthenticationView()
         .environmentObject(AuthenticationService())
 }
-
