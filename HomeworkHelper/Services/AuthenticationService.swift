@@ -86,6 +86,244 @@ class AuthenticationService: ObservableObject {
         await validateSession(token: token)
     }
     
+    // MARK: - Email/Password Authentication
+    
+    func signInWithEmail(email: String, password: String) {
+        guard !email.isEmpty, !password.isEmpty else {
+            self.errorMessage = "Please enter email and password"
+            return
+        }
+        
+        guard email.contains("@") else {
+            self.errorMessage = "Please enter a valid email address"
+            return
+        }
+        
+        guard password.count >= 6 else {
+            self.errorMessage = "Password must be at least 6 characters"
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        print("📧 Email sign-in attempt: \(email)")
+        
+        authenticateWithBackendEmail(email: email, password: password)
+    }
+    
+    func signUpWithEmail(email: String, password: String, username: String) {
+        guard !email.isEmpty, !password.isEmpty, !username.isEmpty else {
+            self.errorMessage = "Please fill in all fields"
+            return
+        }
+        
+        guard email.contains("@") else {
+            self.errorMessage = "Please enter a valid email address"
+            return
+        }
+        
+        guard password.count >= 6 else {
+            self.errorMessage = "Password must be at least 6 characters"
+            return
+        }
+        
+        guard username.count >= 2 else {
+            self.errorMessage = "Name must be at least 2 characters"
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        print("📧 Email sign-up attempt: \(email)")
+        
+        registerWithBackendEmail(email: email, password: password, username: username)
+    }
+    
+    private func authenticateWithBackendEmail(email: String, password: String) {
+        guard let url = URL(string: "\(backendURL)/api/auth/login") else {
+            self.errorMessage = "Invalid backend URL"
+            self.isLoading = false
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "email": email.lowercased(),
+            "password": password
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        print("📤 Sending email authentication request to backend...")
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let error = error {
+                    self.errorMessage = "Network error: \(error.localizedDescription)"
+                    print("❌ Backend email authentication error: \(error)")
+                    return
+                }
+                
+                guard let data = data else {
+                    self.errorMessage = "No data received from server"
+                    return
+                }
+                
+                // Check HTTP status code
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("🔍 HTTP Status Code: \(httpResponse.statusCode)")
+                    
+                    if httpResponse.statusCode == 401 {
+                        self.errorMessage = "Invalid email or password"
+                        return
+                    }
+                    
+                    if httpResponse.statusCode == 403 {
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = error
+                            return
+                        }
+                    }
+                    
+                    if httpResponse.statusCode != 200 {
+                        self.errorMessage = "Login failed. Please try again."
+                        return
+                    }
+                }
+                
+                self.handleAuthenticationResponse(data: data, authType: "email")
+            }
+        }.resume()
+    }
+    
+    private func registerWithBackendEmail(email: String, password: String, username: String) {
+        guard let url = URL(string: "\(backendURL)/api/auth/register") else {
+            self.errorMessage = "Invalid backend URL"
+            self.isLoading = false
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "email": email.lowercased(),
+            "password": password,
+            "username": username
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        print("📤 Sending registration request to backend...")
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let error = error {
+                    self.errorMessage = "Network error: \(error.localizedDescription)"
+                    print("❌ Backend registration error: \(error)")
+                    return
+                }
+                
+                guard let data = data else {
+                    self.errorMessage = "No data received from server"
+                    return
+                }
+                
+                // Check HTTP status code
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("🔍 HTTP Status Code: \(httpResponse.statusCode)")
+                    
+                    if httpResponse.statusCode == 400 {
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let error = json["error"] as? String {
+                            self.errorMessage = error
+                            return
+                        }
+                    }
+                    
+                    if httpResponse.statusCode != 200 && httpResponse.statusCode != 201 {
+                        self.errorMessage = "Registration failed. Please try again."
+                        return
+                    }
+                }
+                
+                self.handleAuthenticationResponse(data: data, authType: "email")
+            }
+        }.resume()
+    }
+    
+    private func handleAuthenticationResponse(data: Data, authType: String) {
+        do {
+            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                self.errorMessage = "Invalid response format"
+                return
+            }
+            
+            if let error = json["error"] as? String {
+                self.errorMessage = error
+                return
+            }
+            
+            guard let userId = json["userId"] as? String,
+                  let userEmail = json["email"] as? String,
+                  let token = json["token"] as? String else {
+                self.errorMessage = "Missing required fields in response"
+                return
+            }
+            
+            let subscriptionStatus = json["subscription_status"] as? String
+            let daysRemaining = json["days_remaining"] as? Int
+            let userName = json["username"] as? String
+            
+            var subscriptionEndDate: Date?
+            if let endDateString = json["subscription_end_date"] as? String {
+                let formatter = ISO8601DateFormatter()
+                subscriptionEndDate = formatter.date(from: endDateString)
+            }
+            
+            print("✅ \(authType) authentication successful!")
+            print("   User ID: \(userId)")
+            print("   Email: \(userEmail)")
+            
+            let user = User(
+                username: userName ?? "User",
+                userId: userId,
+                email: userEmail,
+                authToken: token,
+                subscriptionStatus: subscriptionStatus,
+                subscriptionEndDate: subscriptionEndDate,
+                daysRemaining: daysRemaining
+            )
+            
+            self.saveUser(user)
+            self.currentUser = user
+            self.isAuthenticated = true
+            
+            Task {
+                await self.validateSession(token: token)
+            }
+            
+        } catch {
+            self.errorMessage = "Failed to parse response: \(error.localizedDescription)"
+            print("❌ JSON parsing error: \(error)")
+        }
+    }
+    
     // MARK: - Apple Sign-In
     
     func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
