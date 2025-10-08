@@ -32,9 +32,10 @@ struct AuthenticationView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                    Text("Get step-by-step guidance for your homework")
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.9))
+                    Text("Your Step-by-Step Learning Guide")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white.opacity(0.95))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
