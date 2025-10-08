@@ -15,8 +15,24 @@ struct ContentView: View {
     }
     
     private var shouldShowPaywall: Bool {
-        // Show paywall if user is authenticated, onboarded, but has no active subscription
-        return authService.isAuthenticated && !needsOnboarding && !subscriptionService.hasActiveAccess()
+        // Show paywall ONLY when trial has expired (not during active trial)
+        // This allows users to use the app freely for 7 days before requiring subscription
+        if !authService.isAuthenticated || needsOnboarding {
+            return false
+        }
+        
+        // Check subscription status
+        switch subscriptionService.subscriptionStatus {
+        case .trial:
+            // During trial period - NO paywall, let them use the app
+            return false
+        case .active, .gracePeriod:
+            // Active subscription - no paywall
+            return false
+        case .expired, .unknown:
+            // Trial expired or no subscription - SHOW paywall
+            return true
+        }
     }
     
     var body: some View {
@@ -61,8 +77,9 @@ struct ContentView: View {
                         }
                         .tag(3)
                 }
-                .sheet(isPresented: $showPaywall) {
+                .fullScreenCover(isPresented: $showPaywall) {
                     PaywallView()
+                        .interactiveDismissDisabled() // Prevent dismissing - must subscribe
                 }
             }
         }

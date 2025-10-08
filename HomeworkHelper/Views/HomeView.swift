@@ -985,40 +985,45 @@ struct HomeView: View {
         case .trial(let daysRemaining):
             if daysRemaining <= 3 {
                 // Show warning when trial is ending soon
-                Button {
-                    showPaywall = true
-                } label: {
-                    HStack {
-                        Image(systemName: "clock.badge.exclamationmark")
-                            .font(.title3)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Trial Ending Soon")
-                                .font(.headline)
-                            Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") remaining")
-                                .font(.caption)
-                        }
-                        
-                        Spacer()
-                        
-                        Text("Upgrade")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        
-                        Image(systemName: "chevron.right")
+                HStack {
+                    Image(systemName: "clock.badge.exclamationmark")
+                        .font(.title3)
+                        .foregroundColor(.orange)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Free Trial Ending Soon")
+                            .font(.headline)
+                        Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left - Subscribe to continue")
                             .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.orange, Color.red]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(12)
+                    
+                    Spacer()
                 }
+                .padding()
+                .background(Color.orange.opacity(0.1))
+                .cornerRadius(12)
+                .padding(.horizontal)
+            } else {
+                // Show friendly reminder during early trial
+                HStack {
+                    Image(systemName: "gift.fill")
+                        .font(.title3)
+                        .foregroundColor(.green)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Free Trial Active")
+                            .font(.headline)
+                        Text("\(daysRemaining) days of free access remaining")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(12)
                 .padding(.horizontal)
             }
             

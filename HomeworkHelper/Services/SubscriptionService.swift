@@ -49,48 +49,62 @@ class SubscriptionService: ObservableObject {
     
     // MARK: - Load Products
     func loadProducts() async {
+        print("📦 Loading products...")
         isLoading = true
         errorMessage = nil
         
         do {
             // Request products from App Store
+            print("📦 Requesting product ID: \(monthlySubscriptionID)")
             let products = try await Product.products(for: [monthlySubscriptionID])
             
             if products.isEmpty {
-                errorMessage = "No subscription products available. Please check your App Store Connect configuration."
+                errorMessage = "No subscription products available. Please check your StoreKit Configuration."
                 print("⚠️ No products found for ID: \(monthlySubscriptionID)")
+                print("⚠️ Make sure StoreKit Configuration is set in Xcode scheme")
             } else {
                 currentSubscription = products.first
                 print("✅ Loaded subscription product: \(products.first?.displayName ?? "Unknown")")
                 print("   Price: \(products.first?.displayPrice ?? "Unknown")")
                 print("   Description: \(products.first?.description ?? "Unknown")")
+                print("   Product ID: \(products.first?.id ?? "Unknown")")
             }
         } catch {
             errorMessage = "Failed to load subscription: \(error.localizedDescription)"
             print("❌ Error loading products: \(error)")
+            print("❌ Error details: \(error)")
         }
         
         isLoading = false
+        print("📦 Product loading complete. Current subscription: \(currentSubscription != nil ? "Available" : "Not available")")
     }
     
     // MARK: - Purchase Subscription
     func purchase() async -> Bool {
+        print("🛒 Purchase() called")
+        
         guard let product = currentSubscription else {
-            errorMessage = "No subscription product available"
+            errorMessage = "No subscription product available. Please wait for products to load."
+            print("❌ No product available to purchase")
             return false
         }
         
+        print("🛒 Product found: \(product.displayName)")
         isLoading = true
         errorMessage = nil
         
         do {
             // Attempt purchase
+            print("🛒 Calling product.purchase()...")
             let result = try await product.purchase()
+            print("🛒 Purchase result received: \(result)")
             
             switch result {
             case .success(let verification):
+                print("✅ Purchase successful, verifying transaction...")
                 // Check transaction verification
                 let transaction = try checkVerified(verification)
+                print("✅ Transaction verified")
                 
                 // Update subscription status
                 await updateSubscriptionStatus(transaction: transaction)
@@ -98,7 +112,7 @@ class SubscriptionService: ObservableObject {
                 // Finish the transaction
                 await transaction.finish()
                 
-                print("✅ Purchase successful!")
+                print("✅ Purchase complete!")
                 isLoading = false
                 return true
                 
@@ -121,6 +135,7 @@ class SubscriptionService: ObservableObject {
         } catch {
             errorMessage = "Purchase failed: \(error.localizedDescription)"
             print("❌ Purchase error: \(error)")
+            print("❌ Error type: \(type(of: error))")
             isLoading = false
             return false
         }

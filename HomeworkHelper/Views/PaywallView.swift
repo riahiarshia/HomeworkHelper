@@ -40,6 +40,17 @@ struct PaywallView: View {
                     // CTA Button
                     ctaButton
                     
+                    // Error Message
+                    if let error = subscriptionService.errorMessage {
+                        Text(error)
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.white.opacity(0.9))
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                    }
+                    
                     // Restore Purchases
                     restoreButton
                     
@@ -70,12 +81,12 @@ struct PaywallView: View {
                     .foregroundColor(.white)
             }
             
-            Text("Unlock Your Full Potential")
+            Text("Ready to Continue Learning?")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            Text("Get unlimited access to your AI tutor")
+            Text("Your free trial has ended\nSubscribe to keep using your AI tutor")
                 .font(.title3)
                 .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
@@ -122,22 +133,6 @@ struct PaywallView: View {
     // MARK: - Pricing Card
     private var pricingCard: some View {
         VStack(spacing: 16) {
-            // Trial Badge
-            HStack {
-                Spacer()
-                Text("🎉 7-DAY FREE TRIAL")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.green)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(
-                        Capsule()
-                            .fill(Color.white)
-                    )
-                Spacer()
-            }
-            
             // Price
             VStack(spacing: 8) {
                 if let product = subscriptionService.currentSubscription {
@@ -159,13 +154,13 @@ struct PaywallView: View {
                 }
             }
             
-            // Trial Info
+            // Subscription Info
             VStack(spacing: 4) {
-                Text("Start your 7-day free trial")
+                Text("Continue your learning journey")
                     .font(.subheadline)
                     .foregroundColor(.white)
                 
-                Text("Cancel anytime")
+                Text("Cancel anytime in Settings")
                     .font(.caption)
                     .foregroundColor(.white.opacity(0.7))
             }
@@ -194,7 +189,7 @@ struct PaywallView: View {
                     Text("Processing...")
                         .fontWeight(.bold)
                 } else {
-                    Text("Start Free Trial")
+                    Text("Subscribe Now")
                         .fontWeight(.bold)
                     Image(systemName: "arrow.right")
                 }
@@ -250,15 +245,22 @@ struct PaywallView: View {
     
     // MARK: - Actions
     private func purchaseSubscription() {
+        print("🛒 Purchase button tapped")
         isPurchasing = true
         
         Task {
+            print("🛒 Starting purchase flow...")
             let success = await subscriptionService.purchase()
             isPurchasing = false
             
+            print("🛒 Purchase result: \(success)")
+            
             if success {
+                print("✅ Purchase successful, dismissing paywall")
                 // Dismiss paywall on successful purchase
                 dismiss()
+            } else {
+                print("❌ Purchase failed or cancelled")
             }
         }
     }
