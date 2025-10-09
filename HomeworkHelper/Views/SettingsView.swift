@@ -504,6 +504,14 @@ struct SettingsView: View {
             .sheet(isPresented: $showingTermsOfUse) {
                 TermsOfUseView()
             }
+            .onAppear {
+                // Refresh subscription status when settings view appears
+                Task {
+                    print("⚙️ SettingsView - Refreshing subscription status")
+                    await subscriptionService.refreshSubscriptionStatus()
+                    print("⚙️ SettingsView - Subscription status: \(subscriptionService.subscriptionStatus)")
+                }
+            }
         }
     }
     

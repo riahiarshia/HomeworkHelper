@@ -103,6 +103,13 @@ struct HomeView: View {
                     selectedImage = nil
                     navigateToGuidance = false
                 }
+                
+                // Refresh subscription status when home view appears
+                Task {
+                    print("🏠 HomeView - Refreshing subscription status")
+                    await subscriptionService.refreshSubscriptionStatus()
+                    print("🏠 HomeView - Subscription status: \(subscriptionService.subscriptionStatus)")
+                }
             }
             .background(
                 NavigationLink(
