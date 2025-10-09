@@ -186,7 +186,9 @@ class SubscriptionService: ObservableObject {
     /// Force refresh subscription status from backend
     func refreshSubscriptionStatus() async {
         print("🔄 Force refreshing subscription status...")
+        print("🔄 Current status before refresh: \(subscriptionStatus)")
         await loadSubscriptionStatus()
+        print("🔄 Current status after refresh: \(subscriptionStatus)")
     }
     
     // MARK: - Load Subscription Status

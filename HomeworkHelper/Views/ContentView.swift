@@ -99,6 +99,8 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            print("🔵 ContentView onAppear - Starting subscription refresh")
+            
             // Sync on app launch if user is already authenticated
             if let authUser = authService.currentUser {
                 syncAuthUserToDataManager(authUser)
@@ -106,11 +108,16 @@ struct ContentView: View {
             
             // Load subscription status
             Task {
+                print("🔵 ContentView - Calling refreshSubscriptionStatus()")
                 await subscriptionService.refreshSubscriptionStatus()
+                print("🔵 ContentView - Subscription status after refresh: \(subscriptionService.subscriptionStatus)")
                 
                 // Check if we need to show paywall after loading status
                 if shouldShowPaywall {
+                    print("🔵 ContentView - Should show paywall: TRUE")
                     showPaywall = true
+                } else {
+                    print("🔵 ContentView - Should show paywall: FALSE")
                 }
             }
         }
