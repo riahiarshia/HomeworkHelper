@@ -100,6 +100,21 @@ struct ContentView: View {
             if !needs {
                 selectedTab = 0
                 print("✅ Onboarding complete - setting tab to Home (0)")
+                
+                // Load subscription status after onboarding
+                Task {
+                    print("🔵 Post-onboarding - Refreshing subscription status")
+                    await subscriptionService.refreshSubscriptionStatus()
+                    print("🔵 Post-onboarding - Subscription status: \(subscriptionService.subscriptionStatus)")
+                    
+                    // Check if we need to show paywall
+                    if shouldShowPaywall {
+                        print("🔵 Post-onboarding - Should show paywall: TRUE")
+                        showPaywall = true
+                    } else {
+                        print("🔵 Post-onboarding - Should show paywall: FALSE")
+                    }
+                }
             }
         }
         .onAppear {
