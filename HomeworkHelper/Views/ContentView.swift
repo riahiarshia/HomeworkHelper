@@ -6,6 +6,7 @@ struct ContentView: View {
     @StateObject private var subscriptionService = SubscriptionService.shared
     @State private var selectedTab = 0
     @State private var showPaywall = false
+    @Environment(\.scenePhase) private var scenePhase
     
     init() {
         print("🏗️ ContentView init called")
@@ -154,6 +155,16 @@ struct ContentView: View {
             } else {
                 // Hide paywall if subscription becomes active
                 showPaywall = false
+            }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            // Refresh subscription status when app becomes active
+            if newPhase == .active && authService.isAuthenticated {
+                Task {
+                    print("🔄 App became active - Refreshing subscription status")
+                    await subscriptionService.refreshSubscriptionStatus()
+                    print("🔄 Subscription status after app activation: \(subscriptionService.subscriptionStatus)")
+                }
             }
         }
     }
