@@ -107,12 +107,20 @@ struct ContentView: View {
             // Load subscription status
             Task {
                 await subscriptionService.refreshSubscriptionStatus()
+                
+                // Check if we need to show paywall after loading status
+                if shouldShowPaywall {
+                    showPaywall = true
+                }
             }
         }
         .onChange(of: subscriptionService.subscriptionStatus) { _ in
             // Show paywall if subscription expired
             if shouldShowPaywall {
                 showPaywall = true
+            } else {
+                // Hide paywall if subscription becomes active
+                showPaywall = false
             }
         }
     }

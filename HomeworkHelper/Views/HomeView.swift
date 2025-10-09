@@ -331,6 +331,10 @@ struct HomeView: View {
             
             HStack(spacing: 12) {
                 Button {
+                    if isSubscriptionExpired {
+                        showPaywall = true
+                        return
+                    }
                     logger.critical("🚨 CRITICAL DEBUG: Camera button tapped!")
                     pendingImageSource = .camera
                     showCamera = true
@@ -338,7 +342,7 @@ struct HomeView: View {
                     Label("Camera", systemImage: "camera.fill")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(isSubscriptionExpired ? Color.gray : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -346,6 +350,10 @@ struct HomeView: View {
                 .disabled(isProcessing)
                 
                 Button {
+                    if isSubscriptionExpired {
+                        showPaywall = true
+                        return
+                    }
                     logger.critical("🚨 CRITICAL DEBUG: Photo Library button tapped!")
                     pendingImageSource = .photoLibrary
                     showImagePicker = true
@@ -353,14 +361,32 @@ struct HomeView: View {
                     Label("Photo Library", systemImage: "photo.fill")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(isSubscriptionExpired ? Color.gray : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
                 .accessibilityIdentifier("photo_library_button")
                 .disabled(isProcessing)
             }
+            
+            if isSubscriptionExpired {
+                Text("Subscribe to continue using Homework Helper")
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .padding(.top, 4)
+            }
         }
+    }
+    
+    // MARK: - Helper Properties
+    private var isSubscriptionExpired: Bool {
+        if case .expired = subscriptionService.subscriptionStatus {
+            return true
+        }
+        if case .unknown = subscriptionService.subscriptionStatus {
+            return true
+        }
+        return false
     }
     
     // MARK: - Network Reachability

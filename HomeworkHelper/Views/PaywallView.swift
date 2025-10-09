@@ -79,22 +79,30 @@ struct PaywallView: View {
                     .fill(Color.white.opacity(0.2))
                     .frame(width: 100, height: 100)
                 
-                Image(systemName: "brain.head.profile")
+                Image(systemName: isExpired ? "lock.fill" : "brain.head.profile")
                     .font(.system(size: 50))
                     .foregroundColor(.white)
             }
             
-            Text("Ready to Start Learning?")
+            Text(isExpired ? "Your Trial Has Ended" : "Ready to Start Learning?")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            Text("Start your 7-day free trial\nNo credit card required")
+            Text(isExpired ? "Subscribe to continue using your AI tutor" : "Start your 7-day free trial\nNo credit card required")
                 .font(.title3)
                 .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
         }
         .padding(.top, 20)
+    }
+    
+    // MARK: - Helper Properties
+    private var isExpired: Bool {
+        if case .expired = subscriptionService.subscriptionStatus {
+            return true
+        }
+        return false
     }
     
     // MARK: - Features Section
@@ -192,9 +200,9 @@ struct PaywallView: View {
                     Text("Processing...")
                         .fontWeight(.bold)
                 } else {
-                    Text("Start Free Trial")
+                    Text(isExpired ? "Subscribe Now" : "Start Free Trial")
                         .fontWeight(.bold)
-                    Image(systemName: "gift.fill")
+                    Image(systemName: isExpired ? "arrow.right.circle.fill" : "gift.fill")
                 }
             }
             .frame(maxWidth: .infinity)
