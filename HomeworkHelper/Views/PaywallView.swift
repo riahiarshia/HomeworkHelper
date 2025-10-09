@@ -273,16 +273,15 @@ struct PaywallView: View {
         print("🛒 Purchase button tapped")
         isPurchasing = true
         
-        // TestFlight bypass - simulate successful purchase
         #if DEBUG
+        // TestFlight bypass - simulate successful purchase
         print("🧪 TestFlight/DEBUG mode - simulating successful purchase")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.isPurchasing = false
             self.dismiss()
         }
-        return
-        #endif
-        
+        #else
+        // Production purchase flow
         Task {
             print("🛒 Starting purchase flow...")
             let success = await subscriptionService.purchase()
@@ -298,6 +297,7 @@ struct PaywallView: View {
                 print("❌ Purchase failed or cancelled")
             }
         }
+        #endif
     }
     
     private func restorePurchases() {
