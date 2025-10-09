@@ -290,37 +290,43 @@ class SubscriptionService: ObservableObject {
                 print("🔍 HTTP Status: \(httpResponse.statusCode)")
             }
             
-            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let subscriptionStatus = json["subscription_status"] as? String {
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                // The response has user data nested under "user" key
+                if let userData = json["user"] as? [String: Any],
+                   let subscriptionStatus = userData["subscriptionStatus"] as? String {
                 
-                // Use days_remaining from backend (matches admin portal calculation)
-                let daysRemaining = json["days_remaining"] as? Int ?? 0
+                    // Use days_remaining from backend (matches admin portal calculation)
+                    let daysRemaining = userData["daysRemaining"] as? Int ?? 0
                 
-                print("📊 Backend subscription data:")
-                print("   Status: \(subscriptionStatus)")
-                print("   Days remaining: \(daysRemaining)")
-                
-                print("🔍 Processing subscription status: '\(subscriptionStatus)', days: \(daysRemaining)")
-                
-                if subscriptionStatus == "trial" && daysRemaining > 0 {
-                    self.subscriptionStatus = .trial(daysRemaining: daysRemaining)
-                    print("✅ Set subscription status to .trial(\(daysRemaining))")
-                } else if subscriptionStatus == "active" {
-                    // Parse end date for active subscriptions
-                    if let subscriptionEndDateString = json["subscription_end_date"] as? String,
-                       let endDate = ISO8601DateFormatter().date(from: subscriptionEndDateString) {
-                        self.subscriptionStatus = .active(renewalDate: endDate)
-                        print("✅ Active subscription until: \(endDate)")
+                    print("📊 Backend subscription data:")
+                    print("   Status: \(subscriptionStatus)")
+                    print("   Days remaining: \(daysRemaining)")
+                    
+                    print("🔍 Processing subscription status: '\(subscriptionStatus)', days: \(daysRemaining)")
+                    
+                    if subscriptionStatus == "trial" && daysRemaining > 0 {
+                        self.subscriptionStatus = .trial(daysRemaining: daysRemaining)
+                        print("✅ Set subscription status to .trial(\(daysRemaining))")
+                    } else if subscriptionStatus == "active" {
+                        // Parse end date for active subscriptions
+                        if let subscriptionEndDateString = userData["subscriptionEndDate"] as? String,
+                           let endDate = ISO8601DateFormatter().date(from: subscriptionEndDateString) {
+                            self.subscriptionStatus = .active(renewalDate: endDate)
+                            print("✅ Active subscription until: \(endDate)")
+                        } else {
+                            self.subscriptionStatus = .active(renewalDate: Date().addingTimeInterval(86400 * Double(daysRemaining)))
+                        }
                     } else {
-                        self.subscriptionStatus = .active(renewalDate: Date().addingTimeInterval(86400 * Double(daysRemaining)))
+                        self.subscriptionStatus = .expired
+                        print("⚠️ Set subscription status to .expired (status='\(subscriptionStatus)', days=\(daysRemaining))")
                     }
                 } else {
                     self.subscriptionStatus = .expired
-                    print("⚠️ Set subscription status to .expired (status='\(subscriptionStatus)', days=\(daysRemaining))")
+                    print("❌ Failed to parse user data from backend response")
                 }
             } else {
                 self.subscriptionStatus = .expired
-                print("❌ Failed to parse subscription data from backend")
+                print("❌ Failed to parse JSON from backend response")
             }
         } catch {
             print("❌ Error checking trial status: \(error)")
