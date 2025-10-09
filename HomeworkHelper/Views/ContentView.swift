@@ -106,7 +106,7 @@ struct ContentView: View {
             
             // Load subscription status
             Task {
-                await subscriptionService.loadSubscriptionStatus()
+                await subscriptionService.refreshSubscriptionStatus()
             }
         }
         .onChange(of: subscriptionService.subscriptionStatus) { _ in
