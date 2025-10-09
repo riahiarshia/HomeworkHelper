@@ -279,7 +279,16 @@ class SubscriptionService: ObservableObject {
             request.httpMethod = "GET"
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             
-            let (data, _) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Debug: Log the raw response
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("🔍 Raw backend response: \(responseString)")
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("🔍 HTTP Status: \(httpResponse.statusCode)")
+            }
             
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                let subscriptionStatus = json["subscription_status"] as? String {
@@ -291,9 +300,11 @@ class SubscriptionService: ObservableObject {
                 print("   Status: \(subscriptionStatus)")
                 print("   Days remaining: \(daysRemaining)")
                 
+                print("🔍 Processing subscription status: '\(subscriptionStatus)', days: \(daysRemaining)")
+                
                 if subscriptionStatus == "trial" && daysRemaining > 0 {
                     self.subscriptionStatus = .trial(daysRemaining: daysRemaining)
-                    print("✅ Trial active: \(daysRemaining) days remaining")
+                    print("✅ Set subscription status to .trial(\(daysRemaining))")
                 } else if subscriptionStatus == "active" {
                     // Parse end date for active subscriptions
                     if let subscriptionEndDateString = json["subscription_end_date"] as? String,
@@ -305,7 +316,7 @@ class SubscriptionService: ObservableObject {
                     }
                 } else {
                     self.subscriptionStatus = .expired
-                    print("⚠️ Subscription expired or inactive")
+                    print("⚠️ Set subscription status to .expired (status='\(subscriptionStatus)', days=\(daysRemaining))")
                 }
             } else {
                 self.subscriptionStatus = .expired
