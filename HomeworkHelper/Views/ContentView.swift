@@ -93,6 +93,13 @@ struct ContentView: View {
             // Sync authenticated user to DataManager
             if let authUser = user {
                 syncAuthUserToDataManager(authUser)
+                
+                // Load subscription status after user logs in
+                Task {
+                    print("🔐 User authenticated - Refreshing subscription status")
+                    await subscriptionService.refreshSubscriptionStatus()
+                    print("🔐 Post-auth subscription status: \(subscriptionService.subscriptionStatus)")
+                }
             }
         }
         .onChange(of: needsOnboarding) { needs in

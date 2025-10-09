@@ -48,12 +48,9 @@ class SubscriptionService: ObservableObject {
         // Start listening for transaction updates
         updateListenerTask = listenForTransactions()
         
-        // Load initial subscription status
-        Task {
-            print("🔧 SubscriptionService init - Loading initial subscription status")
-            await loadSubscriptionStatus()
-            print("🔧 SubscriptionService init - Initial status loaded: \(subscriptionStatus)")
-        }
+        // Don't load subscription status here - it will be loaded when views appear
+        // This is because the user might not be logged in yet when this singleton is created
+        print("🔧 SubscriptionService init - Complete (subscription status will be loaded on demand)")
     }
     
     deinit {
