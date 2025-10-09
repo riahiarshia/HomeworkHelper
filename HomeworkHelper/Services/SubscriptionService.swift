@@ -43,12 +43,16 @@ class SubscriptionService: ObservableObject {
     
     // MARK: - Initialization
     private init() {
+        print("🔧 SubscriptionService init - Starting initialization")
+        
         // Start listening for transaction updates
         updateListenerTask = listenForTransactions()
         
         // Load initial subscription status
         Task {
+            print("🔧 SubscriptionService init - Loading initial subscription status")
             await loadSubscriptionStatus()
+            print("🔧 SubscriptionService init - Initial status loaded: \(subscriptionStatus)")
         }
     }
     
@@ -261,11 +265,16 @@ class SubscriptionService: ObservableObject {
     
     // MARK: - Check Trial Status
     private func checkTrialStatus() async {
+        print("🔍 checkTrialStatus() called")
+        
         // Get trial info from backend
         guard let userId = getUserId(), let token = getAuthToken() else {
+            print("❌ checkTrialStatus: No userId or token found")
             subscriptionStatus = .expired
             return
         }
+        
+        print("🔍 checkTrialStatus: userId=\(userId), making backend request...")
         
         do {
             let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/validate-session")!
