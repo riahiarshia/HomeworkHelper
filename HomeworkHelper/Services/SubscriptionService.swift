@@ -29,6 +29,15 @@ class SubscriptionService: ObservableObject {
     // MARK: - Trial Configuration
     private let trialDurationDays = 7 // Default 7-day trial
     
+    // MARK: - TestFlight Detection
+    private var isTestFlight: Bool {
+        #if DEBUG
+        return true // Always true in debug builds
+        #else
+        return Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        #endif
+    }
+    
     // MARK: - Transaction Listener
     private var updateListenerTask: Task<Void, Error>?
     
@@ -52,6 +61,17 @@ class SubscriptionService: ObservableObject {
         print("📦 Loading products...")
         isLoading = true
         errorMessage = nil
+        
+        // TestFlight bypass - skip product loading in TestFlight
+        if isTestFlight {
+            print("🧪 TestFlight detected - bypassing product loading")
+            print("🧪 Setting mock subscription status for testing")
+            
+            // Set a mock trial status for TestFlight
+            subscriptionStatus = .trial(daysRemaining: 7)
+            isLoading = false
+            return
+        }
         
         do {
             // Request products from App Store

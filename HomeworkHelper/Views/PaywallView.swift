@@ -248,6 +248,16 @@ struct PaywallView: View {
         print("🛒 Purchase button tapped")
         isPurchasing = true
         
+        // TestFlight bypass - simulate successful purchase
+        #if DEBUG
+        print("🧪 TestFlight/DEBUG mode - simulating successful purchase")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.isPurchasing = false
+            self.dismiss()
+        }
+        return
+        #endif
+        
         Task {
             print("🛒 Starting purchase flow...")
             let success = await subscriptionService.purchase()
