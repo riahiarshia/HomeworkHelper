@@ -40,6 +40,9 @@ struct PaywallView: View {
                     // CTA Button
                     ctaButton
                     
+                    // Subscribe Directly Button
+                    subscribeButton
+                    
                     // Error Message
                     if let error = subscriptionService.errorMessage {
                         Text(error)
@@ -81,12 +84,12 @@ struct PaywallView: View {
                     .foregroundColor(.white)
             }
             
-            Text("Ready to Continue Learning?")
+            Text("Ready to Start Learning?")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            Text("Your free trial has ended\nSubscribe to keep using your AI tutor")
+            Text("Start your 7-day free trial\nNo credit card required")
                 .font(.title3)
                 .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
@@ -189,9 +192,9 @@ struct PaywallView: View {
                     Text("Processing...")
                         .fontWeight(.bold)
                 } else {
-                    Text("Subscribe Now")
+                    Text("Start Free Trial")
                         .fontWeight(.bold)
-                    Image(systemName: "arrow.right")
+                    Image(systemName: "gift.fill")
                 }
             }
             .frame(maxWidth: .infinity)
@@ -202,6 +205,20 @@ struct PaywallView: View {
         }
         .disabled(isPurchasing || subscriptionService.isLoading)
         .padding(.horizontal)
+    }
+    
+    // MARK: - Subscribe Directly Button
+    private var subscribeButton: some View {
+        Button {
+            purchaseSubscription()
+        } label: {
+            Text("Subscribe Now ($9.99/month)")
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.8))
+                .underline()
+        }
+        .disabled(isPurchasing || subscriptionService.isLoading)
+        .padding(.top, 8)
     }
     
     // MARK: - Restore Button
