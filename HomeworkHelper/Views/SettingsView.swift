@@ -5,12 +5,7 @@ struct SettingsView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var authService: AuthenticationService
     @EnvironmentObject var subscriptionService: SubscriptionService
-    @State private var apiKey: String = ""
-    @State private var azureClientSecret: String = ""
-    @State private var showingAPIKeyAlert = false
     @State private var showingResetAlert = false
-    @State private var showingAzureSecretAlert = false
-    @State private var isRefreshingAzure = false
     @State private var showingPrivacyPolicy = false
     @State private var showingTermsOfUse = false
     @State private var showingDisclaimer = false
@@ -23,72 +18,6 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                // Backend API Section
-                Section(header: Text("Backend API")) {
-                    HStack {
-                        Image(systemName: "checkmark.shield.fill")
-                            .foregroundColor(.green)
-                        Text("Backend API Configured")
-                            .font(.headline)
-                    }
-                    
-                    Text("All AI requests are processed securely through our backend server. No API keys are stored on your device.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                if false {
-                    Section(header: Text("Azure Key Vault")) {
-                        HStack {
-                            Image(systemName: "checkmark.shield.fill")
-                                .foregroundColor(.green)
-                            Text("Azure Key Vault Configured")
-                                .font(.headline)
-                        }
-                        
-                        Text("Azure integration is now handled by the backend server.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Text("API key is automatically fetched from Azure Key Vault. Updates refresh every hour.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Section(header: Text("Azure Client Secret")) {
-                        SecureField("Client Secret (optional update)", text: $azureClientSecret)
-                            .textContentType(.password)
-                            .autocapitalization(.none)
-                        
-                        Button("Update Client Secret") {
-                            AzureKeyVaultService.shared.setClientSecret(azureClientSecret)
-                            azureClientSecret = ""
-                            showingAzureSecretAlert = true
-                        }
-                        .disabled(azureClientSecret.isEmpty)
-                        
-                        Text("Only update this if you've rotated your Azure client secret.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                Section(header: Text("Legacy Configuration (Disabled)")) {
-                    if false {
-                        Text("✅ Using Azure Key Vault for API key management")
-                            .font(.caption)
-                            .foregroundColor(.green)
-                        
-                        Text("Manual entry below is for emergency use only")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Text("API key management is now handled by the backend server.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
                 // Subscription Section
                 Section(header: Text("Subscription")) {
                     switch subscriptionService.subscriptionStatus {
@@ -467,16 +396,6 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
-            }
-            .alert("API Key Saved", isPresented: $showingAPIKeyAlert) {
-                Button("OK") { }
-            } message: {
-                Text("Your OpenAI API key has been saved successfully.")
-            }
-            .alert("Azure Client Secret Updated", isPresented: $showingAzureSecretAlert) {
-                Button("OK") { }
-            } message: {
-                Text("Your Azure client secret has been updated. The API key will be refreshed on next app launch.")
             }
             .alert("Reset All Data?", isPresented: $showingResetAlert) {
                 Button("Cancel", role: .cancel) { }
