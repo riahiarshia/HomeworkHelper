@@ -44,15 +44,34 @@ struct AuthenticationView: View {
                         .foregroundColor(.white.opacity(0.9))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                    
+                    // Prominent Trial CTA
+                    VStack(spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "gift.fill")
+                                .foregroundColor(.yellow)
+                            Text("Start Your 7-Day Free Trial")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                        }
+                        .foregroundColor(.white)
+                        
+                        Text("No credit card required • Full access to all features")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.8))
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.top, 8)
                 }
                 
                 Spacer()
                 
                 // Sign In Section
                 VStack(spacing: 20) {
-                    Text("Choose your sign-in method")
+                    Text("Sign in to start your free trial")
                         .font(.headline)
                         .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
                     
                     // Apple Sign In Button
                     SignInWithAppleButton(
@@ -90,7 +109,7 @@ struct AuthenticationView: View {
                             Image(systemName: "globe")
                                 .font(.title3)
                             
-                            Text("Continue with Google")
+                            Text("Start Trial with Google")
                                 .fontWeight(.semibold)
                         }
                         .frame(maxWidth: .infinity)
@@ -128,19 +147,15 @@ struct AuthenticationView: View {
                 
                 Spacer()
                 
-                // Trial info
+                // Footer info
                 VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Text("7-day free trial")
-                            .fontWeight(.medium)
-                    }
-                    .foregroundColor(.white)
-                    
-                    Text("No credit card required")
+                    Text("Trusted by students worldwide")
                         .font(.caption)
-                        .foregroundColor(.white.opacity(0.8))
+                        .foregroundColor(.white.opacity(0.7))
+                    
+                    Text("Cancel anytime during trial")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.7))
                 }
                 .padding(.bottom, 40)
             }
