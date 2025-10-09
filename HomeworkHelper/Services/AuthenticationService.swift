@@ -18,6 +18,21 @@ class AuthenticationService: ObservableObject {
     // Apple Sign-In
     private var currentNonce: String?
     
+    // Device Information
+    private func getDeviceInfo() -> [String: Any] {
+        let device = UIDevice.current
+        
+        return [
+            "deviceId": device.identifierForVendor?.uuidString ?? "unknown",
+            "deviceModel": device.model,
+            "deviceName": device.name,
+            "systemVersion": device.systemVersion,
+            "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown",
+            "appBuild": Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown",
+            "platform": "iOS"
+        ]
+    }
+    
     init() {
         // Check if user is already authenticated
         loadSavedUser()
@@ -487,7 +502,8 @@ class AuthenticationService: ObservableObject {
             "userIdentifier": userIdentifier,
             "email": email ?? "",
             "name": name,
-            "appleIDToken": appleIDToken
+            "appleIDToken": appleIDToken,
+            "deviceInfo": getDeviceInfo()
         ]
         
         do {
@@ -660,7 +676,8 @@ class AuthenticationService: ObservableObject {
         let body: [String: Any] = [
             "email": email,
             "name": name,
-            "googleIdToken": googleIdToken ?? ""
+            "googleIdToken": googleIdToken ?? "",
+            "deviceInfo": getDeviceInfo()
         ]
         
         do {
