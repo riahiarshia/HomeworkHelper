@@ -7,6 +7,10 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showPaywall = false
     
+    init() {
+        print("🏗️ ContentView init called")
+    }
+    
     private var needsOnboarding: Bool {
         guard let user = dataManager.currentUser else { return true }
         // User needs onboarding if they don't have both age AND grade set
