@@ -65,10 +65,9 @@ class SubscriptionService: ObservableObject {
         // TestFlight bypass - skip product loading in TestFlight
         if isTestFlight {
             print("🧪 TestFlight detected - bypassing product loading")
-            print("🧪 Setting mock subscription status for testing")
+            print("🧪 Note: Subscription status will be loaded from backend")
             
-            // Set a mock trial status for TestFlight
-            subscriptionStatus = .trial(daysRemaining: 7)
+            // Don't set mock status - let loadSubscriptionStatus() handle it
             isLoading = false
             return
         }
@@ -182,8 +181,23 @@ class SubscriptionService: ObservableObject {
         isLoading = false
     }
     
+    // MARK: - Public Methods
+    
+    /// Force refresh subscription status from backend
+    func refreshSubscriptionStatus() async {
+        print("🔄 Force refreshing subscription status...")
+        await loadSubscriptionStatus()
+    }
+    
     // MARK: - Load Subscription Status
-    func loadSubscriptionStatus() async {
+    private func loadSubscriptionStatus() async {
+        // In TestFlight/Debug mode, always check backend first
+        if isTestFlight {
+            print("🧪 TestFlight mode - loading subscription status from backend")
+            await checkTrialStatus()
+            return
+        }
+        
         // Check for active subscriptions
         var activeSubscription: Transaction?
         
