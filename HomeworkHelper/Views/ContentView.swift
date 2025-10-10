@@ -43,16 +43,17 @@ struct ContentView: View {
     var body: some View {
         let _ = print("🔍 ContentView render: isAuthenticated = \(authService.isAuthenticated), needsOnboarding = \(needsOnboarding), selectedTab = \(selectedTab)")
         
-        return Group {
+        Group {
             if !authService.isAuthenticated {
-                // Show authentication screen
-                AuthenticationView()
-            } else if needsOnboarding {
-                // Show onboarding after authentication
+                // Show new onboarding/authentication screen
                 OnboardingView()
+                    .environmentObject(authService)
+            } else if needsOnboarding {
+                // Show profile setup after authentication
+                ProfileSetupView()
                     .environmentObject(dataManager)
                     .onDisappear {
-                        // Reset to home tab when onboarding completes
+                        // Reset to home tab when profile setup completes
                         selectedTab = 0
                     }
             } else {
@@ -86,10 +87,10 @@ struct ContentView: View {
                     PaywallView()
                         .interactiveDismissDisabled() // Prevent dismissing - must subscribe
                 }
+                .environmentObject(authService)
+                .environmentObject(subscriptionService)
             }
         }
-        .environmentObject(authService)
-        .environmentObject(subscriptionService)
         .onChange(of: authService.currentUser) { user in
             // Sync authenticated user to DataManager
             if let authUser = user {
@@ -102,6 +103,9 @@ struct ContentView: View {
                     print("🔐 Post-auth subscription status: \(subscriptionService.subscriptionStatus)")
                 }
             }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            handleScenePhaseChange(newPhase)
         }
         .onChange(of: needsOnboarding) { needs in
             // When onboarding is complete, ensure Home tab is selected
@@ -166,6 +170,22 @@ struct ContentView: View {
                     print("🔄 Subscription status after app activation: \(subscriptionService.subscriptionStatus)")
                 }
             }
+        }
+    }
+    
+    private func handleScenePhaseChange(_ newPhase: ScenePhase) {
+        switch newPhase {
+        case .active:
+            // App became active - data is already saved and session validation happens automatically
+            print("📱 App became active")
+        case .background:
+            // Save data when app goes to background
+            dataManager.saveData()
+            print("💾 App went to background - data saved")
+        case .inactive:
+            print("📱 App became inactive")
+        @unknown default:
+            break
         }
     }
     
