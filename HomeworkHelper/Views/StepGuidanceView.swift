@@ -682,10 +682,12 @@ struct StepGuidanceView: View {
             The student's education depends on your accuracy. Be thorough but fair.
             """
             
+            let userId = dataManager.currentUser?.userId
             let verificationResponse = try await BackendAPIService.shared.generateChatResponse(
                 messages: [ChatMessage(problemId: problemId, role: .user, content: verificationPrompt)],
                 problemContext: problemContext,
-                userGradeLevel: userGradeLevel
+                userGradeLevel: userGradeLevel,
+                userId: userId
             )
             
             let trimmedResponse = verificationResponse.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
@@ -877,8 +879,9 @@ struct StepGuidanceView: View {
         do {
             let problemContext = buildProblemContext()
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let userId = dataManager.currentUser?.userId
             
-            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel, userId: userId)
             hasShownInitialHint = true
             
             var updatedStep = step
@@ -943,9 +946,10 @@ struct StepGuidanceView: View {
         do {
             let problemContext = buildProblemContext()
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let userId = dataManager.currentUser?.userId
             
             // Request a different hint approach
-            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext + "\n\nNote: Student attempted but got it wrong. Provide a DIFFERENT hint with a new approach or perspective.", userGradeLevel: userGradeLevel)
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext + "\n\nNote: Student attempted but got it wrong. Provide a DIFFERENT hint with a new approach or perspective.", userGradeLevel: userGradeLevel, userId: userId)
             
             var updatedStep = step
             updatedStep.hintsUsed += 1
@@ -1025,8 +1029,9 @@ struct StepGuidanceView: View {
         do {
             let problemContext = buildProblemContext()
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let userId = dataManager.currentUser?.userId
             
-            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel)
+            hintText = try await BackendAPIService.shared.generateHint(for: step, problemContext: problemContext, userGradeLevel: userGradeLevel, userId: userId)
             showHint = true
             
             var updatedStep = step
@@ -1076,11 +1081,13 @@ struct StepGuidanceView: View {
             Make this hint more specific and actionable.
             """
             
+            let userId = dataManager.currentUser?.userId
             print("🔍 DEBUG: About to call BackendAPIService.generateHint")
             let newHint = try await BackendAPIService.shared.generateHint(
                 for: step,
                 problemContext: problemContext + "\n\n" + hintPrompt,
-                userGradeLevel: userGradeLevel
+                userGradeLevel: userGradeLevel,
+                userId: userId
             )
             
             print("✅ DEBUG: Generated new hint: \(newHint.prefix(50))...")

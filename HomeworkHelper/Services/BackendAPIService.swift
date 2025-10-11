@@ -285,7 +285,7 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Hint Generation
     
-    func generateHint(for step: GuidanceStep, problemContext: String, userGradeLevel: String) async throws -> String {
+    func generateHint(for step: GuidanceStep, problemContext: String, userGradeLevel: String, userId: String? = nil) async throws -> String {
         await MainActor.run { isLoading = true }
         defer { 
             Task { @MainActor in
@@ -299,7 +299,7 @@ class BackendAPIService: ObservableObject {
         addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let requestBody: [String: Any] = [
+        var requestBody: [String: Any] = [
             "step": [
                 "question": step.question,
                 "explanation": step.explanation,
@@ -309,6 +309,11 @@ class BackendAPIService: ObservableObject {
             "problemContext": problemContext,
             "userGradeLevel": userGradeLevel
         ]
+        
+        // Add userId if available
+        if let userId = userId {
+            requestBody["userId"] = userId
+        }
         
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
         
@@ -346,7 +351,7 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Answer Verification
     
-    func verifyAnswer(answer: String, step: GuidanceStep, problemContext: String, userGradeLevel: String) async throws -> AnswerVerification {
+    func verifyAnswer(answer: String, step: GuidanceStep, problemContext: String, userGradeLevel: String, userId: String? = nil) async throws -> AnswerVerification {
         await MainActor.run { isLoading = true }
         defer { 
             Task { @MainActor in
@@ -360,7 +365,7 @@ class BackendAPIService: ObservableObject {
         addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let requestBody: [String: Any] = [
+        var requestBody: [String: Any] = [
             "answer": answer,
             "step": [
                 "question": step.question,
@@ -371,6 +376,11 @@ class BackendAPIService: ObservableObject {
             "problemContext": problemContext,
             "userGradeLevel": userGradeLevel
         ]
+        
+        // Add userId if available
+        if let userId = userId {
+            requestBody["userId"] = userId
+        }
         
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
         
@@ -434,7 +444,7 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Chat Response
     
-    func generateChatResponse(messages: [ChatMessage], problemContext: String, userGradeLevel: String) async throws -> String {
+    func generateChatResponse(messages: [ChatMessage], problemContext: String, userGradeLevel: String, userId: String? = nil) async throws -> String {
         await MainActor.run { isLoading = true }
         defer { 
             Task { @MainActor in
@@ -448,11 +458,12 @@ class BackendAPIService: ObservableObject {
         addAuthHeader(to: &request)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let requestBody = ChatRequest(
+        var requestBody = ChatRequest(
             messages: messages,
             problemContext: problemContext,
             userGradeLevel: userGradeLevel
         )
+        requestBody.userId = userId
         
         let jsonData = try JSONEncoder().encode(requestBody)
         request.httpBody = jsonData
@@ -615,6 +626,7 @@ struct ChatRequest: Codable {
     let messages: [ChatMessage]
     let problemContext: String
     let userGradeLevel: String
+    var userId: String?
 }
 
 struct ChatResponse: Codable {
