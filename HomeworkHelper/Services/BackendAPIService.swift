@@ -619,6 +619,8 @@ struct HomeworkStats: Codable {
     let avgHintsUsed: Int
 }
 
+// MARK: - Error Types
+
 enum BackendAPIError: Error, LocalizedError {
     case noResponse
     case invalidResponse
