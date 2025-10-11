@@ -400,17 +400,6 @@ struct HomeView: View {
         }
     }
     
-    // MARK: - Helper Properties
-    private var isSubscriptionExpired: Bool {
-        if case .expired = subscriptionService.subscriptionStatus {
-            return true
-        }
-        if case .unknown = subscriptionService.subscriptionStatus {
-            return true
-        }
-        return false
-    }
-    
     // MARK: - Network Reachability
     
     private func checkNetworkReachability() async -> Bool {
