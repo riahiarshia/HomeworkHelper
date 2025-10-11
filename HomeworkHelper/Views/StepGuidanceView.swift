@@ -1025,19 +1025,6 @@ struct StepGuidanceView: View {
         
         isLoadingQuestionAnswer = false
     }
-    
-    private func buildProblemContext() -> String {
-        var context = ""
-        if let problem = problem {
-            if let subject = problem.subject {
-                context += "Subject: \(subject)\n"
-            }
-            if let text = problem.problemText {
-                context += "Problem: \(text)\n"
-            }
-        }
-        return context
-    }
 }
 
 // MARK: - Ask Question View
