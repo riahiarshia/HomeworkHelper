@@ -23,9 +23,11 @@ struct HomeView: View {
     @StateObject private var backendService = BackendAPIService.shared
     @State private var showPaywall = false
     let isSubscriptionExpired: Bool
+    let skipLaunchAnimation: Bool
     
-    init(isSubscriptionExpired: Bool = false) {
+    init(isSubscriptionExpired: Bool = false, skipLaunchAnimation: Bool = false) {
         self.isSubscriptionExpired = isSubscriptionExpired
+        self.skipLaunchAnimation = skipLaunchAnimation
         logger.critical("🚨 CRITICAL DEBUG: HomeView init called! isSubscriptionExpired: \(isSubscriptionExpired)")
     }
     
@@ -48,58 +50,63 @@ struct HomeView: View {
     @State private var alertMessage = ""
     @State private var navigateToGuidance = false
     @State private var currentProblemId: UUID?
-    @State private var showLaunchAnimation = true
-    @State private var animationScale: CGFloat = 0.5
-    @State private var animationOpacity: Double = 0.0
-    @State private var hasShownLaunchAnimation = false
     @State private var bigBrainAnimation = false
     @State private var handTapAnimation = false
     @State private var showBigBrainText = false
     @State private var currentBrainPhrase = "BIG BRAIN!"
+    @State private var logoRotation: Double = 0
+    @State private var logoOffset: CGFloat = -200
+    @State private var logoFinalPosition: CGSize = .zero
+    @State private var processingLogoRotation: Double = 0
+    @State private var logoDragOffset: CGSize = .zero
     private let speechSynthesizer = AVSpeechSynthesizer()
     
     var body: some View {
         NavigationView {
             ZStack {
+                // Background gradient (more purple, less pink)
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(red: 0.4, green: 0.2, blue: 0.8).opacity(0.9), Color(red: 0.2, green: 0.4, blue: 0.9).opacity(0.7)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
                 ScrollView {
-                    VStack(spacing: 24) {
+                    VStack(spacing: 32) {
                         if isProcessing {
                             processingView
                         }
                         
-                        // Subscription status banner
-                        subscriptionBanner
-                        
-                        headerView
-                        
+                        // Upload section at the top
                         uploadSection
                         
                         if selectedImage != nil && !navigateToGuidance {
                             imagePreview
                         }
+                        
+                        // Remaining content
+                        contentSection
+                        
+                        // Subscription info at the bottom
+                        subscriptionBanner
                     }
                     .padding()
                 }
-                .navigationTitle("Homework Helper")
+                .navigationTitle("Ai Homework Helper")
+                .navigationBarTitleDisplayMode(.large)
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("home_view")
-                .opacity(showLaunchAnimation ? 0.0 : 1.0)
                 .sheet(isPresented: $showPaywall) {
                     PaywallView()
                 }
                 
-                if showLaunchAnimation {
-                    launchAnimationView
-                }
+                // Draggable logo overlay
+                draggableLogo
             }
             .onAppear {
                 logger.critical("🚨 CRITICAL DEBUG: HomeView onAppear called!")
-                if showLaunchAnimation && !hasShownLaunchAnimation {
-                    hasShownLaunchAnimation = true
-                    startLaunchAnimation()
-                } else {
-                    showLaunchAnimation = false
-                }
+                
                 // Clear any previous image when returning to home
                 if navigateToGuidance {
                     selectedImage = nil
@@ -193,26 +200,59 @@ struct HomeView: View {
         }
     }
     
-    private var headerView: some View {
-        VStack(spacing: 16) {
-            // Custom logo with animation
+    private var draggableLogo: some View {
             ZStack {
-                // Custom owl logo
                 Image("logo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 120, height: 120)
+                .frame(width: 180, height: 180)
                     .scaleEffect(bigBrainAnimation ? 1.1 : 1.0)
                     .animation(.easeInOut(duration: 0.3), value: bigBrainAnimation)
-                
-                // Animated hand tapping logo
-                Image(systemName: "hand.point.up.fill")
-                    .font(.system(size: 25))
-                    .foregroundColor(.brown)
-                    .offset(x: 45, y: -45)
-                    .rotationEffect(.degrees(handTapAnimation ? -20 : 0))
-                    .scaleEffect(handTapAnimation ? 1.2 : 1.0)
-                    .animation(.easeInOut(duration: 0.2), value: handTapAnimation)
+                .offset(y: logoOffset)
+                .offset(logoFinalPosition)
+                .offset(logoDragOffset)
+                .rotationEffect(.degrees(logoRotation))
+                .onAppear {
+                    // Play whistle sound when logo starts entering
+                    AudioServicesPlaySystemSound(1016) // Whistle/fanfare sound
+                    
+                    // Start entrance animation from top
+                    withAnimation(.easeOut(duration: 1.0)) {
+                        logoOffset = 0
+                    }
+                    
+                    // Move to center of buttons after dropping down
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                        withAnimation(.easeInOut(duration: 0.8)) {
+                            // Position logo between camera and photo library buttons
+                            logoFinalPosition = CGSize(width: 0, height: -180) // Move up higher to avoid covering text
+                        }
+                    }
+                    
+                    // Spin twice and play audio after moving to position
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                        withAnimation(.linear(duration: 2.0)) {
+                            logoRotation = 720 // Two full spins (360 * 2)
+                        }
+                        
+                        // Play audio message after spinning
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            playWelcomeMessage()
+                        }
+                    }
+                }
+                .onTapGesture {
+                    startBigBrainAnimation()
+                }
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            logoDragOffset = value.translation
+                        }
+                        .onEnded { value in
+                            logoDragOffset = value.translation
+                        }
+                )
                 
                 // "BIG BRAIN" text bubble
                 if showBigBrainText {
@@ -237,22 +277,17 @@ struct HomeView: View {
                             .frame(width: 15, height: 10)
                             .offset(y: -5)
                     }
-                    .offset(x: 0, y: -90)
-                }
+                .offset(x: logoDragOffset.width, y: logoDragOffset.height + logoOffset + logoFinalPosition.height - 130) // Follow logo movement
             }
-            .onTapGesture {
-                startBigBrainAnimation()
-            }
-            .onAppear {
-                // Auto-trigger animation after a delay
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    startBigBrainAnimation()
-                }
-            }
-            
+        }
+    }
+    
+    
+    private var contentSection: some View {
+        VStack(spacing: 16) {
             Text("Learn by Solving")
                 .font(.title2)
-                .foregroundColor(.secondary)
+                .foregroundColor(.white)
                 .accessibilityIdentifier("learn_by_solving")
             
             // Tagline
@@ -260,13 +295,13 @@ struct HomeView: View {
                 Text("Your AI Tutor for Step-by-Step Learning")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                 
                 Text("No Cheating - Real Learning")
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.white.opacity(0.8))
                     .multilineTextAlignment(.center)
             }
             .padding(.horizontal)
@@ -284,12 +319,14 @@ struct HomeView: View {
         .padding(.vertical)
     }
     
+    
     private var uploadSection: some View {
         VStack(spacing: 20) {
             // Upload Your Homework heading
             Text("Upload Your Homework")
                 .font(.title2)
                 .fontWeight(.semibold)
+                .foregroundColor(.white)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             // Camera and Photo Library buttons side by side
@@ -304,14 +341,14 @@ struct HomeView: View {
                     VStack {
                         Image(systemName: "camera.fill")
                             .font(.title)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.black)
                         Text("Camera")
                             .font(.headline)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.black)
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 100)
-                    .background(Color(.systemGray6))
+                    .background(Color.white.opacity(0.9))
                     .cornerRadius(12)
                 }
                 .accessibilityIdentifier("camera_button")
@@ -319,7 +356,7 @@ struct HomeView: View {
                 
                 // Vertical separator
                 Rectangle()
-                    .fill(Color(.systemGray4))
+                    .fill(Color.white.opacity(0.3))
                     .frame(width: 1)
                     .frame(height: 100)
                 
@@ -333,14 +370,14 @@ struct HomeView: View {
                     VStack {
                         Image(systemName: "photo.fill")
                             .font(.title)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.black)
                         Text("Photo Library")
                             .font(.headline)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.black)
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 100)
-                    .background(Color(.systemGray6))
+                    .background(Color.white.opacity(0.9))
                     .cornerRadius(12)
                 }
                 .accessibilityIdentifier("photo_library_button")
@@ -350,11 +387,12 @@ struct HomeView: View {
             if isSubscriptionExpired {
                 Text("Limited access - Subscribe for full AI guidance")
                     .font(.caption)
-                    .foregroundColor(.orange)
+                    .foregroundColor(.white.opacity(0.9))
                     .multilineTextAlignment(.center)
                     .padding(.top, 4)
             }
         }
+        .padding(.vertical, 24) // Increased padding for upload section at top
     }
     
     // MARK: - Network Reachability
@@ -419,13 +457,18 @@ struct HomeView: View {
     
     private var processingView: some View {
         VStack(spacing: 20) {
-            // Animated logo with pulsing effect
+            // Animated logo with spinning effect
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 120, height: 120)
-                .scaleEffect(1.0 + sin(Date().timeIntervalSince1970 * 2) * 0.1)
-                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: Date())
+                .rotationEffect(.degrees(processingLogoRotation))
+                .onAppear {
+                    // Start spinning animation during processing
+                    withAnimation(.linear(duration: 2.0).repeatForever(autoreverses: false)) {
+                        processingLogoRotation = 360
+                    }
+                }
             
             VStack(spacing: 8) {
                 Text(backendService.progressMessage.isEmpty ? processingMessage : backendService.progressMessage)
@@ -477,52 +520,6 @@ struct HomeView: View {
         .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
     }
     
-    private var launchAnimationView: some View {
-        ZStack {
-            // Background
-            LinearGradient(
-                gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.8)]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-            
-            VStack(spacing: 30) {
-                // Main logo/icon with animation
-                Image(systemName: "graduationcap.fill")
-                    .font(.system(size: 80))
-                    .foregroundColor(.white)
-                    .scaleEffect(animationScale)
-                    .opacity(animationOpacity)
-                
-                // Animated text
-                VStack(spacing: 10) {
-                    Text("Homework Made Easier")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .opacity(animationOpacity)
-                    
-                    Text("Without Cheating")
-                        .font(.title2)
-                        .foregroundColor(.white.opacity(0.9))
-                        .opacity(animationOpacity)
-                }
-                
-                // Fireworks animation
-                HStack(spacing: 20) {
-                    ForEach(0..<5) { index in
-                        Image(systemName: "sparkles")
-                            .font(.title)
-                            .foregroundColor(.yellow)
-                            .opacity(animationOpacity)
-                            .scaleEffect(animationScale)
-                            .rotationEffect(.degrees(Double(index) * 72))
-                    }
-                }
-            }
-        }
-    }
     
     private func startBigBrainAnimation() {
         // Speak "BIG BRAIN" aloud
@@ -602,35 +599,30 @@ struct HomeView: View {
         speechSynthesizer.speak(utterance)
     }
     
-    private func startLaunchAnimation() {
-        // Play celebration sound effect
-        AudioServicesPlaySystemSound(1016) // Fanfare sound
+    private func playWelcomeMessage() {
+        // Welcome messages for logo entrance
+        let welcomeMessages = [
+            "Hi there! Ready to learn?",
+            "Hello! Let's solve some problems together!",
+            "Hey! I'm here to help you succeed!",
+            "Welcome! Time for some smart thinking!",
+            "Hello! Ready to be a big brain today?"
+        ]
         
-        withAnimation(.easeOut(duration: 1.0)) {
-            animationScale = 1.2
-            animationOpacity = 1.0
-        }
+        let randomMessage = welcomeMessages.randomElement() ?? "Hi there! Ready to learn?"
         
-        // Fireworks effect with additional sound
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            AudioServicesPlaySystemSound(1013) // Pop sound
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                animationScale = 1.0
-            }
-        }
+        // Create speech utterance
+        let utterance = AVSpeechUtterance(string: randomMessage)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.rate = 0.5 // Slightly slower for friendliness
+        utterance.pitchMultiplier = 1.1 // Slightly higher for enthusiasm
+        utterance.volume = 0.8
         
-        // Additional sparkle sound
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            AudioServicesPlaySystemSound(1057) // Tweet sound
-        }
-        
-        // Hide animation after 4 seconds (added extra second)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-            withAnimation(.easeInOut(duration: 0.5)) {
-                showLaunchAnimation = false
-            }
-        }
+        // Speak it!
+        speechSynthesizer.speak(utterance)
     }
+    
+    
     
     private func handleImageSelected(_ image: UIImage) {
         selectedImage = image
@@ -643,6 +635,7 @@ struct HomeView: View {
     private func analyzeProblem() async {
         print("🚨 CRITICAL DEBUG: analyzeProblem() function called!")
         isProcessing = true
+        processingLogoRotation = 0 // Reset rotation for processing animation
         
         do {
             guard let userId = dataManager.currentUser?.id else { 
@@ -779,6 +772,7 @@ struct HomeView: View {
         
         // Immediately set processing state on main thread
         isProcessing = true
+        processingLogoRotation = 0 // Reset rotation for processing animation
         processingMessage = "Preparing image..."
         
         // Do ALL image processing in background task to avoid freezing
@@ -978,24 +972,27 @@ struct HomeView: View {
                 Text("Subscriber")
                     .font(.headline)
                     .fontWeight(.semibold)
+                    .foregroundColor(.white)
                 
                 switch subscriptionService.subscriptionStatus {
                 case .trial(let daysRemaining):
                     Text("Free Trial - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.white.opacity(0.8))
                 case .active(let renewalDate):
                     Text("Premium - Renews \(renewalDate, style: .date)")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.white.opacity(0.8))
                 case .expired:
                     Text("Subscription Expired")
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundColor(.white.opacity(0.9))
                 case .unknown:
                     Text("Subscription status unknown")
+                        .foregroundColor(.white.opacity(0.8))
                 case .gracePeriod(daysRemaining: let daysRemaining):
                     Text("Grace period - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
+                        .foregroundColor(.white.opacity(0.8))
                     
                 }
             }
@@ -1017,7 +1014,7 @@ struct HomeView: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color.white.opacity(0.15))
         .cornerRadius(12)
     }
 }
@@ -1080,7 +1077,7 @@ struct Triangle: Shape {
 
 // MARK: - Preview
 #Preview {
-    HomeView()
+    HomeView(skipLaunchAnimation: true)
         .environmentObject(DataManager.shared)
         .environmentObject(SubscriptionService.shared)
 }

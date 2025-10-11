@@ -5,17 +5,27 @@ struct ProgressStatsView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    userStatsCard
-                    
-                    if !dataManager.progress.isEmpty {
-                        subjectProgressSection
-                    } else {
-                        emptyStateView
+            ZStack {
+                // Background gradient (more purple, less pink)
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(red: 0.4, green: 0.2, blue: 0.8).opacity(0.9), Color(red: 0.2, green: 0.4, blue: 0.9).opacity(0.7)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        userStatsCard
+                        
+                        if !dataManager.progress.isEmpty {
+                            subjectProgressSection
+                        } else {
+                            emptyStateView
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle("Progress")
         }
@@ -60,7 +70,7 @@ struct ProgressStatsView: View {
             }
         }
         .padding()
-        .background(Color.gray.opacity(0.1))
+        .background(Color.white)
         .cornerRadius(16)
     }
     
@@ -69,11 +79,15 @@ struct ProgressStatsView: View {
             Text("Progress by Subject")
                 .font(.title2)
                 .fontWeight(.bold)
+                .foregroundColor(.primary)
             
             ForEach(dataManager.progress.sorted(by: { $0.totalPoints > $1.totalPoints })) { progress in
                 SubjectProgressCard(progress: progress)
             }
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
     }
     
     private var emptyStateView: some View {
@@ -85,6 +99,7 @@ struct ProgressStatsView: View {
             Text("No Progress Yet")
                 .font(.title3)
                 .fontWeight(.semibold)
+                .foregroundColor(.primary)
             
             Text("Complete some homework problems to see your progress here!")
                 .font(.body)
@@ -92,6 +107,8 @@ struct ProgressStatsView: View {
                 .multilineTextAlignment(.center)
         }
         .padding()
+        .background(Color.white)
+        .cornerRadius(16)
     }
 }
 
@@ -110,6 +127,7 @@ struct StatItem: View {
             Text(value)
                 .font(.title)
                 .fontWeight(.bold)
+                .foregroundColor(.primary)
             
             Text(title)
                 .font(.caption)
@@ -127,6 +145,7 @@ struct SubjectProgressCard: View {
             HStack {
                 Text(progress.subject)
                     .font(.headline)
+                    .foregroundColor(.primary)
                 
                 Spacer()
                 
@@ -143,6 +162,7 @@ struct SubjectProgressCard: View {
                     Text("\(progress.problemsSolved)")
                         .font(.title3)
                         .fontWeight(.semibold)
+                        .foregroundColor(.primary)
                 }
                 
                 VStack(alignment: .leading) {
@@ -152,6 +172,7 @@ struct SubjectProgressCard: View {
                     Text(String(format: "%.1f", progress.averageScore))
                         .font(.title3)
                         .fontWeight(.semibold)
+                        .foregroundColor(.primary)
                 }
             }
         }

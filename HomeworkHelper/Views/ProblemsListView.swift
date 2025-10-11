@@ -25,16 +25,28 @@ struct ProblemsListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                filterPicker
+            ZStack {
+                // Background gradient (more purple, less pink)
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(red: 0.4, green: 0.2, blue: 0.8).opacity(0.9), Color(red: 0.2, green: 0.4, blue: 0.9).opacity(0.7)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
                 
-                if filteredProblems.isEmpty {
-                    emptyStateView
-                } else {
-                    List(filteredProblems) { problem in
-                        NavigationLink(destination: ProblemDetailView(problem: problem)) {
-                            ProblemRow(problem: problem)
+                VStack {
+                    filterPicker
+                    
+                    if filteredProblems.isEmpty {
+                        emptyStateView
+                    } else {
+                        List(filteredProblems) { problem in
+                            NavigationLink(destination: ProblemDetailView(problem: problem)) {
+                                ProblemRow(problem: problem)
+                            }
+                            .listRowBackground(Color.white)
                         }
+                        .scrollContentBackground(.hidden)
                     }
                 }
             }

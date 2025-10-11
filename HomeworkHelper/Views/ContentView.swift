@@ -92,6 +92,22 @@ struct ContentView: View {
                         }
                         .tag(3)
                 }
+                .onAppear {
+                    // Configure tab bar appearance
+                    let appearance = UITabBarAppearance()
+                    appearance.configureWithOpaqueBackground()
+                    appearance.backgroundColor = UIColor.white
+                    
+                    // Set selected and unselected item colors
+                    appearance.stackedLayoutAppearance.normal.iconColor = UIColor.systemGray
+                    appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.systemGray]
+                    
+                    appearance.stackedLayoutAppearance.selected.iconColor = UIColor.systemBlue
+                    appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.systemBlue]
+                    
+                    UITabBar.appearance().standardAppearance = appearance
+                    UITabBar.appearance().scrollEdgeAppearance = appearance
+                }
                 .fullScreenCover(isPresented: $showPaywall) {
                     PaywallView()
                         .interactiveDismissDisabled() // Prevent dismissing - must subscribe

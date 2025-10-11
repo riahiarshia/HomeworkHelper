@@ -18,9 +18,9 @@ struct PaywallView: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
+            // Background gradient (more purple, less pink)
             LinearGradient(
-                gradient: Gradient(colors: [Color.purple.opacity(0.8), Color.blue.opacity(0.6)]),
+                gradient: Gradient(colors: [Color(red: 0.4, green: 0.2, blue: 0.8).opacity(0.9), Color(red: 0.2, green: 0.4, blue: 0.9).opacity(0.7)]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
