@@ -492,3 +492,9 @@ struct StatView: View {
         }
     }
 }
+
+// MARK: - Preview
+#Preview {
+    ProblemsListView(isSubscriptionExpired: false)
+        .environmentObject(DataManager.shared)
+}

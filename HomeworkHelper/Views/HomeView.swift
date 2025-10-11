@@ -1081,6 +1081,6 @@ struct Triangle: Shape {
 // MARK: - Preview
 #Preview {
     HomeView()
-        .environmentObject(DataManager())
-        .environmentObject(SubscriptionService())
+        .environmentObject(DataManager.shared)
+        .environmentObject(SubscriptionService.shared)
 }

@@ -730,3 +730,11 @@ struct TermsOfUseView: View {
 }
 
 
+
+
+// MARK: - Preview
+#Preview {
+    SettingsView()
+        .environmentObject(DataManager.shared)
+        .environmentObject(SubscriptionService.shared)
+}

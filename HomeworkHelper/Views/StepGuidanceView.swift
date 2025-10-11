@@ -1259,3 +1259,10 @@ struct AskQuestionView: View {
         }
     }
 }
+
+// MARK: - Preview
+#Preview {
+    StepGuidanceView(problemId: UUID())
+        .environmentObject(DataManager.shared)
+        .environmentObject(SubscriptionService.shared)
+}

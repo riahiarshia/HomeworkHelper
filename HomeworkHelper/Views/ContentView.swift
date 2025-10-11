@@ -217,3 +217,11 @@ struct ContentView: View {
         dataManager.saveData()
     }
 }
+
+// MARK: - Preview
+#Preview {
+    ContentView()
+        .environmentObject(AuthenticationService.shared)
+        .environmentObject(DataManager.shared)
+        .environmentObject(SubscriptionService.shared)
+}
