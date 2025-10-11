@@ -99,10 +99,12 @@ struct ChatView: View {
         do {
             let problemContext = problem?.problemText ?? "homework problem"
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let userId = dataManager.currentUser?.userId
             let response = try await BackendAPIService.shared.generateChatResponse(
                 messages: messages,
                 problemContext: problemContext,
-                userGradeLevel: userGradeLevel
+                userGradeLevel: userGradeLevel,
+                userId: userId
             )
             
             let assistantMessage = ChatMessage(

@@ -1137,11 +1137,13 @@ struct StepGuidanceView: View {
             Use their grade level (\(userGradeLevel)) to adjust the complexity.
             """
             
+            let userId = dataManager.currentUser?.userId
             let messages = [ChatMessage(problemId: problemId, role: .user, content: contextualPrompt)]
             questionAnswer = try await BackendAPIService.shared.generateChatResponse(
                 messages: messages,
                 problemContext: problemContext,
-                userGradeLevel: userGradeLevel
+                userGradeLevel: userGradeLevel,
+                userId: userId
             )
         } catch {
             questionAnswer = "I understand your question. Let's think about it step by step. What part of this step is confusing you the most?"
