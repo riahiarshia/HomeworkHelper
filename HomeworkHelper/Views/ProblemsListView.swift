@@ -209,7 +209,10 @@ struct ProblemDetailView: View {
         } message: {
             Text("Are you sure you want to delete this problem? This action cannot be undone.")
         }
-        .navigationDestination(isPresented: .constant(selectedStepIndex != nil)) {
+        .navigationDestination(isPresented: Binding(
+            get: { selectedStepIndex != nil },
+            set: { if !$0 { selectedStepIndex = nil } }
+        )) {
             if let stepIndex = selectedStepIndex {
                 StepGuidanceView(problemId: problem.id, startFromStep: stepIndex)
             }
