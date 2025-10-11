@@ -195,64 +195,21 @@ struct HomeView: View {
     
     private var headerView: some View {
         VStack(spacing: 16) {
-            // Animated cartoon head
+            // Custom logo with animation
             ZStack {
-                // Head (circle)
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            gradient: Gradient(colors: [Color.yellow.opacity(0.8), Color.orange.opacity(0.6)]),
-                            center: .topLeading,
-                            startRadius: 20,
-                            endRadius: 80
-                        )
-                    )
-                    .frame(width: 100, height: 100)
+                // Custom owl logo
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 120, height: 120)
                     .scaleEffect(bigBrainAnimation ? 1.1 : 1.0)
                     .animation(.easeInOut(duration: 0.3), value: bigBrainAnimation)
                 
-                // Eyes
-                HStack(spacing: 20) {
-                    // Left eye
-                    ZStack {
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 15, height: 15)
-                        Circle()
-                            .fill(Color.black)
-                            .frame(width: 8, height: 8)
-                    }
-                    
-                    // Right eye
-                    ZStack {
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 15, height: 15)
-                        Circle()
-                            .fill(Color.black)
-                            .frame(width: 8, height: 8)
-                    }
-                }
-                .offset(y: -15)
-                
-                // Mouth (smile)
-                Path { path in
-                    path.addArc(
-                        center: CGPoint(x: 50, y: 65),
-                        radius: 15,
-                        startAngle: .degrees(0),
-                        endAngle: .degrees(180),
-                        clockwise: false
-                    )
-                }
-                .stroke(Color.black, lineWidth: 3)
-                .frame(width: 100, height: 100)
-                
-                // Animated hand tapping head
+                // Animated hand tapping logo
                 Image(systemName: "hand.point.up.fill")
                     .font(.system(size: 25))
                     .foregroundColor(.brown)
-                    .offset(x: 35, y: -35)
+                    .offset(x: 45, y: -45)
                     .rotationEffect(.degrees(handTapAnimation ? -20 : 0))
                     .scaleEffect(handTapAnimation ? 1.2 : 1.0)
                     .animation(.easeInOut(duration: 0.2), value: handTapAnimation)
@@ -280,7 +237,7 @@ struct HomeView: View {
                             .frame(width: 15, height: 10)
                             .offset(y: -5)
                     }
-                    .offset(x: 0, y: -80)
+                    .offset(x: 0, y: -90)
                 }
             }
             .onTapGesture {
