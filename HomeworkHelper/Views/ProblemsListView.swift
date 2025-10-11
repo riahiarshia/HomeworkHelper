@@ -152,6 +152,8 @@ struct ProblemDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showDeleteAlert = false
     @State private var selectedStepIndex: Int?
+    @State private var showPrerequisiteAlert = false
+    @State private var prerequisiteMessage = ""
     
     private var steps: [GuidanceStep] {
         dataManager.steps[problem.id.uuidString]?.sorted(by: { $0.stepNumber < $1.stepNumber }) ?? []
@@ -209,6 +211,11 @@ struct ProblemDetailView: View {
         } message: {
             Text("Are you sure you want to delete this problem? This action cannot be undone.")
         }
+        .alert("Prerequisites Required", isPresented: $showPrerequisiteAlert) {
+            Button("OK") { }
+        } message: {
+            Text(prerequisiteMessage)
+        }
         .navigationDestination(isPresented: Binding(
             get: { selectedStepIndex != nil },
             set: { if !$0 { selectedStepIndex = nil } }
@@ -250,17 +257,25 @@ struct ProblemDetailView: View {
             
             ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                 Button {
-                    selectedStepIndex = index
+                    if canAccessStep(step, at: index) {
+                        selectedStepIndex = index
+                    } else {
+                        showPrerequisiteAlert = true
+                        prerequisiteMessage = getPrerequisiteMessage(for: step, at: index)
+                    }
                 } label: {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Image(systemName: step.isCompleted ? "checkmark.circle.fill" : step.isSkipped ? "forward.circle.fill" : "circle")
-                                .foregroundColor(step.isCompleted ? .green : step.isSkipped ? .orange : .gray)
+                            // Step status icon
+                            Image(systemName: getStepIcon(for: step, at: index))
+                                .foregroundColor(getStepIconColor(for: step, at: index))
                             
                             Text("Step \(step.stepNumber)")
                                 .font(.body)
                                 .fontWeight(.semibold)
+                                .foregroundColor(canAccessStep(step, at: index) ? .primary : .secondary)
                             
+                            // Status text
                             if step.isSkipped {
                                 Text("(Skipped)")
                                     .font(.caption)
@@ -269,13 +284,18 @@ struct ProblemDetailView: View {
                                 Text("(Completed)")
                                     .font(.caption)
                                     .foregroundColor(.green)
+                            } else if !canAccessStep(step, at: index) {
+                                Text("(Locked)")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
                             }
                             
                             Spacer()
                             
-                            Image(systemName: "chevron.right")
+                            // Chevron or lock icon
+                            Image(systemName: canAccessStep(step, at: index) ? "chevron.right" : "lock.fill")
                                 .font(.caption)
-                                .foregroundColor(.gray)
+                                .foregroundColor(canAccessStep(step, at: index) ? .gray : .red)
                         }
                         
                         // Show step question as description
@@ -388,6 +408,52 @@ struct ProblemDetailView: View {
         }
         
         dataManager.saveData()
+    }
+    
+    private func canAccessStep(_ step: GuidanceStep, at index: Int) -> Bool {
+        // If step doesn't require previous steps, always allow access
+        if !step.requiresPreviousSteps {
+            return true
+        }
+        
+        // Check if all previous steps are completed or skipped
+        let previousSteps = steps.prefix(index)
+        return previousSteps.allSatisfy { $0.isCompleted || $0.isSkipped }
+    }
+    
+    private func getPrerequisiteMessage(for step: GuidanceStep, at index: Int) -> String {
+        let incompleteSteps = steps.prefix(index).filter { !$0.isCompleted && !$0.isSkipped }
+        
+        if incompleteSteps.isEmpty {
+            return "This step requires previous steps to be completed first. Please complete the previous steps before accessing this one."
+        } else {
+            let stepNumbers = incompleteSteps.map { "Step \($0.stepNumber)" }.joined(separator: ", ")
+            return "This step requires the following steps to be completed first: \(stepNumbers). Please complete those steps before accessing Step \(step.stepNumber)."
+        }
+    }
+    
+    private func getStepIcon(for step: GuidanceStep, at index: Int) -> String {
+        if !canAccessStep(step, at: index) {
+            return "lock.circle.fill"
+        } else if step.isCompleted {
+            return "checkmark.circle.fill"
+        } else if step.isSkipped {
+            return "forward.circle.fill"
+        } else {
+            return "circle"
+        }
+    }
+    
+    private func getStepIconColor(for step: GuidanceStep, at index: Int) -> Color {
+        if !canAccessStep(step, at: index) {
+            return .red
+        } else if step.isCompleted {
+            return .green
+        } else if step.isSkipped {
+            return .orange
+        } else {
+            return .gray
+        }
     }
 }
 

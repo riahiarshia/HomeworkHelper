@@ -13,6 +13,7 @@ struct GuidanceStep: Codable, Identifiable {
     var isSkipped: Bool
     var hintsUsed: Int
     var createdAt: Date
+    var requiresPreviousSteps: Bool
     
     init(
         id: UUID = UUID(),
@@ -26,7 +27,8 @@ struct GuidanceStep: Codable, Identifiable {
         isCompleted: Bool = false,
         isSkipped: Bool = false,
         hintsUsed: Int = 0,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        requiresPreviousSteps: Bool = true
     ) {
         self.id = id
         self.problemId = problemId
@@ -40,5 +42,6 @@ struct GuidanceStep: Codable, Identifiable {
         self.isSkipped = isSkipped
         self.hintsUsed = hintsUsed
         self.createdAt = createdAt
+        self.requiresPreviousSteps = requiresPreviousSteps
     }
 }
