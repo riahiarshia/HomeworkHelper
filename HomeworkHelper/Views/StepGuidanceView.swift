@@ -205,22 +205,30 @@ struct StepGuidanceView: View {
                                     HStack(spacing: 12) {
                                         // Get Another Hint button
                                         Button {
+                                            print("🔍 DEBUG: Another Hint button tapped!")
                                             Task {
                                                 await getAnotherHint(step)
                                             }
                                         } label: {
                                             HStack {
-                                                Image(systemName: "lightbulb.fill")
-                                                Text("Another Hint")
+                                                if isLoadingHint {
+                                                    ProgressView()
+                                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                                    Text("Loading...")
+                                                } else {
+                                                    Image(systemName: "lightbulb.fill")
+                                                    Text("Another Hint")
+                                                }
                                             }
                                             .font(.subheadline)
                                             .fontWeight(.semibold)
                                             .foregroundColor(.white)
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(Color.orange)
+                                            .background(isLoadingHint ? Color.orange.opacity(0.6) : Color.orange)
                                             .cornerRadius(12)
                                         }
+                                        .disabled(isLoadingHint)
                                         
                                         // Ask a Question button
                                         Button {
@@ -985,7 +993,12 @@ struct StepGuidanceView: View {
     }
     
     private func getAnotherHint(_ step: GuidanceStep) async {
-        print("🔍 DEBUG: getAnotherHint called")
+        print("🔍 DEBUG: getAnotherHint called - START")
+        
+        // Update on main actor
+        await MainActor.run {
+            print("🔍 DEBUG: Setting isLoadingHint to true")
+        }
         
         // Check subscription status for expired users
         if isSubscriptionExpired {
@@ -996,8 +1009,11 @@ struct StepGuidanceView: View {
             return
         }
         
-        hintCount += 1
-        isLoadingHint = true
+        await MainActor.run {
+            hintCount += 1
+            isLoadingHint = true
+            print("🔍 DEBUG: hintCount is now \(hintCount), isLoadingHint = \(isLoadingHint)")
+        }
         
         print("🔍 DEBUG: Generating hint \(hintCount) for step \(step.stepNumber)")
         
@@ -1012,6 +1028,7 @@ struct StepGuidanceView: View {
             Make this hint more specific and actionable.
             """
             
+            print("🔍 DEBUG: About to call BackendAPIService.generateHint")
             let newHint = try await BackendAPIService.shared.generateHint(
                 for: step,
                 problemContext: problemContext + "\n\n" + hintPrompt,
@@ -1022,20 +1039,27 @@ struct StepGuidanceView: View {
             
             await MainActor.run {
                 additionalHints.append(newHint)
+                print("✅ DEBUG: Added hint to additionalHints array. Total hints: \(additionalHints.count)")
             }
             
-            var updatedStep = step
-            updatedStep.hintsUsed += 1
-            dataManager.updateStep(updatedStep, for: problemId)
+            // Update step hints counter
+            await MainActor.run {
+                var updatedStep = step
+                updatedStep.hintsUsed += 1
+                dataManager.updateStep(updatedStep, for: problemId)
+            }
         } catch {
             print("❌ DEBUG: Error generating hint: \(error)")
             await MainActor.run {
                 additionalHints.append("Think about breaking down the problem into smaller parts. What's the first thing you need to find?")
+                print("⚠️ DEBUG: Added fallback hint. Total hints: \(additionalHints.count)")
             }
         }
         
-        isLoadingHint = false
-        print("🔍 DEBUG: getAnotherHint completed")
+        await MainActor.run {
+            isLoadingHint = false
+            print("🔍 DEBUG: getAnotherHint completed - isLoadingHint set to false")
+        }
     }
     
     private func handleUserQuestion(_ question: String) async {
