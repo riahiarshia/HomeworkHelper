@@ -835,7 +835,6 @@ struct HomeView: View {
                 // Analyze the homework
                 logger.critical("🚨 CRITICAL DEBUG: Starting homework analysis...")
                 let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
-                let userId = dataManager.currentUser?.userId
                 logger.critical("🚨 CRITICAL DEBUG: User grade level: \(userGradeLevel)")
                 logger.critical("🚨 CRITICAL DEBUG: User ID: \(userId ?? "nil")")
                 let analysis = try await backendService.analyzeHomework(
