@@ -611,6 +611,7 @@ class AuthenticationService: ObservableObject {
                     
                     let subscriptionStatus = json["subscription_status"] as? String
                     let daysRemaining = json["days_remaining"] as? Int
+                    let backendUsername = json["username"] as? String ?? ""
                     
                     // Parse subscription end date
                     var subscriptionEndDate: Date?
@@ -622,12 +623,13 @@ class AuthenticationService: ObservableObject {
                     print("✅ Apple authentication successful!")
                     print("   User ID: \(userId)")
                     print("   Email: \(userEmail)")
+                    print("   Username: \(backendUsername)")
                     print("   Subscription: \(subscriptionStatus ?? "unknown")")
                     print("   Days remaining: \(daysRemaining ?? 0)")
                     
                     // Create user object
                     let user = User(
-                        username: name,
+                        username: backendUsername,
                         userId: userId,
                         email: userEmail,
                         authToken: token,
