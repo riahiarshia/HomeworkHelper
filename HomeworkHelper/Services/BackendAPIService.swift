@@ -469,39 +469,7 @@ class BackendAPIService: ObservableObject {
             }
         }
     }
-}
-
-// MARK: - Supporting Types
-
-struct AnswerVerification: Codable {
-    let isCorrect: Bool
-    let verification: String
-}
-
-struct HealthStatus: Codable {
-    let status: String
-    let timestamp: String
-    let version: String
-}
-
-struct ImageQualityValidation: Codable {
-    let isGoodQuality: Bool
-    let confidence: Double
-    let issues: [String]
-    let recommendations: [String]
-}
-
-struct ChatRequest: Codable {
-    let messages: [ChatMessage]
-    let problemContext: String
-    let userGradeLevel: String
-}
-
-struct ChatResponse: Codable {
-    let response: String
-}
-
-
+    
     // MARK: - Homework Tracking
     
     func trackHomeworkSubmission(problem: HomeworkProblem) async throws {
@@ -606,6 +574,36 @@ struct ChatResponse: Codable {
         
         throw BackendAPIError.invalidResponse
     }
+}
+
+// MARK: - Supporting Types
+
+struct AnswerVerification: Codable {
+    let isCorrect: Bool
+    let verification: String
+}
+
+struct HealthStatus: Codable {
+    let status: String
+    let timestamp: String
+    let version: String
+}
+
+struct ImageQualityValidation: Codable {
+    let isGoodQuality: Bool
+    let confidence: Double
+    let issues: [String]
+    let recommendations: [String]
+}
+
+struct ChatRequest: Codable {
+    let messages: [ChatMessage]
+    let problemContext: String
+    let userGradeLevel: String
+}
+
+struct ChatResponse: Codable {
+    let response: String
 }
 
 // MARK: - Homework Stats Models
