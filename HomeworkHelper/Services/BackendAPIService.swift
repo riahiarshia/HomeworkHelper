@@ -41,7 +41,7 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Image Quality Validation
     
-    func validateImageQuality(imageData: Data) async throws -> ImageQualityValidation {
+    func validateImageQuality(imageData: Data, userId: String? = nil) async throws -> ImageQualityValidation {
         await MainActor.run { isLoading = true }
         defer { 
             Task { @MainActor in
@@ -58,6 +58,13 @@ class BackendAPIService: ObservableObject {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         var body = Data()
+        
+        // Add userId if available
+        if let userId = userId {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"userId\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(userId)\r\n".data(using: .utf8)!)
+        }
         
         // Add image data
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -101,11 +108,12 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Homework Analysis
     
-    func analyzeHomework(imageData: Data?, problemText: String?, userGradeLevel: String) async throws -> ProblemAnalysis {
+    func analyzeHomework(imageData: Data?, problemText: String?, userGradeLevel: String, userId: String? = nil) async throws -> ProblemAnalysis {
         print("🔍 DEBUG BackendAPIService.analyzeHomework:")
         print("   Image data provided: \(imageData != nil)")
         print("   Problem text provided: \(problemText != nil)")
         print("   User grade level: \(userGradeLevel)")
+        print("   User ID: \(userId ?? "nil")")
         print("   Base URL: \(baseURL)")
         
         await MainActor.run {
@@ -131,6 +139,13 @@ class BackendAPIService: ObservableObject {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         var body = Data()
+        
+        // Add userId if available
+        if let userId = userId {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"userId\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(userId)\r\n".data(using: .utf8)!)
+        }
         
         // Add image data if provided
         if let imageData = imageData {

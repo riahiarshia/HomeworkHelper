@@ -798,7 +798,8 @@ struct HomeView: View {
             do {
                 logger.critical("🚨 CRITICAL DEBUG: Starting image quality validation...")
                 // First, validate image quality
-                let qualityResult = try await backendService.validateImageQuality(imageData: imageData)
+                let userId = await MainActor.run { dataManager.currentUser?.userId }
+                let qualityResult = try await backendService.validateImageQuality(imageData: imageData, userId: userId)
                 logger.critical("🚨 CRITICAL DEBUG: Image quality validation completed. Is good quality: \(qualityResult.isGoodQuality)")
                 
                 await MainActor.run {
@@ -834,11 +835,14 @@ struct HomeView: View {
                 // Analyze the homework
                 logger.critical("🚨 CRITICAL DEBUG: Starting homework analysis...")
                 let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+                let userId = dataManager.currentUser?.userId
                 logger.critical("🚨 CRITICAL DEBUG: User grade level: \(userGradeLevel)")
+                logger.critical("🚨 CRITICAL DEBUG: User ID: \(userId ?? "nil")")
                 let analysis = try await backendService.analyzeHomework(
                     imageData: imageData,
                     problemText: nil,
-                    userGradeLevel: userGradeLevel
+                    userGradeLevel: userGradeLevel,
+                    userId: userId
                 )
                 
                 logger.critical("🚨 CRITICAL DEBUG: Homework analysis completed successfully!")
@@ -904,10 +908,12 @@ struct HomeView: View {
         do {
             // Analyze the homework directly without quality check
             let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            let userId = dataManager.currentUser?.userId
             let analysis = try await backendService.analyzeHomework(
                 imageData: imageData,
                 problemText: nil,
-                userGradeLevel: userGradeLevel
+                userGradeLevel: userGradeLevel,
+                userId: userId
             )
             
             await MainActor.run {
