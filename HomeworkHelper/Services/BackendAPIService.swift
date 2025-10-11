@@ -39,6 +39,21 @@ class BackendAPIService: ObservableObject {
         }
     }
     
+    // MARK: - Device ID Helper
+    
+    private func getDeviceId() -> String {
+        // Get or create a persistent device ID
+        let deviceIdKey = "app_device_id"
+        if let existingId = keychain.load(forKey: deviceIdKey) {
+            return existingId
+        }
+        
+        // Create new device ID using UIDevice identifier
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        _ = keychain.save(deviceId, forKey: deviceIdKey)
+        return deviceId
+    }
+    
     // MARK: - Image Quality Validation
     
     func validateImageQuality(imageData: Data, userId: String? = nil) async throws -> ImageQualityValidation {
@@ -65,6 +80,12 @@ class BackendAPIService: ObservableObject {
             body.append("Content-Disposition: form-data; name=\"userId\"\r\n\r\n".data(using: .utf8)!)
             body.append("\(userId)\r\n".data(using: .utf8)!)
         }
+        
+        // Add deviceId
+        let deviceId = getDeviceId()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"deviceId\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(deviceId)\r\n".data(using: .utf8)!)
         
         // Add image data
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -146,6 +167,12 @@ class BackendAPIService: ObservableObject {
             body.append("Content-Disposition: form-data; name=\"userId\"\r\n\r\n".data(using: .utf8)!)
             body.append("\(userId)\r\n".data(using: .utf8)!)
         }
+        
+        // Add deviceId
+        let deviceId = getDeviceId()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"deviceId\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(deviceId)\r\n".data(using: .utf8)!)
         
         // Add image data if provided
         if let imageData = imageData {
@@ -315,6 +342,9 @@ class BackendAPIService: ObservableObject {
             requestBody["userId"] = userId
         }
         
+        // Add deviceId
+        requestBody["deviceId"] = getDeviceId()
+        
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
         
         do {
@@ -381,6 +411,9 @@ class BackendAPIService: ObservableObject {
         if let userId = userId {
             requestBody["userId"] = userId
         }
+        
+        // Add deviceId
+        requestBody["deviceId"] = getDeviceId()
         
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
         
@@ -464,6 +497,7 @@ class BackendAPIService: ObservableObject {
             userGradeLevel: userGradeLevel
         )
         requestBody.userId = userId
+        requestBody.deviceId = getDeviceId()
         
         let jsonData = try JSONEncoder().encode(requestBody)
         request.httpBody = jsonData
@@ -627,6 +661,7 @@ struct ChatRequest: Codable {
     let problemContext: String
     let userGradeLevel: String
     var userId: String?
+    var deviceId: String?
 }
 
 struct ChatResponse: Codable {
