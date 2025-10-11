@@ -197,6 +197,37 @@ struct StepGuidanceView: View {
                             
                             // Show options after Continue is pressed
                             if showOptions {
+                                // Show initial hint and all additional hints
+                                if !hintText.isEmpty {
+                                    tutorHintView
+                                    
+                                    // Show additional hints if any
+                                    ForEach(Array(additionalHints.enumerated()), id: \.offset) { index, hint in
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            HStack {
+                                                Image(systemName: "lightbulb.fill")
+                                                    .foregroundColor(.yellow)
+                                                Text("Additional Hint \(index + 1)")
+                                                    .font(.headline)
+                                                    .foregroundColor(.orange)
+                                            }
+                                            Text(hint)
+                                                .font(.body)
+                                                .foregroundColor(.primary)
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Color.orange.opacity(0.1))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
+                                                )
+                                        )
+                                        .padding(.top, 8)
+                                    }
+                                }
+                                
                                 optionsView(step)
                                 
                                 // Action buttons after multiple choice
