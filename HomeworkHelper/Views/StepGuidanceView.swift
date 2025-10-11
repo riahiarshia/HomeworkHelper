@@ -766,6 +766,10 @@ struct StepGuidanceView: View {
             currentStepIndex += 1
             selectedAnswer = nil
             showHint = false
+            
+            // Clear additional hints from previous step
+            additionalHints = []
+            hintCount = 0
         } else {
             completeProblem()
         }
@@ -779,6 +783,10 @@ struct StepGuidanceView: View {
             showHint = false
             feedbackMessage = ""
             showFeedback = false
+            
+            // Clear additional hints from previous step
+            additionalHints = []
+            hintCount = 0
         } else {
             // At first step, go back to home
             presentationMode.wrappedValue.dismiss()
@@ -834,6 +842,10 @@ struct StepGuidanceView: View {
         showHint = false
         showFeedback = false
         feedbackMessage = ""
+        
+        // Clear additional hints when restarting
+        additionalHints = []
+        hintCount = 0
         
         // Reset problem status
         if var problem = problem {
@@ -989,6 +1001,11 @@ struct StepGuidanceView: View {
             feedbackMessage = ""
             showFeedback = false
             showWrongAnswerMessage = false
+            
+            // Clear additional hints from previous step
+            additionalHints = []
+            hintCount = 0
+            print("🔄 DEBUG: Cleared additional hints for new step")
             
             // Load initial hint for new step
             if let step = currentStep {
