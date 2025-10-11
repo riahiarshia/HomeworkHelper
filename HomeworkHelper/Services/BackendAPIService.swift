@@ -502,6 +502,123 @@ struct ChatResponse: Codable {
 }
 
 
+    // MARK: - Homework Tracking
+    
+    func trackHomeworkSubmission(problem: HomeworkProblem) async throws {
+        print("📝 Tracking homework submission to backend...")
+        
+        guard let url = URL(string: "\(baseURL)/api/homework/submit") else {
+            throw BackendAPIError.invalidResponse
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        addAuthHeader(to: &request)
+        
+        let submissionData: [String: Any] = [
+            "problemId": problem.id.uuidString,
+            "subject": problem.subject ?? "Unknown",
+            "problemText": problem.problemText ?? "",
+            "imageFilename": problem.imageFilename ?? "",
+            "totalSteps": problem.totalSteps,
+            "completedSteps": problem.completedSteps,
+            "skippedSteps": problem.skippedSteps,
+            "status": problem.status.rawValue,
+            "timeSpentSeconds": 0,
+            "hintsUsed": 0
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: submissionData)
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BackendAPIError.noResponse
+        }
+        
+        if httpResponse.statusCode == 200 {
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let totalSubmissions = json["totalSubmissions"] as? Int {
+                print("✅ Homework submission tracked! Total submissions: \(totalSubmissions)")
+            }
+        } else {
+            print("⚠️ Failed to track homework submission: \(httpResponse.statusCode)")
+        }
+    }
+    
+    func updateHomeworkCompletion(problemId: UUID, completionData: [String: Any]) async throws {
+        print("✅ Updating homework completion in backend...")
+        
+        guard let url = URL(string: "\(baseURL)/api/homework/complete/\(problemId.uuidString)") else {
+            throw BackendAPIError.invalidResponse
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        addAuthHeader(to: &request)
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: completionData)
+        
+        let (_, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BackendAPIError.noResponse
+        }
+        
+        if httpResponse.statusCode == 200 {
+            print("✅ Homework completion updated in backend!")
+        } else {
+            print("⚠️ Failed to update homework completion: \(httpResponse.statusCode)")
+        }
+    }
+    
+    func getUserHomeworkStats() async throws -> HomeworkStats {
+        print("📊 Fetching user homework stats...")
+        
+        guard let url = URL(string: "\(baseURL)/api/homework/stats") else {
+            throw BackendAPIError.invalidResponse
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        addAuthHeader(to: &request)
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BackendAPIError.noResponse
+        }
+        
+        if httpResponse.statusCode == 200 {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let statsData = json["stats"] as? [String: Any] {
+                let statsJsonData = try JSONSerialization.data(withJSONObject: statsData)
+                let stats = try decoder.decode(HomeworkStats.self, from: statsJsonData)
+                print("✅ Fetched homework stats: \(stats.totalSubmissions) total submissions")
+                return stats
+            }
+        }
+        
+        throw BackendAPIError.invalidResponse
+    }
+}
+
+// MARK: - Homework Stats Models
+
+struct HomeworkStats: Codable {
+    let totalSubmissions: Int
+    let detailedSubmissionCount: Int
+    let completedCount: Int
+    let inProgressCount: Int
+    let avgTimeSeconds: Int
+    let avgHintsUsed: Int
+}
+
 enum BackendAPIError: Error, LocalizedError {
     case noResponse
     case invalidResponse

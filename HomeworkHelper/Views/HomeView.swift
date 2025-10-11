@@ -944,6 +944,16 @@ struct HomeView: View {
                     dataManager.addStep(step, for: problem.id)
                 }
                 
+                // Track homework submission to backend
+                Task {
+                    do {
+                        try await backendService.trackHomeworkSubmission(problem: problem)
+                    } catch {
+                        print("⚠️ Failed to track homework submission: \(error)")
+                        // Don't fail the whole flow if tracking fails
+                    }
+                }
+                
                 currentProblemId = problem.id
                 selectedImage = nil
                 navigateToGuidance = true

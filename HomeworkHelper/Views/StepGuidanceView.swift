@@ -764,6 +764,27 @@ struct StepGuidanceView: View {
             dataManager.updateProgress(subject: subject, points: pointsEarned)
         }
         
+        // Track homework completion to backend
+        Task {
+            do {
+                let totalHintsUsed = steps.reduce(0) { $0 + $1.hintsUsed }
+                let completionData: [String: Any] = [
+                    "completedSteps": problem.completedSteps,
+                    "skippedSteps": problem.skippedSteps,
+                    "status": "completed",
+                    "timeSpentSeconds": 0,
+                    "hintsUsed": totalHintsUsed
+                ]
+                try await BackendAPIService.shared.updateHomeworkCompletion(
+                    problemId: problemId,
+                    completionData: completionData
+                )
+            } catch {
+                print("⚠️ Failed to track homework completion: \(error)")
+                // Don't fail the whole flow if tracking fails
+            }
+        }
+        
         showCompletionView = true
     }
     
