@@ -178,7 +178,30 @@ struct StepGuidanceView: View {
                                         .padding(.top, 8)
                                     }
                                     
-                                    // Action buttons
+                                    
+                                    // Show Continue button below the hint
+                                    Button {
+                                        showMultipleChoice(step)
+                                    } label: {
+                                        Text("Continue to Answer")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.green)
+                                            .cornerRadius(12)
+                                    }
+                                    .padding(.top, 8)
+                                }
+                            }
+                            
+                            // Show options after Continue is pressed
+                            if showOptions {
+                                optionsView(step)
+                                
+                                // Action buttons after multiple choice
+                                VStack(spacing: 12) {
+                                    // Get Another Hint and Ask Question buttons
                                     HStack(spacing: 12) {
                                         // Get Another Hint button
                                         Button {
@@ -216,41 +239,21 @@ struct StepGuidanceView: View {
                                             .cornerRadius(12)
                                         }
                                     }
-                                    .padding(.top, 8)
                                     
-                                    // Show Continue button below the hint
+                                    // Show skip button below action buttons
                                     Button {
-                                        showMultipleChoice(step)
+                                        skipStep(step)
                                     } label: {
-                                        Text("Continue to Answer")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(Color.green)
-                                            .cornerRadius(12)
+                                        HStack {
+                                            Image(systemName: "forward.fill")
+                                            Text("Skip This Step")
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.gray)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(10)
                                     }
-                                    .padding(.top, 8)
-                                }
-                            }
-                            
-                            // Show options after Continue is pressed
-                            if showOptions {
-                                optionsView(step)
-                                
-                                // Show skip button below options
-                                Button {
-                                    skipStep(step)
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "forward.fill")
-                                        Text("Skip This Step")
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.gray)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
                                 }
                                 .padding(.top, 8)
                             }
