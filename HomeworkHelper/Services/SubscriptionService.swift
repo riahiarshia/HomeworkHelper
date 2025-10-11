@@ -126,8 +126,11 @@ class SubscriptionService: ObservableObject {
                 let transaction = try checkVerified(verification)
                 print("✅ Transaction verified")
                 
-                // Update subscription status
+                // Update local subscription status
                 await updateSubscriptionStatus(transaction: transaction)
+                
+                // CRITICAL: Validate receipt with backend (Industry best practice)
+                await validateReceiptWithBackend(transaction: transaction)
                 
                 // Finish the transaction
                 await transaction.finish()
@@ -331,8 +334,13 @@ class SubscriptionService: ObservableObject {
                 do {
                     let transaction = try await self.checkVerified(result)
                     
-                    // Update subscription status
+                    print("🔄 Transaction update received: \(transaction.productID)")
+                    
+                    // Update local subscription status
                     await self.updateSubscriptionStatus(transaction: transaction)
+                    
+                    // CRITICAL: Validate receipt with backend for all transaction updates
+                    await self.validateReceiptWithBackend(transaction: transaction)
                     
                     // Finish the transaction
                     await transaction.finish()
@@ -356,6 +364,65 @@ class SubscriptionService: ObservableObject {
     }
     
     // MARK: - Sync with Backend
+    
+    /// Validate Apple receipt with backend (Industry best practice)
+    private func validateReceiptWithBackend(transaction: Transaction) async {
+        guard let userId = getUserId(), let token = getAuthToken() else { return }
+        
+        do {
+            // Get the receipt from the device
+            guard let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
+                  let receiptData = try? Data(contentsOf: appStoreReceiptURL) else {
+                print("❌ No receipt found")
+                return
+            }
+            
+            let receiptString = receiptData.base64EncodedString()
+            
+            print("🍎 Sending receipt for validation to backend...")
+            
+            let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/subscription/apple/validate-receipt")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let body: [String: Any] = [
+                "receipt": receiptString,
+                "transactionId": transaction.id
+            ]
+            
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("🔍 Receipt validation response status: \(httpResponse.statusCode)")
+                
+                if httpResponse.statusCode == 200 {
+                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let success = json["success"] as? Bool, success {
+                        print("✅ Receipt validated by backend")
+                        print("   Subscription Status: \(json["subscriptionStatus"] as? String ?? "unknown")")
+                        print("   Expires Date: \(json["expiresDate"] as? String ?? "unknown")")
+                        print("   Environment: \(json["environment"] as? String ?? "unknown")")
+                    } else {
+                        print("❌ Backend receipt validation failed")
+                    }
+                } else {
+                    print("❌ Receipt validation failed with status: \(httpResponse.statusCode)")
+                    if let errorData = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let error = errorData["error"] as? String {
+                        print("   Error: \(error)")
+                    }
+                }
+            }
+        } catch {
+            print("❌ Failed to validate receipt with backend: \(error)")
+        }
+    }
+    
+    /// Legacy sync method (deprecated - use validateReceiptWithBackend instead)
     private func syncSubscriptionWithBackend(status: String, endDate: Date?) async {
         guard let userId = getUserId(), let token = getAuthToken() else { return }
         
