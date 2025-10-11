@@ -221,7 +221,7 @@ struct ContentView: View {
 // MARK: - Preview
 #Preview {
     ContentView()
-        .environmentObject(AuthenticationService.shared)
+        .environmentObject(AuthenticationService())
         .environmentObject(DataManager.shared)
         .environmentObject(SubscriptionService.shared)
 }
