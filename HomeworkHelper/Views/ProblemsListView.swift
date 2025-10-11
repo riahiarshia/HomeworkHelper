@@ -288,6 +288,10 @@ struct ProblemDetailView: View {
                                 Text("(Locked)")
                                     .font(.caption)
                                     .foregroundColor(.red)
+                            } else if selectedStepIndex == index {
+                                Text("(Selected)")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
                             }
                             
                             Spacer()
@@ -313,7 +317,23 @@ struct ProblemDetailView: View {
                         }
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.05))
+                    .background(
+                        selectedStepIndex == index 
+                            ? LinearGradient(
+                                gradient: Gradient(colors: [Color.blue.opacity(0.2), Color.purple.opacity(0.15)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                              )
+                            : LinearGradient(
+                                gradient: Gradient(colors: [Color.gray.opacity(0.05), Color.gray.opacity(0.05)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                              )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(selectedStepIndex == index ? Color.blue : Color.clear, lineWidth: 2)
+                    )
                     .cornerRadius(8)
                 }
                 .buttonStyle(PlainButtonStyle())
