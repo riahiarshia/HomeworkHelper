@@ -40,36 +40,21 @@ struct User: Codable, Identifiable, Equatable {
         if let grade = grade {
             return grade
         }
-        
-        guard let age = age else {
-            return "elementary" // Default fallback
-        }
-        
-        switch age {
-        case 5...7:
-            return "kindergarten to 1st grade"
-        case 8...9:
-            return "2nd to 3rd grade"
-        case 10...11:
-            return "4th to 5th grade"
-        case 12...14:
-            return "6th to 8th grade (middle school)"
-        case 15...18:
-            return "9th to 12th grade (high school)"
-        default:
-            return "elementary"
-        }
+        return "elementary" // Default fallback
     }
     
     // Helper function to determine if user can handle algebraic concepts
     func canHandleAlgebra() -> Bool {
-        guard let age = age else { return false }
-        return age >= 12 // Middle school and up
+        guard let grade = grade else { return false }
+        return grade.contains("6th") || grade.contains("7th") || grade.contains("8th") || 
+               grade.contains("9th") || grade.contains("10th") || grade.contains("11th") || 
+               grade.contains("12th") || grade.contains("College") || grade.contains("Graduate")
     }
     
     // Helper function to determine if user can handle complex math
     func canHandleComplexMath() -> Bool {
-        guard let age = age else { return false }
-        return age >= 15 // High school and up
+        guard let grade = grade else { return false }
+        return grade.contains("9th") || grade.contains("10th") || grade.contains("11th") || 
+               grade.contains("12th") || grade.contains("College") || grade.contains("Graduate")
     }
 }

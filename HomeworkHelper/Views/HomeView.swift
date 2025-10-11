@@ -22,9 +22,11 @@ struct HomeView: View {
     @EnvironmentObject var subscriptionService: SubscriptionService
     @StateObject private var backendService = BackendAPIService.shared
     @State private var showPaywall = false
+    let isSubscriptionExpired: Bool
     
-    init() {
-        logger.critical("🚨 CRITICAL DEBUG: HomeView init called!")
+    init(isSubscriptionExpired: Bool = false) {
+        self.isSubscriptionExpired = isSubscriptionExpired
+        logger.critical("🚨 CRITICAL DEBUG: HomeView init called! isSubscriptionExpired: \(isSubscriptionExpired)")
     }
     
     @State private var selectedImage: UIImage?
@@ -326,60 +328,73 @@ struct HomeView: View {
     }
     
     private var uploadSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 20) {
+            // Upload Your Homework heading
             Text("Upload Your Homework")
-                .font(.headline)
+                .font(.title2)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            Text("Take a photo or select from your library - we'll analyze it automatically!")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            HStack(spacing: 12) {
+            // Camera and Photo Library buttons side by side
+            HStack(spacing: 0) {
+                // Camera button (left side)
                 Button {
-                    if isSubscriptionExpired {
-                        showPaywall = true
-                        return
-                    }
+                    // Allow expired users to take photos - paywall will show later when they try to get AI guidance
                     logger.critical("🚨 CRITICAL DEBUG: Camera button tapped!")
                     pendingImageSource = .camera
                     showCamera = true
                 } label: {
-                    Label("Camera", systemImage: "camera.fill")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(isSubscriptionExpired ? Color.gray : Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    VStack {
+                        Image(systemName: "camera.fill")
+                            .font(.title)
+                            .foregroundColor(.primary)
+                        Text("Camera")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 100)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
                 }
                 .accessibilityIdentifier("camera_button")
                 .disabled(isProcessing)
                 
+                // Vertical separator
+                Rectangle()
+                    .fill(Color(.systemGray4))
+                    .frame(width: 1)
+                    .frame(height: 100)
+                
+                // Photo Library button (right side)
                 Button {
-                    if isSubscriptionExpired {
-                        showPaywall = true
-                        return
-                    }
+                    // Allow expired users to select photos - paywall will show later when they try to get AI guidance
                     logger.critical("🚨 CRITICAL DEBUG: Photo Library button tapped!")
                     pendingImageSource = .photoLibrary
                     showImagePicker = true
                 } label: {
-                    Label("Photo Library", systemImage: "photo.fill")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(isSubscriptionExpired ? Color.gray : Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    VStack {
+                        Image(systemName: "photo.fill")
+                            .font(.title)
+                            .foregroundColor(.primary)
+                        Text("Photo Library")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 100)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
                 }
                 .accessibilityIdentifier("photo_library_button")
                 .disabled(isProcessing)
             }
             
             if isSubscriptionExpired {
-                Text("Subscribe to continue using Homework Helper")
+                Text("Limited access - Subscribe for full AI guidance")
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundColor(.orange)
+                    .multilineTextAlignment(.center)
                     .padding(.top, 4)
             }
         }
@@ -1014,144 +1029,53 @@ struct HomeView: View {
     // MARK: - Subscription Banner
     @ViewBuilder
     private var subscriptionBanner: some View {
-        switch subscriptionService.subscriptionStatus {
-        case .trial(let daysRemaining):
-            if daysRemaining <= 3 {
-                // Show warning when trial is ending soon
-                HStack {
-                    Image(systemName: "clock.badge.exclamationmark")
-                        .font(.title3)
-                        .foregroundColor(.orange)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Free Trial Ending Soon")
-                            .font(.headline)
-                        Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left - Subscribe to continue")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                .background(Color.orange.opacity(0.1))
-                .cornerRadius(12)
-                .padding(.horizontal)
-            } else {
-                // Show trial status during active trial
-                HStack {
-                    Image(systemName: "gift.fill")
-                        .font(.title3)
-                        .foregroundColor(.green)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Trial activated - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
-                            .font(.headline)
-                        Text("Enjoy full access to your AI tutor")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                .background(Color.green.opacity(0.1))
-                .cornerRadius(12)
-                .padding(.horizontal)
-            }
-            
-        case .active(let renewalDate):
-            // Show active subscription status
-            HStack {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.green)
+        HStack {
+            // Subscriber info section
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Subscriber")
+                    .font(.headline)
+                    .fontWeight(.semibold)
                 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Premium Active")
-                        .font(.headline)
-                    Text("Renews \(renewalDate, style: .date)")
+                switch subscriptionService.subscriptionStatus {
+                case .trial(let daysRemaining):
+                    Text("Free Trial - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                case .active(let renewalDate):
+                    Text("Premium - Renews \(renewalDate, style: .date)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                case .expired:
+                    Text("Subscription Expired")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                case .unknown:
+                    Text("Subscription status unknown")
+                case .gracePeriod(daysRemaining: let daysRemaining):
+                    Text("Grace period - \(daysRemaining) day\(daysRemaining == 1 ? "" : "s") left")
+                    
                 }
-                
-                Spacer()
             }
-            .padding()
-            .background(Color.green.opacity(0.1))
-            .cornerRadius(12)
-            .padding(.horizontal)
             
-        case .expired:
-            // Show upgrade prompt
+            Spacer()
+            
+            // Renew button
             Button {
                 showPaywall = true
             } label: {
-                HStack {
-                    Image(systemName: "lock.fill")
-                        .font(.title3)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Subscription Expired")
-                            .font(.headline)
-                        Text("Tap to renew and continue learning")
-                            .font(.caption)
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Renew")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                }
-                .foregroundColor(.white)
-                .padding()
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.purple, Color.blue]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(12)
+                Text("Renew")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(Color.blue)
+                    .cornerRadius(8)
             }
-            .padding(.horizontal)
-            
-        case .gracePeriod(let daysRemaining):
-            // Show grace period warning
-            HStack {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.title3)
-                    .foregroundColor(.orange)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Payment Issue")
-                        .font(.headline)
-                    Text("\(daysRemaining) day\(daysRemaining == 1 ? "" : "s") of access remaining")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer()
-                
-                Button("Fix") {
-                    showPaywall = true
-                }
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(.orange)
-            }
-            .padding()
-            .background(Color.orange.opacity(0.1))
-            .cornerRadius(12)
-            .padding(.horizontal)
-            
-        case .unknown:
-            EmptyView()
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
     }
 }
 

@@ -3,15 +3,14 @@ import SwiftUI
 struct ProfileSetupView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var username = ""
-    @State private var selectedAge: Int = 10
     @State private var selectedGrade: String = "4th grade"
-    @State private var useGrade = false
     @State private var isCompleted = false
+    @State private var showingNameAlert = false
     
-    private let ages = Array(5...18)
     private let grades = [
         "Kindergarten", "1st grade", "2nd grade", "3rd grade", "4th grade", "5th grade",
-        "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade"
+        "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade",
+        "College - Freshman", "College - Sophomore", "College - Junior", "College - Senior", "Graduate School"
     ]
     
     var body: some View {
@@ -20,7 +19,7 @@ struct ProfileSetupView: View {
                 VStack(spacing: 32) {
                     headerView
                     userInfoSection
-                    ageGradeSection
+                    gradeSection
                     continueButton
                 }
                 .padding()
@@ -28,30 +27,30 @@ struct ProfileSetupView: View {
             .navigationTitle("Complete Your Profile")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
+            .alert("Name Required", isPresented: $showingNameAlert) {
+                Button("OK") { }
+            } message: {
+                Text("Please enter your name before continuing.")
+            }
         }
         .onAppear {
-            // Pre-fill username if user already exists and it's not a generic name
+            // Don't pre-fill username - user must enter their own name
+            // Only pre-fill grade if it exists
             if let existingUser = dataManager.currentUser {
-                let existingName = existingUser.username
-                // Only pre-fill if it's not a generic name
-                if existingName.lowercased() != "apple user" && 
-                   existingName.lowercased() != "google user" &&
-                   existingName.lowercased() != "user" {
-                    username = existingName
-                }
-                selectedAge = existingUser.age ?? 10
                 selectedGrade = existingUser.grade ?? "4th grade"
             }
         }
     }
     
     private var headerView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
+        VStack(spacing: 8) {
+            // Custom logo
+            Image("logo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 200, height: 200)
             
-            Text("Let's personalize your experience!")
+            Text("Let's personalize your experience!")  
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
@@ -61,7 +60,7 @@ struct ProfileSetupView: View {
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
         }
-        .padding(.top, 40)
+        .padding(.top, 20)
     }
     
     private var userInfoSection: some View {
@@ -79,45 +78,12 @@ struct ProfileSetupView: View {
         }
     }
     
-    private var ageGradeSection: some View {
+    private var gradeSection: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("Tell us about your grade level")
+            Text("What's your grade level?")
                 .font(.headline)
             
-            // Toggle between age and grade selection
-            Picker("Select method", selection: $useGrade) {
-                Text("By Age").tag(false)
-                Text("By Grade").tag(true)
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            
-            if useGrade {
-                gradeSelectionView
-            } else {
-                ageSelectionView
-            }
-        }
-    }
-    
-    private var ageSelectionView: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("How old are you?")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Picker("Age", selection: $selectedAge) {
-                ForEach(ages, id: \.self) { age in
-                    Text("\(age) years old").tag(age)
-                }
-            }
-            .pickerStyle(WheelPickerStyle())
-            .frame(height: 120)
-        }
-    }
-    
-    private var gradeSelectionView: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("What grade are you in?")
+            Text("Select your current grade or education level")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             
@@ -127,23 +93,26 @@ struct ProfileSetupView: View {
                 }
             }
             .pickerStyle(WheelPickerStyle())
-            .frame(height: 120)
+            .frame(height: 150)
         }
     }
     
     private var continueButton: some View {
         Button {
-            saveUserInfo()
+            if isValidName {
+                saveUserInfo()
+            } else {
+                showingNameAlert = true
+            }
         } label: {
             Text("Get Started!")
                 .font(.headline)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(isValidName ? Color.blue : Color.gray)
+                .background(Color.blue)
                 .cornerRadius(12)
         }
-        .disabled(!isValidName)
         .padding(.top, 20)
     }
     
@@ -158,7 +127,7 @@ struct ProfileSetupView: View {
     }
     
     private func saveUserInfo() {
-        guard !username.isEmpty else { return }
+        guard isValidName else { return }
         
         let trimmedName = username.trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -166,20 +135,20 @@ struct ProfileSetupView: View {
         if var user = dataManager.currentUser {
             // Update the onboarding fields
             user.username = trimmedName
-            user.age = useGrade ? nil : selectedAge
-            user.grade = useGrade ? selectedGrade : nil
+            user.age = nil // Always set age to nil since we're removing it
+            user.grade = selectedGrade
             dataManager.currentUser = user
             
             // Sync to backend if authenticated
             if let userId = user.userId, let token = user.authToken {
-                syncProfileToBackend(userId: userId, token: token, username: trimmedName, age: user.age, grade: user.grade)
+                syncProfileToBackend(userId: userId, token: token, username: trimmedName, grade: user.grade)
             }
         } else {
             // Fallback: create new user if none exists
             let user = User(
                 username: trimmedName,
-                age: useGrade ? nil : selectedAge,
-                grade: useGrade ? selectedGrade : nil
+                age: nil, // Always set age to nil
+                grade: selectedGrade
             )
             dataManager.currentUser = user
         }
@@ -188,7 +157,7 @@ struct ProfileSetupView: View {
         isCompleted = true
     }
     
-    private func syncProfileToBackend(userId: String, token: String, username: String, age: Int?, grade: String?) {
+    private func syncProfileToBackend(userId: String, token: String, username: String, grade: String?) {
         guard let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/update-profile") else { return }
         
         var request = URLRequest(url: url)
@@ -198,7 +167,7 @@ struct ProfileSetupView: View {
         
         let body: [String: Any] = [
             "username": username,
-            "age": age as Any,
+            "age": NSNull(), // Always send null for age
             "grade": grade as Any
         ]
         

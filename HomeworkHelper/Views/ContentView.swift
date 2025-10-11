@@ -14,9 +14,9 @@ struct ContentView: View {
     
     private var needsOnboarding: Bool {
         guard let user = dataManager.currentUser else { return true }
-        // User needs onboarding if they don't have both age AND grade set
-        // (they should have at least one of them set after completing onboarding)
-        return user.age == nil && user.grade == nil
+        // User needs onboarding if they don't have grade set
+        // (they should have grade set after completing onboarding)
+        return user.grade == nil
     }
     
     private var shouldShowPaywall: Bool {
@@ -35,8 +35,17 @@ struct ContentView: View {
             // Active subscription - no paywall
             return false
         case .expired, .unknown:
-            // Trial expired or no subscription - SHOW paywall
+            // Trial expired - allow limited access, don't show paywall immediately
+            return false
+        }
+    }
+    
+    private var isSubscriptionExpired: Bool {
+        switch subscriptionService.subscriptionStatus {
+        case .expired, .unknown:
             return true
+        default:
+            return false
         }
     }
     
@@ -59,13 +68,13 @@ struct ContentView: View {
             } else {
                 // Show main app
                 TabView(selection: $selectedTab) {
-                    HomeView()
+                    HomeView(isSubscriptionExpired: isSubscriptionExpired)
                         .tabItem {
                             Label("Home", systemImage: "house.fill")
                         }
                         .tag(0)
                     
-                    ProblemsListView()
+                    ProblemsListView(isSubscriptionExpired: isSubscriptionExpired)
                         .tabItem {
                             Label("Problems", systemImage: "list.bullet")
                         }

@@ -316,7 +316,7 @@ class AuthenticationService: ObservableObject {
             print("   Email: \(userEmail)")
             
             let user = User(
-                username: userName ?? "User",
+                username: userName ?? "",
                 userId: userId,
                 email: userEmail,
                 authToken: token,
@@ -362,16 +362,14 @@ class AuthenticationService: ObservableObject {
             let email = appleIDCredential.email
             let fullName = appleIDCredential.fullName
             
-            // Create display name
-            var displayName = "Apple User"
+            // Create display name from Apple ID info
+            var displayName = ""
             if let fullName = fullName {
                 let firstName = fullName.givenName ?? ""
                 let lastName = fullName.familyName ?? ""
                 displayName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
-                if displayName.isEmpty {
-                    displayName = "Apple User"
-                }
             }
+            // If no name provided or empty, leave empty for user to fill in
             
             print("✅ Apple Sign-In successful: \(userIdentifier)")
             print("   Email: \(email ?? "not provided")")

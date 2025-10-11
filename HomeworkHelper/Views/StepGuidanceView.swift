@@ -4,6 +4,7 @@ struct StepGuidanceView: View {
     let problemId: UUID
     
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var subscriptionService: SubscriptionService
     @Environment(\.presentationMode) var presentationMode
     
     @State private var currentStepIndex = 0
@@ -16,6 +17,7 @@ struct StepGuidanceView: View {
     @State private var showCompletion = false
     @State private var debugInfo = ""
     @State private var showCompletionView = false
+    @State private var showPaywall = false
     
     // New tutor flow states
     @State private var showOptions = false
@@ -23,6 +25,15 @@ struct StepGuidanceView: View {
     @State private var attemptCount = 0
     @State private var hasShownInitialHint = false
     @State private var showWrongAnswerMessage = false
+    
+    private var isSubscriptionExpired: Bool {
+        switch subscriptionService.subscriptionStatus {
+        case .expired, .unknown:
+            return true
+        default:
+            return false
+        }
+    }
     
     private var steps: [GuidanceStep] {
         dataManager.steps[problemId.uuidString]?.sorted(by: { $0.stepNumber < $1.stepNumber }) ?? []
@@ -194,6 +205,9 @@ struct StepGuidanceView: View {
                 }
             }
             
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
         }
         .sheet(isPresented: $showCompletionView) {
             VStack(spacing: 20) {
@@ -712,6 +726,12 @@ struct StepGuidanceView: View {
     }
     
     private func handleAnswerSelection(_ answer: String, step: GuidanceStep) {
+        // Show paywall if subscription is expired
+        if isSubscriptionExpired {
+            showPaywall = true
+            return
+        }
+        
         selectedAnswer = answer
         
         // Check if answer is correct

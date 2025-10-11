@@ -170,10 +170,10 @@ class SubscriptionService: ObservableObject {
             // Sync with App Store
             try await AppStore.sync()
             
-            // Reload subscription status
-            await loadSubscriptionStatus()
+            // Always fetch fresh subscription status from backend
+            await checkTrialStatus()
             
-            print("✅ Purchases restored")
+            print("✅ Purchases restored and subscription status refreshed from backend")
         } catch {
             errorMessage = "Failed to restore purchases: \(error.localizedDescription)"
             print("❌ Restore error: \(error)")
@@ -186,44 +186,33 @@ class SubscriptionService: ObservableObject {
     
     /// Force refresh subscription status from backend
     func refreshSubscriptionStatus() async {
-        print("🔄 Force refreshing subscription status...")
+        print("🔄 Force refreshing subscription status from backend...")
         print("🔄 Current status before refresh: \(subscriptionStatus)")
-        await loadSubscriptionStatus()
+        
+        // Clear any local state and always fetch from backend - single source of truth
+        await checkTrialStatus()
+        
         print("🔄 Current status after refresh: \(subscriptionStatus)")
+    }
+    
+    /// Clear local subscription cache and force refresh from backend
+    func clearCacheAndRefresh() async {
+        print("🗑️ Clearing subscription cache and refreshing from backend...")
+        subscriptionStatus = .unknown
+        await refreshSubscriptionStatus()
+    }
+    
+    /// Handle subscription status change (e.g., after cancellation)
+    func handleSubscriptionChange() async {
+        print("📱 Subscription status changed - refreshing from backend...")
+        await clearCacheAndRefresh()
     }
     
     // MARK: - Load Subscription Status
     private func loadSubscriptionStatus() async {
-        // In TestFlight/Debug mode, always check backend first
-        if isTestFlight {
-            print("🧪 TestFlight mode - loading subscription status from backend")
-            await checkTrialStatus()
-            return
-        }
-        
-        // Check for active subscriptions
-        var activeSubscription: Transaction?
-        
-        for await result in Transaction.currentEntitlements {
-            do {
-                let transaction = try checkVerified(result)
-                
-                // Check if this is our subscription product
-                if transaction.productID == monthlySubscriptionID {
-                    activeSubscription = transaction
-                    break
-                }
-            } catch {
-                print("❌ Transaction verification failed: \(error)")
-            }
-        }
-        
-        if let transaction = activeSubscription {
-            await updateSubscriptionStatus(transaction: transaction)
-        } else {
-            // No active subscription - check trial status
-            await checkTrialStatus()
-        }
+        // Always fetch from backend - single source of truth
+        print("🔄 Loading subscription status from backend (single source of truth)")
+        await checkTrialStatus()
     }
     
     // MARK: - Update Subscription Status

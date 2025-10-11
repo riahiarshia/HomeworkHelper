@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "B7E8F7A4",
   "nonRenewingSubscriptions" : [
 
@@ -97,14 +107,16 @@
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly Premium Subscription",
           "subscriptionGroupID" : "21482893",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }
   ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }
-

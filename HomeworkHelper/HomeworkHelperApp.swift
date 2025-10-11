@@ -30,7 +30,7 @@ struct HomeworkHelperApp: App {
         // Configure test data if needed
         if ProcessInfo.processInfo.environment["-uiLocale"] == "en_US" {
             // Set up test user data
-            dataManager.currentUser = User(username: "TestUser", age: 12, grade: nil, points: 100, streak: 5)
+            dataManager.currentUser = User(username: "TestUser", age: nil, grade: "8th grade", points: 100, streak: 5)
         }
     }
 }

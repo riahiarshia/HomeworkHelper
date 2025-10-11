@@ -3,6 +3,7 @@ import SwiftUI
 struct ProblemsListView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var selectedFilter: ProblemFilter = .all
+    let isSubscriptionExpired: Bool
     
     enum ProblemFilter: String, CaseIterable {
         case all = "All"

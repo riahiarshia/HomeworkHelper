@@ -5,15 +5,13 @@ struct EditProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var username: String = ""
-    @State private var selectedAge: Int = 10
     @State private var selectedGrade: String = "4th grade"
-    @State private var useGrade = false
     @State private var showingSaveAlert = false
     
-    private let ages = Array(5...18)
     private let grades = [
         "Kindergarten", "1st grade", "2nd grade", "3rd grade", "4th grade", "5th grade",
-        "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade"
+        "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade",
+        "College - Freshman", "College - Sophomore", "College - Junior", "College - Senior", "Graduate School"
     ]
     
     var body: some View {
@@ -25,28 +23,14 @@ struct EditProfileView: View {
                 }
                 
                 Section(header: Text("Grade Level")) {
-                    Picker("Select method", selection: $useGrade) {
-                        Text("By Age").tag(false)
-                        Text("By Grade").tag(true)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    
-                    if useGrade {
-                        Picker("Grade", selection: $selectedGrade) {
-                            ForEach(grades, id: \.self) { grade in
-                                Text(grade).tag(grade)
-                            }
-                        }
-                    } else {
-                        Picker("Age", selection: $selectedAge) {
-                            ForEach(ages, id: \.self) { age in
-                                Text("\(age) years old").tag(age)
-                            }
+                    Picker("Grade", selection: $selectedGrade) {
+                        ForEach(grades, id: \.self) { grade in
+                            Text(grade).tag(grade)
                         }
                     }
                 }
                 
-                Section(footer: Text("This information helps us provide age-appropriate learning guidance.")) {
+                Section(footer: Text("This information helps us provide grade-appropriate learning guidance.")) {
                     EmptyView()
                 }
             }
@@ -83,9 +67,7 @@ struct EditProfileView: View {
         guard let user = dataManager.currentUser else { return }
         
         username = user.username
-        selectedAge = user.age ?? 10
         selectedGrade = user.grade ?? "4th grade"
-        useGrade = user.grade != nil
     }
     
     private func saveProfile() {
@@ -94,8 +76,8 @@ struct EditProfileView: View {
         // Preserve authentication fields
         var updatedUser = dataManager.currentUser ?? User(username: username)
         updatedUser.username = username
-        updatedUser.age = useGrade ? nil : selectedAge
-        updatedUser.grade = useGrade ? selectedGrade : nil
+        updatedUser.age = nil // Always set age to nil
+        updatedUser.grade = selectedGrade
         updatedUser.lastActive = Date()
         
         dataManager.currentUser = updatedUser
@@ -103,13 +85,13 @@ struct EditProfileView: View {
         
         // Sync to backend if authenticated
         if let userId = updatedUser.userId, let token = updatedUser.authToken {
-            syncProfileToBackend(userId: userId, token: token, username: username, age: updatedUser.age, grade: updatedUser.grade)
+            syncProfileToBackend(userId: userId, token: token, username: username, grade: updatedUser.grade)
         }
         
         showingSaveAlert = true
     }
     
-    private func syncProfileToBackend(userId: String, token: String, username: String, age: Int?, grade: String?) {
+    private func syncProfileToBackend(userId: String, token: String, username: String, grade: String?) {
         guard let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/update-profile") else { return }
         
         var request = URLRequest(url: url)
@@ -119,7 +101,7 @@ struct EditProfileView: View {
         
         let body: [String: Any] = [
             "username": username,
-            "age": age as Any,
+            "age": NSNull(), // Always send null for age
             "grade": grade as Any
         ]
         

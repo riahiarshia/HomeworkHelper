@@ -27,7 +27,9 @@ struct PaywallView: View {
             .ignoresSafeArea()
             
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: 0) {
+                    
+                    
                     // Header
                     headerSection
                     
@@ -68,31 +70,28 @@ struct PaywallView: View {
                 await subscriptionService.loadProducts()
             }
         }
+        .sheet(isPresented: $showingTerms) {
+            TermsOfUseView()
+        }
+        .sheet(isPresented: $showingPrivacy) {
+            PrivacyPolicyView()
+        }
     }
     
     // MARK: - Header Section
     private var headerSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             // Icon
             ZStack {
-                Circle()
-                    .fill(Color.white.opacity(0.2))
-                    .frame(width: 100, height: 100)
                 
-                Image(systemName: isExpired ? "lock.fill" : "brain.head.profile")
-                    .font(.system(size: 50))
-                    .foregroundColor(.white)
             }
             
-            Text(isExpired ? "Your Trial Has Ended" : "Ready to Start Learning?")
+            Text(isExpired ? "Your Trial Has Ended" : "Ready to Subscribe?")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            Text(isExpired ? "Subscribe to continue using your AI tutor" : "Start your 7-day free trial\nNo credit card required")
-                .font(.title3)
-                .foregroundColor(.white.opacity(0.9))
-                .multilineTextAlignment(.center)
+            
         }
         .padding(.top, 20)
     }
@@ -126,11 +125,6 @@ struct PaywallView: View {
                 description: "Math, Science, English, and more"
             )
             
-            FeatureRow(
-                icon: "chart.line.uptrend.xyaxis",
-                title: "Track Your Progress",
-                description: "See your improvement over time"
-            )
             
             FeatureRow(
                 icon: "sparkles",
@@ -190,28 +184,44 @@ struct PaywallView: View {
     
     // MARK: - CTA Button
     private var ctaButton: some View {
-        Button {
-            purchaseSubscription()
-        } label: {
-            HStack {
-                if isPurchasing {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .purple))
-                    Text("Processing...")
-                        .fontWeight(.bold)
-                } else {
-                    Text(isExpired ? "Subscribe Now" : "Start Free Trial")
-                        .fontWeight(.bold)
-                    Image(systemName: isExpired ? "arrow.right.circle.fill" : "gift.fill")
+        VStack(spacing: 12) {
+            // Main Subscribe Button
+            Button {
+                purchaseSubscription()
+            } label: {
+                HStack {
+                    if isPurchasing {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .purple))
+                        Text("Processing...")
+                            .fontWeight(.bold)
+                    } else {
+                        Text(isExpired ? "Subscribe Now" : "Start Free Trial")
+                            .fontWeight(.bold)
+                        Image(systemName: isExpired ? "arrow.right.circle.fill" : "gift.fill")
+                    }
                 }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.white)
+                .foregroundColor(.purple)
+                .cornerRadius(16)
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.white)
-            .foregroundColor(.purple)
-            .cornerRadius(16)
+            .disabled(isPurchasing || subscriptionService.isLoading)
+            
+            // Not Now Button (only show for expired users)
+            if isExpired {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Not Now")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+                        .underline()
+                }
+                .disabled(isPurchasing || subscriptionService.isLoading)
+            }
         }
-        .disabled(isPurchasing || subscriptionService.isLoading)
         .padding(.horizontal)
     }
     

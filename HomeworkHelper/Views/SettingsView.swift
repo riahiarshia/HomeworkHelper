@@ -310,14 +310,14 @@ struct SettingsView: View {
                         }
                         
                         Button {
-                            UIPasteboard.general.string = "homework@arshia.com"
+                            UIPasteboard.general.string = "support_homewor@arshia.com"
                             supportEmailCopied = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 supportEmailCopied = false
                             }
                         } label: {
                             HStack {
-                                Text("homework@arshia.com")
+                                Text("support_homework@arshia.com")
                                     .foregroundColor(.blue)
                                     .underline()
                                 Spacer()
@@ -439,7 +439,7 @@ struct SettingsView: View {
         dataManager.steps = [:]
         dataManager.messages = [:]
         dataManager.progress = []
-        dataManager.currentUser = User(username: "Student", age: nil, grade: nil, points: 0, streak: 0)
+        dataManager.currentUser = User(username: "", age: nil, grade: nil, points: 0, streak: 0)
         dataManager.saveData()
     }
     
@@ -457,7 +457,7 @@ struct SettingsView: View {
         
         let encoded = emailBody.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         
-        if let url = URL(string: "mailto:homework@arshia.com?subject=Support%20Request&body=\(encoded)") {
+        if let url = URL(string: "mailto:support_homework@arshia.com?subject=Support%20Request&body=\(encoded)") {
             UIApplication.shared.open(url)
         }
     }
@@ -728,3 +728,5 @@ struct TermsOfUseView: View {
         }
     }
 }
+
+
