@@ -236,8 +236,14 @@ struct ProblemDetailView: View {
     
     private var stepsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Steps")
-                .font(.headline)
+            HStack {
+                Text("Steps")
+                    .font(.headline)
+                Spacer()
+                Text("Tap any step to work on it")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+            }
             
             ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                 Button {
@@ -311,19 +317,35 @@ struct ProblemDetailView: View {
                     .cornerRadius(12)
                 }
             } else if problem.status == .completed {
-                Button {
-                    restartProblem()
-                } label: {
-                    HStack {
-                        Image(systemName: "arrow.counterclockwise")
-                        Text("Restart Problem")
-                            .fontWeight(.semibold)
+                VStack(spacing: 12) {
+                    // Allow working on any step of completed problems
+                    NavigationLink(destination: StepGuidanceView(problemId: problem.id)) {
+                        HStack {
+                            Image(systemName: "play.circle.fill")
+                            Text("Work on Problem")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
+                    
+                    Button {
+                        restartProblem()
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise")
+                            Text("Restart from Beginning")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
                 }
             }
         }
