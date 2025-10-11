@@ -303,7 +303,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Data")) {
-                    Button("Reset All Data") {
+                    Button("Clear Homework History") {
                         showingResetAlert = true
                     }
                     .foregroundColor(.red)
@@ -408,22 +408,22 @@ struct SettingsView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
-            .alert("Reset All Data?", isPresented: $showingResetAlert) {
+            .alert("Clear Homework History?", isPresented: $showingResetAlert) {
                 Button("Cancel", role: .cancel) { }
-                Button("Reset", role: .destructive) {
-                    resetAllData()
+                Button("Clear", role: .destructive) {
+                    clearHomeworkHistory()
                 }
             } message: {
-                Text("This will permanently delete all your homework problems, progress, and chat history. This action cannot be undone.")
+                Text("This will permanently delete all your homework problems, progress, and chat history. Your account and subscription will remain active.")
             }
             .alert("Sign Out?", isPresented: $showingSignOutAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Sign Out", role: .destructive) {
                     authService.signOut()
-                    dataManager.currentUser = nil
+                    dataManager.clearCurrentUser()
                 }
             } message: {
-                Text("Are you sure you want to sign out? Your data will be saved.")
+                Text("Are you sure you want to sign out? Your homework data will be saved and restored when you sign back in.")
             }
             .sheet(isPresented: $showingDisclaimer) {
                 DisclaimerView()
@@ -445,13 +445,16 @@ struct SettingsView: View {
         }
     }
     
-    private func resetAllData() {
-        dataManager.problems = []
-        dataManager.steps = [:]
-        dataManager.messages = [:]
-        dataManager.progress = []
-        dataManager.currentUser = User(username: "", age: nil, grade: nil, points: 0, streak: 0)
-        dataManager.saveData()
+    private func clearHomeworkHistory() {
+        // Clear homework data but preserve user authentication
+        dataManager.clearHomeworkData()
+        
+        // Optionally reset points and streak
+        if var user = dataManager.currentUser {
+            user.points = 0
+            user.streak = 0
+            dataManager.currentUser = user
+        }
     }
     
     private func sendSupportEmail() {

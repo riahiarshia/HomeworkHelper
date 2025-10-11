@@ -15,7 +15,7 @@ class DataManager: ObservableObject {
     }
     
     private init() {
-        loadData()
+        // Don't load data here - wait for user to be set
         setupDefaultUser()
     }
     
@@ -27,69 +27,164 @@ class DataManager: ObservableObject {
         }
     }
     
+    // MARK: - User-Specific File Paths
+    
+    private func getProblemsFilePath(for userId: String) -> URL {
+        return documentsDirectory.appendingPathComponent("user_\(userId)_problems.json")
+    }
+    
+    private func getStepsFilePath(for userId: String) -> URL {
+        return documentsDirectory.appendingPathComponent("user_\(userId)_steps.json")
+    }
+    
+    private func getMessagesFilePath(for userId: String) -> URL {
+        return documentsDirectory.appendingPathComponent("user_\(userId)_messages.json")
+    }
+    
+    private func getProgressFilePath(for userId: String) -> URL {
+        return documentsDirectory.appendingPathComponent("user_\(userId)_progress.json")
+    }
+    
+    // MARK: - User Context Management
+    
+    /// Call this when a user logs in to load their homework data
+    func setCurrentUser(_ user: User) {
+        print("📂 DataManager: Setting current user: \(user.email ?? "unknown")")
+        self.currentUser = user
+        
+        // Clear current data
+        problems = []
+        steps = [:]
+        messages = [:]
+        progress = []
+        
+        // Load user-specific data if userId exists
+        if let userId = user.userId {
+            loadUserData(for: userId)
+        } else {
+            print("⚠️ DataManager: User has no userId, using empty data")
+        }
+    }
+    
+    /// Call this when user logs out
+    func clearCurrentUser() {
+        print("📂 DataManager: Clearing current user (homework data preserved)")
+        currentUser = nil
+        problems = []
+        steps = [:]
+        messages = [:]
+        progress = []
+    }
+    
+    // MARK: - Save Data (User-Specific)
+    
     func saveData() {
+        // Only save if we have a userId
+        guard let userId = currentUser?.userId else {
+            print("⚠️ DataManager: Cannot save data - no userId")
+            return
+        }
+        
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         
         do {
-            if let user = currentUser {
-                let userData = try encoder.encode(user)
-                try userData.write(to: documentsDirectory.appendingPathComponent("user.json"))
-            }
-            
+            // Save homework data to user-specific files
             let problemsData = try encoder.encode(problems)
-            try problemsData.write(to: documentsDirectory.appendingPathComponent("problems.json"))
+            try problemsData.write(to: getProblemsFilePath(for: userId))
             
             let stepsData = try encoder.encode(steps)
-            try stepsData.write(to: documentsDirectory.appendingPathComponent("steps.json"))
+            try stepsData.write(to: getStepsFilePath(for: userId))
             
             let messagesData = try encoder.encode(messages)
-            try messagesData.write(to: documentsDirectory.appendingPathComponent("messages.json"))
+            try messagesData.write(to: getMessagesFilePath(for: userId))
             
             let progressData = try encoder.encode(progress)
-            try progressData.write(to: documentsDirectory.appendingPathComponent("progress.json"))
+            try progressData.write(to: getProgressFilePath(for: userId))
             
+            print("💾 DataManager: Saved data for user \(userId)")
         } catch {
-            print("Error saving data: \(error)")
+            print("❌ Error saving data: \(error)")
         }
     }
     
-    func loadData() {
+    // MARK: - Load Data (User-Specific)
+    
+    private func loadUserData(for userId: String) {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         
+        print("📂 DataManager: Loading data for user \(userId)")
+        
         do {
-            let userURL = documentsDirectory.appendingPathComponent("user.json")
-            if fileManager.fileExists(atPath: userURL.path) {
-                let userData = try Data(contentsOf: userURL)
-                currentUser = try decoder.decode(User.self, from: userData)
-            }
-            
-            let problemsURL = documentsDirectory.appendingPathComponent("problems.json")
+            // Load problems
+            let problemsURL = getProblemsFilePath(for: userId)
             if fileManager.fileExists(atPath: problemsURL.path) {
                 let problemsData = try Data(contentsOf: problemsURL)
                 problems = try decoder.decode([HomeworkProblem].self, from: problemsData)
+                print("✅ Loaded \(problems.count) problems")
             }
             
-            let stepsURL = documentsDirectory.appendingPathComponent("steps.json")
+            // Load steps
+            let stepsURL = getStepsFilePath(for: userId)
             if fileManager.fileExists(atPath: stepsURL.path) {
                 let stepsData = try Data(contentsOf: stepsURL)
                 steps = try decoder.decode([String: [GuidanceStep]].self, from: stepsData)
+                print("✅ Loaded steps for \(steps.count) problems")
             }
             
-            let messagesURL = documentsDirectory.appendingPathComponent("messages.json")
+            // Load messages
+            let messagesURL = getMessagesFilePath(for: userId)
             if fileManager.fileExists(atPath: messagesURL.path) {
                 let messagesData = try Data(contentsOf: messagesURL)
                 messages = try decoder.decode([String: [ChatMessage]].self, from: messagesData)
+                print("✅ Loaded messages for \(messages.count) problems")
             }
             
-            let progressURL = documentsDirectory.appendingPathComponent("progress.json")
+            // Load progress
+            let progressURL = getProgressFilePath(for: userId)
             if fileManager.fileExists(atPath: progressURL.path) {
                 let progressData = try Data(contentsOf: progressURL)
                 progress = try decoder.decode([UserProgress].self, from: progressData)
+                print("✅ Loaded \(progress.count) progress records")
             }
         } catch {
-            print("Error loading data: \(error)")
+            print("❌ Error loading data: \(error)")
+        }
+    }
+    
+    // MARK: - Clear Homework Data
+    
+    /// Clears homework data for the current user (but preserves authentication)
+    func clearHomeworkData() {
+        guard let userId = currentUser?.userId else {
+            print("⚠️ DataManager: Cannot clear data - no userId")
+            return
+        }
+        
+        print("🗑️ DataManager: Clearing homework data for user \(userId)")
+        
+        // Clear in-memory data
+        problems = []
+        steps = [:]
+        messages = [:]
+        progress = []
+        
+        // Delete user-specific files
+        do {
+            try? fileManager.removeItem(at: getProblemsFilePath(for: userId))
+            try? fileManager.removeItem(at: getStepsFilePath(for: userId))
+            try? fileManager.removeItem(at: getMessagesFilePath(for: userId))
+            try? fileManager.removeItem(at: getProgressFilePath(for: userId))
+            
+            // Delete associated images
+            for problem in problems {
+                if let filename = problem.imageFilename {
+                    deleteImage(filename: filename)
+                }
+            }
+            
+            print("✅ Cleared homework data for user \(userId)")
         }
     }
     

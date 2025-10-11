@@ -18,12 +18,27 @@ class AuthenticationService: ObservableObject {
     // Apple Sign-In
     private var currentNonce: String?
     
+    // MARK: - Device ID Helper
+    
+    private func getDeviceId() -> String {
+        // Get or create a persistent device ID stored in keychain
+        let deviceIdKey = "app_device_id"
+        if let existingId = keychain.load(forKey: deviceIdKey) {
+            return existingId
+        }
+        
+        // Create new device ID using UIDevice identifier
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        _ = keychain.save(deviceId, forKey: deviceIdKey)
+        return deviceId
+    }
+    
     // Device Information
     private func getDeviceInfo() -> [String: Any] {
         let device = UIDevice.current
         
         return [
-            "deviceId": device.identifierForVendor?.uuidString ?? "unknown",
+            "deviceId": getDeviceId(),
             "deviceModel": device.model,
             "deviceName": device.name,
             "systemVersion": device.systemVersion,
@@ -328,6 +343,9 @@ class AuthenticationService: ObservableObject {
             self.saveUser(user)
             self.currentUser = user
             self.isAuthenticated = true
+            
+            // Load user-specific homework data
+            DataManager.shared.setCurrentUser(user)
             
             Task {
                 await self.validateSession(token: token)
@@ -643,6 +661,9 @@ class AuthenticationService: ObservableObject {
                     self.currentUser = user
                     self.isAuthenticated = true
                     
+                    // Load user-specific homework data
+                    DataManager.shared.setCurrentUser(user)
+                    
                     print("🔄 State updated: isAuthenticated = \(self.isAuthenticated)")
                     print("🔄 Current user: \(self.currentUser?.email ?? "nil")")
                     
@@ -787,6 +808,9 @@ class AuthenticationService: ObservableObject {
                     self.currentUser = user
                     self.isAuthenticated = true
                     
+                    // Load user-specific homework data
+                    DataManager.shared.setCurrentUser(user)
+                    
                     print("🔄 State updated: isAuthenticated = \(self.isAuthenticated)")
                     print("🔄 Current user: \(self.currentUser?.email ?? "nil")")
                     
@@ -839,6 +863,9 @@ class AuthenticationService: ObservableObject {
         // Temporarily set user as authenticated while we validate
         self.currentUser = user
         self.isAuthenticated = true
+        
+        // Load user-specific homework data
+        DataManager.shared.setCurrentUser(user)
         
         // Validate session with backend (async)
         Task {
@@ -970,7 +997,10 @@ class AuthenticationService: ObservableObject {
         currentUser = nil
         isAuthenticated = false
         
-        print("👋 User signed out")
+        // Clear current user context in DataManager (preserves their homework data)
+        DataManager.shared.clearCurrentUser()
+        
+        print("👋 User signed out (homework data preserved)")
     }
     
     // MARK: - Helpers
