@@ -964,8 +964,21 @@ struct StepGuidanceView: View {
     }
     
     private func getAnotherHint(_ step: GuidanceStep) async {
+        print("🔍 DEBUG: getAnotherHint called")
+        
+        // Check subscription status for expired users
+        if isSubscriptionExpired {
+            print("⚠️ DEBUG: Subscription expired - showing paywall instead of hint")
+            await MainActor.run {
+                showPaywall = true
+            }
+            return
+        }
+        
         hintCount += 1
         isLoadingHint = true
+        
+        print("🔍 DEBUG: Generating hint \(hintCount) for step \(step.stepNumber)")
         
         do {
             let problemContext = buildProblemContext()
@@ -984,16 +997,24 @@ struct StepGuidanceView: View {
                 userGradeLevel: userGradeLevel
             )
             
-            additionalHints.append(newHint)
+            print("✅ DEBUG: Generated new hint: \(newHint.prefix(50))...")
+            
+            await MainActor.run {
+                additionalHints.append(newHint)
+            }
             
             var updatedStep = step
             updatedStep.hintsUsed += 1
             dataManager.updateStep(updatedStep, for: problemId)
         } catch {
-            additionalHints.append("Think about breaking down the problem into smaller parts. What's the first thing you need to find?")
+            print("❌ DEBUG: Error generating hint: \(error)")
+            await MainActor.run {
+                additionalHints.append("Think about breaking down the problem into smaller parts. What's the first thing you need to find?")
+            }
         }
         
         isLoadingHint = false
+        print("🔍 DEBUG: getAnotherHint completed")
     }
     
     private func handleUserQuestion(_ question: String) async {
