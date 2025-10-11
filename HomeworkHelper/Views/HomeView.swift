@@ -462,26 +462,13 @@ struct HomeView: View {
     
     private var processingView: some View {
         VStack(spacing: 20) {
-            // Animated gradient circle with rotating icon
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [.blue, .purple, .pink, .orange]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 80, height: 80)
-                    .scaleEffect(1.0 + sin(Date().timeIntervalSince1970 * 2) * 0.1)
-                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: Date())
-                
-                Image(systemName: "doc.text.magnifyingglass")
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundColor(.white)
-                    .rotationEffect(.degrees(Date().timeIntervalSince1970 * 30))
-                    .animation(.linear(duration: 2).repeatForever(autoreverses: false), value: Date())
-            }
+            // Animated logo with pulsing effect
+            Image("logo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 120, height: 120)
+                .scaleEffect(1.0 + sin(Date().timeIntervalSince1970 * 2) * 0.1)
+                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: Date())
             
             VStack(spacing: 8) {
                 Text(backendService.progressMessage.isEmpty ? processingMessage : backendService.progressMessage)
