@@ -33,14 +33,14 @@ struct PaywallView: View {
                     // Header
                     headerSection
                     
+                    // CTA Button (moved to top)
+                    ctaButton
+                    
                     // Features
                     featuresSection
                     
                     // Pricing Card
                     pricingCard
-                    
-                    // CTA Button
-                    ctaButton
                     
                     // Subscribe Directly Button
                     subscribeButton
