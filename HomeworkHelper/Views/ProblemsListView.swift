@@ -149,6 +149,9 @@ struct ProblemRow: View {
 struct ProblemDetailView: View {
     let problem: HomeworkProblem
     @EnvironmentObject var dataManager: DataManager
+    @Environment(\.presentationMode) var presentationMode
+    @State private var showDeleteAlert = false
+    @State private var selectedStepIndex: Int?
     
     private var steps: [GuidanceStep] {
         dataManager.steps[problem.id.uuidString]?.sorted(by: { $0.stepNumber < $1.stepNumber }) ?? []
@@ -164,6 +167,7 @@ struct ProblemDetailView: View {
                         .resizable()
                         .scaledToFit()
                         .cornerRadius(12)
+                        .shadow(radius: 4)
                 }
                 
                 if let text = problem.problemText {
@@ -181,22 +185,35 @@ struct ProblemDetailView: View {
                     stepsSection
                 }
                 
-                if problem.status == .inProgress {
-                    NavigationLink(destination: StepGuidanceView(problemId: problem.id)) {
-                        Text("Continue")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                }
+                actionButtons
             }
             .padding()
         }
         .navigationTitle(problem.subject ?? "Problem")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(role: .destructive) {
+                    showDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .alert("Delete Problem?", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteProblem()
+            }
+        } message: {
+            Text("Are you sure you want to delete this problem? This action cannot be undone.")
+        }
+        .navigationDestination(isPresented: .constant(selectedStepIndex != nil)) {
+            if let stepIndex = selectedStepIndex {
+                StepGuidanceView(problemId: problem.id, startFromStep: stepIndex)
+            }
+        }
     }
     
     private var statsSection: some View {
@@ -222,28 +239,130 @@ struct ProblemDetailView: View {
             Text("Steps")
                 .font(.headline)
             
-            ForEach(steps) { step in
-                HStack {
-                    Image(systemName: step.isCompleted ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(step.isCompleted ? .green : .gray)
-                    
-                    Text("Step \(step.stepNumber)")
-                        .font(.body)
-                    
-                    if step.isSkipped {
-                        Text("(Skipped)")
-                            .font(.caption)
-                            .foregroundColor(.orange)
+            ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
+                Button {
+                    selectedStepIndex = index
+                } label: {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: step.isCompleted ? "checkmark.circle.fill" : step.isSkipped ? "forward.circle.fill" : "circle")
+                                .foregroundColor(step.isCompleted ? .green : step.isSkipped ? .orange : .gray)
+                            
+                            Text("Step \(step.stepNumber)")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                            
+                            if step.isSkipped {
+                                Text("(Skipped)")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            } else if step.isCompleted {
+                                Text("(Completed)")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        
+                        // Show step question as description
+                        Text(step.question)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .lineLimit(2)
+                        
+                        // Show explanation if completed
+                        if step.isCompleted {
+                            Text(step.explanation)
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                                .lineLimit(1)
+                        }
                     }
-                    
-                    Spacer()
+                    .padding()
+                    .background(Color.gray.opacity(0.05))
+                    .cornerRadius(8)
                 }
-                .padding(.vertical, 4)
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .padding()
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
+    }
+    
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+            if problem.status == .inProgress || problem.status == .pending {
+                NavigationLink(destination: StepGuidanceView(problemId: problem.id)) {
+                    HStack {
+                        Image(systemName: problem.status == .pending ? "play.fill" : "arrow.right.circle.fill")
+                        Text(problem.status == .pending ? "Start Problem" : "Continue")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+            } else if problem.status == .completed {
+                Button {
+                    restartProblem()
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.counterclockwise")
+                        Text("Restart Problem")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+            }
+        }
+    }
+    
+    private func deleteProblem() {
+        // Delete problem and associated data
+        dataManager.problems.removeAll { $0.id == problem.id }
+        dataManager.steps.removeValue(forKey: problem.id.uuidString)
+        dataManager.messages.removeValue(forKey: problem.id.uuidString)
+        
+        // Delete image file if exists
+        if let filename = problem.imageFilename {
+            dataManager.deleteImage(filename: filename)
+        }
+        
+        dataManager.saveData()
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func restartProblem() {
+        // Reset all steps to not completed
+        if var stepsForProblem = dataManager.steps[problem.id.uuidString] {
+            for i in 0..<stepsForProblem.count {
+                stepsForProblem[i].isCompleted = false
+                stepsForProblem[i].isSkipped = false
+                stepsForProblem[i].userAnswer = nil
+            }
+            dataManager.steps[problem.id.uuidString] = stepsForProblem
+        }
+        
+        // Reset problem status
+        if let index = dataManager.problems.firstIndex(where: { $0.id == problem.id }) {
+            dataManager.problems[index].status = .pending
+            dataManager.problems[index].completedSteps = 0
+            dataManager.problems[index].skippedSteps = 0
+        }
+        
+        dataManager.saveData()
     }
 }
 

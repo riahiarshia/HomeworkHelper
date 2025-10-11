@@ -2,6 +2,12 @@ import SwiftUI
 
 struct StepGuidanceView: View {
     let problemId: UUID
+    let startFromStep: Int?
+    
+    init(problemId: UUID, startFromStep: Int? = nil) {
+        self.problemId = problemId
+        self.startFromStep = startFromStep
+    }
     
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var subscriptionService: SubscriptionService
@@ -25,6 +31,14 @@ struct StepGuidanceView: View {
     @State private var attemptCount = 0
     @State private var hasShownInitialHint = false
     @State private var showWrongAnswerMessage = false
+    @State private var additionalHints: [String] = []
+    @State private var hintCount = 0
+    
+    // Ask a Question feature
+    @State private var showAskQuestion = false
+    @State private var userQuestion = ""
+    @State private var questionAnswer = ""
+    @State private var isLoadingQuestionAnswer = false
     
     private var isSubscriptionExpired: Bool {
         switch subscriptionService.subscriptionStatus {
@@ -138,16 +152,82 @@ struct StepGuidanceView: View {
                                 } else if !hintText.isEmpty {
                                     tutorHintView
                                     
+                                    // Show additional hints if any
+                                    ForEach(Array(additionalHints.enumerated()), id: \.offset) { index, hint in
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            HStack {
+                                                Image(systemName: "lightbulb.fill")
+                                                    .foregroundColor(.yellow)
+                                                Text("Additional Hint \(index + 1)")
+                                                    .font(.headline)
+                                                    .foregroundColor(.orange)
+                                            }
+                                            Text(hint)
+                                                .font(.body)
+                                                .foregroundColor(.primary)
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Color.orange.opacity(0.1))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color.orange.opacity(0.3), lineWidth: 2)
+                                                )
+                                        )
+                                        .padding(.top, 8)
+                                    }
+                                    
+                                    // Action buttons
+                                    HStack(spacing: 12) {
+                                        // Get Another Hint button
+                                        Button {
+                                            Task {
+                                                await getAnotherHint(step)
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: "lightbulb.fill")
+                                                Text("Another Hint")
+                                            }
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.orange)
+                                            .cornerRadius(12)
+                                        }
+                                        
+                                        // Ask a Question button
+                                        Button {
+                                            showAskQuestion = true
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: "questionmark.bubble.fill")
+                                                Text("Ask Question")
+                                            }
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.purple)
+                                            .cornerRadius(12)
+                                        }
+                                    }
+                                    .padding(.top, 8)
+                                    
                                     // Show Continue button below the hint
                                     Button {
                                         showMultipleChoice(step)
                                     } label: {
-                                        Text("Continue")
+                                        Text("Continue to Answer")
                                             .font(.headline)
                                             .foregroundColor(.white)
                                             .frame(maxWidth: .infinity)
                                             .padding()
-                                            .background(Color.blue)
+                                            .background(Color.green)
                                             .cornerRadius(12)
                                     }
                                     .padding(.top, 8)
@@ -181,6 +261,11 @@ struct StepGuidanceView: View {
                     .padding()
                 }
                 .onAppear {
+                    // Set starting step if specified
+                    if let startStep = startFromStep, currentStepIndex == 0 {
+                        currentStepIndex = startStep
+                    }
+                    
                     // Load initial hint when step appears
                     if let step = currentStep, !hasShownInitialHint {
                         Task {
@@ -208,6 +293,20 @@ struct StepGuidanceView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+        }
+        .sheet(isPresented: $showAskQuestion) {
+            AskQuestionView(
+                currentStep: currentStep,
+                problem: problem,
+                userQuestion: $userQuestion,
+                questionAnswer: $questionAnswer,
+                isLoading: $isLoadingQuestionAnswer,
+                onSubmitQuestion: { question in
+                    Task {
+                        await handleUserQuestion(question)
+                    }
+                }
+            )
         }
         .sheet(isPresented: $showCompletionView) {
             VStack(spacing: 20) {
@@ -861,4 +960,198 @@ struct StepGuidanceView: View {
         isLoadingHint = false
     }
     
+    private func getAnotherHint(_ step: GuidanceStep) async {
+        hintCount += 1
+        isLoadingHint = true
+        
+        do {
+            let problemContext = buildProblemContext()
+            let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            
+            // Request a different hint with a new perspective
+            let hintPrompt = """
+            The student needs another hint for this step. They've already seen \(hintCount) hint(s).
+            Provide a DIFFERENT approach or perspective. Don't repeat previous hints.
+            Make this hint more specific and actionable.
+            """
+            
+            let newHint = try await BackendAPIService.shared.generateHint(
+                for: step,
+                problemContext: problemContext + "\n\n" + hintPrompt,
+                userGradeLevel: userGradeLevel
+            )
+            
+            additionalHints.append(newHint)
+            
+            var updatedStep = step
+            updatedStep.hintsUsed += 1
+            dataManager.updateStep(updatedStep, for: problemId)
+        } catch {
+            additionalHints.append("Think about breaking down the problem into smaller parts. What's the first thing you need to find?")
+        }
+        
+        isLoadingHint = false
+    }
+    
+    private func handleUserQuestion(_ question: String) async {
+        guard let step = currentStep else { return }
+        isLoadingQuestionAnswer = true
+        
+        do {
+            let problemContext = buildProblemContext()
+            let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+            
+            // Generate answer to the user's question
+            let contextualPrompt = """
+            Current Step: \(step.question)
+            Explanation: \(step.explanation)
+            
+            Student's Question: \(question)
+            
+            Provide a helpful answer to the student's question while keeping it relevant to the current step.
+            Guide them towards understanding without giving away the answer directly.
+            Use their grade level (\(userGradeLevel)) to adjust the complexity.
+            """
+            
+            let messages = [ChatMessage(problemId: problemId, role: .user, content: contextualPrompt)]
+            questionAnswer = try await BackendAPIService.shared.generateChatResponse(
+                messages: messages,
+                problemContext: problemContext,
+                userGradeLevel: userGradeLevel
+            )
+        } catch {
+            questionAnswer = "I understand your question. Let's think about it step by step. What part of this step is confusing you the most?"
+        }
+        
+        isLoadingQuestionAnswer = false
+    }
+    
+    private func buildProblemContext() -> String {
+        var context = ""
+        if let problem = problem {
+            if let subject = problem.subject {
+                context += "Subject: \(subject)\n"
+            }
+            if let text = problem.problemText {
+                context += "Problem: \(text)\n"
+            }
+        }
+        return context
+    }
+}
+
+// MARK: - Ask Question View
+struct AskQuestionView: View {
+    let currentStep: GuidanceStep?
+    let problem: HomeworkProblem?
+    @Binding var userQuestion: String
+    @Binding var questionAnswer: String
+    @Binding var isLoading: Bool
+    let onSubmitQuestion: (String) -> Void
+    
+    @Environment(\.dismiss) var dismiss
+    @State private var showAnswer = false
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Current context
+                    if let step = currentStep {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Current Step")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                            
+                            Text(step.question)
+                                .font(.body)
+                                .padding()
+                                .background(Color.blue.opacity(0.1))
+                                .cornerRadius(8)
+                        }
+                    }
+                    
+                    // Question input
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Your Question")
+                            .font(.headline)
+                        
+                        Text("Ask anything related to this step or concept")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        TextEditor(text: $userQuestion)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.purple.opacity(0.3), lineWidth: 1)
+                            )
+                    }
+                    
+                    // Submit button
+                    Button {
+                        showAnswer = true
+                        onSubmitQuestion(userQuestion)
+                    } label: {
+                        HStack {
+                            Image(systemName: "paperplane.fill")
+                            Text("Get Answer")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(userQuestion.isEmpty ? Color.gray : Color.purple)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
+                    .disabled(userQuestion.isEmpty || isLoading)
+                    
+                    // Show answer
+                    if showAnswer {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "lightbulb.fill")
+                                    .foregroundColor(.yellow)
+                                Text("Answer")
+                                    .font(.headline)
+                            }
+                            
+                            if isLoading {
+                                HStack {
+                                    ProgressView()
+                                    Text("Generating answer...")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                            } else if !questionAnswer.isEmpty {
+                                Text(questionAnswer)
+                                    .font(.body)
+                                    .padding()
+                                    .background(Color.green.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                        }
+                        .padding()
+                        .background(Color.purple.opacity(0.05))
+                        .cornerRadius(12)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Ask a Question")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
 }
