@@ -111,6 +111,11 @@ class DataManager: ObservableObject {
         return try? Data(contentsOf: fileURL)
     }
     
+    func deleteImage(filename: String) {
+        let fileURL = documentsDirectory.appendingPathComponent(filename)
+        try? FileManager.default.removeItem(at: fileURL)
+    }
+    
     func addProblem(_ problem: HomeworkProblem) {
         print("🔍 DEBUG DataManager.addProblem:")
         print("   Problem ID: \(problem.id)")
