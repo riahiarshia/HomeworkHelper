@@ -1077,3 +1077,10 @@ struct Triangle: Shape {
         return path
     }
 }
+
+// MARK: - Preview
+#Preview {
+    HomeView()
+        .environmentObject(DataManager())
+        .environmentObject(SubscriptionService())
+}
