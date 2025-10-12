@@ -121,6 +121,8 @@ struct HomeView: View {
                 }
             }
             .background(
+                // Using deprecated NavigationLink for iOS 15+ compatibility
+                // TODO: Migrate to NavigationStack + navigationDestination when dropping iOS 15 support
                 NavigationLink(
                     destination: destinationView,
                     isActive: $navigateToGuidance,
@@ -136,7 +138,7 @@ struct HomeView: View {
                     
                     // Wait for sheet to dismiss, then show cropper
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        logger.critical("🚨 CRITICAL DEBUG: About to show ImageCropper, tempImageForCropping is nil: \(image == nil)")
+                        logger.critical("🚨 CRITICAL DEBUG: About to show ImageCropper with image")
                         showImageCropper = true
                     }
                 })
@@ -834,7 +836,7 @@ struct HomeView: View {
                 
                 // Analyze the homework
                 logger.critical("🚨 CRITICAL DEBUG: Starting homework analysis...")
-                let userGradeLevel = dataManager.currentUser?.getGradeLevel() ?? "elementary"
+                let userGradeLevel = await MainActor.run { dataManager.currentUser?.getGradeLevel() ?? "elementary" }
                 logger.critical("🚨 CRITICAL DEBUG: User grade level: \(userGradeLevel)")
                 logger.critical("🚨 CRITICAL DEBUG: User ID: \(userId ?? "nil")")
                 let analysis = try await backendService.analyzeHomework(

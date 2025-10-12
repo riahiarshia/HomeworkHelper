@@ -50,19 +50,23 @@ class DataManager: ObservableObject {
     /// Call this when a user logs in to load their homework data
     func setCurrentUser(_ user: User) {
         print("📂 DataManager: Setting current user: \(user.email ?? "unknown")")
-        self.currentUser = user
         
-        // Clear current data
-        problems = []
-        steps = [:]
-        messages = [:]
-        progress = []
-        
-        // Load user-specific data if userId exists
-        if let userId = user.userId {
-            loadUserData(for: userId)
-        } else {
-            print("⚠️ DataManager: User has no userId, using empty data")
+        // Defer updates to avoid publishing during view updates
+        Task { @MainActor in
+            self.currentUser = user
+            
+            // Clear current data
+            self.problems = []
+            self.steps = [:]
+            self.messages = [:]
+            self.progress = []
+            
+            // Load user-specific data if userId exists
+            if let userId = user.userId {
+                self.loadUserData(for: userId)
+            } else {
+                print("⚠️ DataManager: User has no userId, using empty data")
+            }
         }
     }
     
