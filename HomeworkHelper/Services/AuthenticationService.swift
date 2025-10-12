@@ -860,16 +860,27 @@ class AuthenticationService: ObservableObject {
         
         print("✅ Loaded saved user: \(user.email ?? "unknown")")
         
-        // Temporarily set user as authenticated while we validate
+        // Set user as authenticated
         self.currentUser = user
         self.isAuthenticated = true
         
         // Load user-specific homework data
         DataManager.shared.setCurrentUser(user)
         
-        // Validate session with backend (async)
-        Task {
-            await validateSession(token: token)
+        // Validate session with backend (async) but don't be aggressive about it
+        // Only validate if last check was more than 1 hour ago
+        let lastValidationKey = "lastSessionValidation"
+        let lastValidation = UserDefaults.standard.double(forKey: lastValidationKey)
+        let hourInSeconds: TimeInterval = 3600
+        
+        if lastValidation == 0 || Date().timeIntervalSince1970 - lastValidation > hourInSeconds {
+            print("🔄 Will validate session (last check > 1 hour ago)")
+            Task {
+                await validateSession(token: token)
+                UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: lastValidationKey)
+            }
+        } else {
+            print("⏭️ Skipping session validation (checked recently)")
         }
     }
     
@@ -958,18 +969,23 @@ class AuthenticationService: ObservableObject {
                     }
                 }
             } else if httpResponse.statusCode == 404 {
-                // User not found in database
-                print("❌ User not found in database")
-                await MainActor.run {
-                    self.errorMessage = "Account not found. Please sign in again."
-                    self.signOut()
-                }
+                // User not found in database - backend may be down or endpoint missing
+                // Don't sign out immediately, keep user authenticated
+                print("⚠️ User not found in database (404) - backend may be down, keeping user authenticated")
+                // User can still use the app with cached data
             } else if httpResponse.statusCode == 401 {
-                // Token expired or invalid
-                print("❌ Token expired or invalid")
-                await MainActor.run {
-                    self.errorMessage = "Session expired. Please sign in again."
-                    self.signOut()
+                // Token expired or invalid - but only sign out if we get a clear response
+                // This prevents signing out users when backend is unreachable
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? String,
+                   error.lowercased().contains("token") || error.lowercased().contains("expired") {
+                    print("❌ Token explicitly expired or invalid - signing out")
+                    await MainActor.run {
+                        self.errorMessage = "Session expired. Please sign in again."
+                        self.signOut()
+                    }
+                } else {
+                    print("⚠️ Got 401 but unclear error - keeping user authenticated")
                 }
             }
             
