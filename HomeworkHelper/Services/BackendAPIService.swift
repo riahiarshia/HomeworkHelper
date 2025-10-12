@@ -1,6 +1,31 @@
 import Foundation
 import UIKit
 
+// MARK: - Data Models
+
+struct ImageVerificationResult: Codable {
+    let isValidHomework: Bool
+    let confidence: Double
+    let subject: String?
+    let readabilityScore: Double
+}
+
+struct ProblemAnalysis: Codable {
+    let subject: String
+    let difficulty: String
+    let steps: [StepData]
+    let finalAnswer: String?
+}
+
+struct StepData: Codable {
+    let question: String
+    let explanation: String
+    let options: [String]
+    let correctAnswer: String
+}
+
+// MARK: - Backend API Service
+
 class BackendAPIService: ObservableObject {
     static let shared = BackendAPIService()
     
