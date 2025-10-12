@@ -94,7 +94,7 @@ class AuthenticationService: ObservableObject {
         guard let updatedUser = notification.userInfo?["user"] as? User else { return }
         
         print("📝 Profile updated notification received - updating AuthenticationService")
-        print("   Username: \(updatedUser.username ?? "nil")")
+        print("   Username: \(updatedUser.username)")
         print("   Grade: \(updatedUser.grade ?? "nil")")
         
         // Update our current user with the profile data

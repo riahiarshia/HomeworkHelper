@@ -154,10 +154,11 @@ class BackendAPIService: ObservableObject {
     
     // MARK: - Homework Analysis
     
-    func analyzeHomework(imageData: Data?, problemText: String?, userGradeLevel: String, userId: String? = nil) async throws -> ProblemAnalysis {
+    func analyzeHomework(imageData: Data?, problemText: String?, userGradeLevel: String, userId: String? = nil, teacherMethodImageData: Data? = nil) async throws -> ProblemAnalysis {
         print("🔍 DEBUG BackendAPIService.analyzeHomework:")
         print("   Image data provided: \(imageData != nil)")
         print("   Problem text provided: \(problemText != nil)")
+        print("   Teacher method image provided: \(teacherMethodImageData != nil)")
         print("   User grade level: \(userGradeLevel)")
         print("   User ID: \(userId ?? "nil")")
         print("   Base URL: \(baseURL)")
@@ -205,6 +206,15 @@ class BackendAPIService: ObservableObject {
             body.append("Content-Disposition: form-data; name=\"image\"; filename=\"homework.jpg\"\r\n".data(using: .utf8)!)
             body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
             body.append(imageData)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        
+        // Add teacher method image data if provided
+        if let teacherMethodImageData = teacherMethodImageData {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"teacherMethodImage\"; filename=\"teacher_method.jpg\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            body.append(teacherMethodImageData)
             body.append("\r\n".data(using: .utf8)!)
         }
         

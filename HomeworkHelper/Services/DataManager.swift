@@ -192,8 +192,8 @@ class DataManager: ObservableObject {
         }
     }
     
-    func saveImage(_ imageData: Data, forProblemId problemId: UUID) -> String? {
-        let filename = "\(problemId.uuidString).jpg"
+    func saveImage(_ imageData: Data, forProblemId problemId: UUID, suffix: String = "") -> String? {
+        let filename = "\(problemId.uuidString)\(suffix).jpg"
         let fileURL = documentsDirectory.appendingPathComponent(filename)
         
         do {

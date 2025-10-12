@@ -38,6 +38,15 @@ struct HomeView: View {
     @State private var tempImageForCropping: UIImage?
     @State private var pendingImageSource: ImageSource? = nil
     
+    // Teacher method states
+    @State private var showTeacherMethodPrompt = false
+    @State private var teacherMethodImage: UIImage?
+    @State private var showTeacherMethodCamera = false
+    @State private var showTeacherMethodImagePicker = false
+    @State private var showTeacherMethodCropper = false
+    @State private var tempTeacherMethodImage: UIImage?
+    @State private var isCapturingTeacherMethod = false
+    
     enum ImageSource {
         case camera
         case photoLibrary
@@ -191,6 +200,74 @@ struct HomeView: View {
                 }
             } message: {
                 Text(imageQualityMessage)
+            }
+            // Teacher method prompt temporarily disabled
+            // .sheet(isPresented: $showTeacherMethodPrompt) {
+            //     TeacherMethodPromptView(
+            //         onYes: {
+            //             // User wants to add teacher method - show options
+            //             showTeacherMethodChoice()
+            //         },
+            //         onNo: {
+            //             // User doesn't need teacher method - proceed with analysis
+            //             proceedWithAnalysis()
+            //         }
+            //     )
+            // }
+            .sheet(isPresented: $showTeacherMethodCamera) {
+                ImagePicker(image: $tempTeacherMethodImage, sourceType: .camera, onImageSelected: { image in
+                    print("📸 Teacher method image captured from camera")
+                    tempTeacherMethodImage = image
+                    showTeacherMethodCamera = false
+                    
+                    // Wait for sheet to dismiss, then show cropper
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showTeacherMethodCropper = true
+                    }
+                })
+            }
+            .sheet(isPresented: $showTeacherMethodImagePicker) {
+                ImagePicker(image: $tempTeacherMethodImage, sourceType: .photoLibrary, onImageSelected: { image in
+                    print("📸 Teacher method image selected from photo library")
+                    tempTeacherMethodImage = image
+                    showTeacherMethodImagePicker = false
+                    
+                    // Wait for sheet to dismiss, then show cropper
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showTeacherMethodCropper = true
+                    }
+                })
+            }
+            .sheet(isPresented: $showTeacherMethodCropper) {
+                ImageCropperView(image: $tempTeacherMethodImage, onCrop: { croppedImage in
+                    print("✂️ Teacher method image cropped")
+                    // Dismiss sheet first
+                    showTeacherMethodCropper = false
+                    
+                    // Save the teacher method image
+                    teacherMethodImage = croppedImage
+                    tempTeacherMethodImage = nil
+                    
+                    // Wait for sheet to fully dismiss before starting analysis
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        proceedWithAnalysis()
+                    }
+                })
+                .interactiveDismissDisabled(false)
+            }
+            .alert("Choose Image Source", isPresented: $isCapturingTeacherMethod) {
+                Button("Camera") {
+                    showTeacherMethodCamera = true
+                }
+                Button("Photo Library") {
+                    showTeacherMethodImagePicker = true
+                }
+                Button("Cancel", role: .cancel) {
+                    // User cancelled, proceed without teacher method
+                    proceedWithAnalysis()
+                }
+            } message: {
+                Text("Take a photo of an example showing your teacher's preferred method for solving this problem.")
             }
         }
     }
@@ -767,10 +844,37 @@ struct HomeView: View {
         }
     }
     
+    // MARK: - Teacher Method Workflow
+    
+    private func showTeacherMethodChoice() {
+        isCapturingTeacherMethod = true
+    }
+    
+    private func proceedWithAnalysis() {
+        guard let image = selectedImage else {
+            alertMessage = "No problem image found"
+            showAlert = true
+            return
+        }
+        
+        // Start the actual analysis with both images
+        performImageAnalysis(problemImage: image, teacherMethodImage: teacherMethodImage)
+    }
+    
     // MARK: - Image Analysis with Quality Check
     
     private func analyzeImageWithQualityCheck(_ image: UIImage) {
         logger.critical("🚨 CRITICAL DEBUG: analyzeImageWithQualityCheck() function called!")
+        
+        // Save the selected image
+        selectedImage = image
+        
+        // Show teacher method prompt after image is selected
+        showTeacherMethodPrompt = true
+    }
+    
+    private func performImageAnalysis(problemImage: UIImage, teacherMethodImage: UIImage?) {
+        logger.critical("🚨 CRITICAL DEBUG: performImageAnalysis() function called!")
         
         // Immediately set processing state on main thread
         isProcessing = true
@@ -779,20 +883,26 @@ struct HomeView: View {
         
         // Do ALL image processing in background task to avoid freezing
         Task.detached(priority: .userInitiated) {
-            // Convert to JPEG in background (can be slow!)
-            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            // Convert problem image to JPEG in background (can be slow!)
+            guard let imageData = problemImage.jpegData(compressionQuality: 0.8) else {
                 await MainActor.run {
-                    logger.critical("❌ CRITICAL DEBUG: Failed to convert image to JPEG data")
-                    alertMessage = "Failed to process image"
+                    logger.critical("❌ CRITICAL DEBUG: Failed to convert problem image to JPEG data")
+                    alertMessage = "Failed to process problem image"
                     showAlert = true
                     isProcessing = false
                 }
                 return
             }
             
+            // Convert teacher method image to JPEG if provided
+            var teacherMethodImageData: Data? = nil
+            if let methodImage = teacherMethodImage {
+                teacherMethodImageData = methodImage.jpegData(compressionQuality: 0.8)
+                logger.critical("🚨 CRITICAL DEBUG: Teacher method image converted, size: \(teacherMethodImageData?.count ?? 0) bytes")
+            }
+            
             await MainActor.run {
-                logger.critical("🚨 CRITICAL DEBUG: Image converted to JPEG data, size: \(imageData.count) bytes")
-                selectedImage = image
+                logger.critical("🚨 CRITICAL DEBUG: Problem image converted to JPEG data, size: \(imageData.count) bytes")
                 processingMessage = "Checking image quality..."
             }
             
@@ -839,11 +949,13 @@ struct HomeView: View {
                 let userGradeLevel = await MainActor.run { dataManager.currentUser?.getGradeLevel() ?? "elementary" }
                 logger.critical("🚨 CRITICAL DEBUG: User grade level: \(userGradeLevel)")
                 logger.critical("🚨 CRITICAL DEBUG: User ID: \(userId ?? "nil")")
+                logger.critical("🚨 CRITICAL DEBUG: Has teacher method image: \(teacherMethodImageData != nil)")
                 let analysis = try await backendService.analyzeHomework(
                     imageData: imageData,
                     problemText: nil,
                     userGradeLevel: userGradeLevel,
-                    userId: userId
+                    userId: userId,
+                    teacherMethodImageData: teacherMethodImageData
                 )
                 
                 logger.critical("🚨 CRITICAL DEBUG: Homework analysis completed successfully!")
@@ -851,13 +963,24 @@ struct HomeView: View {
                 
                 await MainActor.run {
                     // Create problem from analysis
-                    let problem = HomeworkProblem(
+                    var problem = HomeworkProblem(
                         id: UUID(),
                         userId: dataManager.currentUser?.id ?? UUID(),
                         subject: analysis.subject,
                         totalSteps: analysis.steps.count,
                         completedSteps: 0
                     )
+                    
+                    // Save problem image
+                    let problemImageFilename = dataManager.saveImage(imageData, forProblemId: problem.id)
+                    problem.imageFilename = problemImageFilename
+                    
+                    // Save teacher method image if provided
+                    if let methodData = teacherMethodImageData {
+                        let methodImageFilename = dataManager.saveImage(methodData, forProblemId: problem.id, suffix: "_method")
+                        problem.teacherMethodImageFilename = methodImageFilename
+                        logger.critical("🚨 CRITICAL DEBUG: Saved teacher method image: \(methodImageFilename ?? "unknown")")
+                    }
                     
                     dataManager.addProblem(problem)
                     

@@ -5,6 +5,7 @@ struct HomeworkProblem: Codable, Identifiable {
     let userId: UUID
     var problemText: String?
     var imageFilename: String?
+    var teacherMethodImageFilename: String?
     var subject: String?
     var status: ProblemStatus
     var createdAt: Date
@@ -19,6 +20,7 @@ struct HomeworkProblem: Codable, Identifiable {
         userId: UUID,
         problemText: String? = nil,
         imageFilename: String? = nil,
+        teacherMethodImageFilename: String? = nil,
         subject: String? = nil,
         status: ProblemStatus = .pending,
         createdAt: Date = Date(),
@@ -32,6 +34,7 @@ struct HomeworkProblem: Codable, Identifiable {
         self.userId = userId
         self.problemText = problemText
         self.imageFilename = imageFilename
+        self.teacherMethodImageFilename = teacherMethodImageFilename
         self.subject = subject
         self.status = status
         self.createdAt = createdAt

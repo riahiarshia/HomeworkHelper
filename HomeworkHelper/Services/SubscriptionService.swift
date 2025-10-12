@@ -367,7 +367,7 @@ class SubscriptionService: ObservableObject {
     
     /// Validate Apple receipt with backend (Industry best practice)
     private func validateReceiptWithBackend(transaction: Transaction) async {
-        guard let userId = getUserId(), let token = getAuthToken() else { return }
+        guard let _ = getUserId(), let token = getAuthToken() else { return }
         
         do {
             // Get the receipt from the device
