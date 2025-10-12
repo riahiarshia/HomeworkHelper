@@ -201,19 +201,9 @@ struct HomeView: View {
             } message: {
                 Text(imageQualityMessage)
             }
-            // Teacher method prompt temporarily disabled
-            // .sheet(isPresented: $showTeacherMethodPrompt) {
-            //     TeacherMethodPromptView(
-            //         onYes: {
-            //             // User wants to add teacher method - show options
-            //             showTeacherMethodChoice()
-            //         },
-            //         onNo: {
-            //             // User doesn't need teacher method - proceed with analysis
-            //             proceedWithAnalysis()
-            //         }
-            //     )
-            // }
+            .sheet(isPresented: $showTeacherMethodPrompt) {
+                teacherMethodPromptSheet
+            }
             .sheet(isPresented: $showTeacherMethodCamera) {
                 ImagePicker(image: $tempTeacherMethodImage, sourceType: .camera, onImageSelected: { image in
                     print("📸 Teacher method image captured from camera")
@@ -255,20 +245,6 @@ struct HomeView: View {
                 })
                 .interactiveDismissDisabled(false)
             }
-            .alert("Choose Image Source", isPresented: $isCapturingTeacherMethod) {
-                Button("Camera") {
-                    showTeacherMethodCamera = true
-                }
-                Button("Photo Library") {
-                    showTeacherMethodImagePicker = true
-                }
-                Button("Cancel", role: .cancel) {
-                    // User cancelled, proceed without teacher method
-                    proceedWithAnalysis()
-                }
-            } message: {
-                Text("Take a photo of an example showing your teacher's preferred method for solving this problem.")
-            }
         }
     }
     
@@ -276,6 +252,151 @@ struct HomeView: View {
     private var destinationView: some View {
         if let problemId = currentProblemId {
             StepGuidanceView(problemId: problemId)
+        }
+    }
+    
+    private var teacherMethodPromptSheet: some View {
+        NavigationView {
+            ZStack {
+                // Background gradient matching app theme
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(red: 0.4, green: 0.2, blue: 0.8).opacity(0.9), Color(red: 0.2, green: 0.4, blue: 0.9).opacity(0.7)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                VStack(spacing: 32) {
+                    // Owl logo
+                    Image("logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 120, height: 120)
+                    
+                    if !isCapturingTeacherMethod {
+                        // Initial prompt
+                        VStack(spacing: 16) {
+                            Text("Teacher's Method?")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            
+                            Text("Did your teacher show you a specific way to solve this problem?")
+                                .font(.body)
+                                .foregroundColor(.white.opacity(0.9))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
+                        }
+                        
+                        // Buttons
+                        VStack(spacing: 16) {
+                            Button {
+                                showTeacherMethodChoice()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                    Text("Yes, I have it")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(12)
+                            }
+                            
+                            Button {
+                                showTeacherMethodPrompt = false
+                                proceedWithAnalysis()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "xmark.circle.fill")
+                                    Text("No, I don't")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.orange)
+                                .cornerRadius(12)
+                            }
+                        }
+                        .padding(.horizontal, 40)
+                    } else {
+                        // Teacher method upload options
+                        VStack(spacing: 16) {
+                            Text("Upload Teacher's Method")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            
+                            Text("Take a photo of your teacher's solution or choose from your library")
+                                .font(.body)
+                                .foregroundColor(.white.opacity(0.9))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
+                        }
+                        
+                        VStack(spacing: 16) {
+                            Button {
+                                showTeacherMethodPrompt = false
+                                showTeacherMethodCamera = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "camera.fill")
+                                    Text("Take Photo")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .cornerRadius(12)
+                            }
+                            
+                            Button {
+                                showTeacherMethodPrompt = false
+                                showTeacherMethodImagePicker = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "photo.fill")
+                                    Text("Photo Library")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.purple)
+                                .cornerRadius(12)
+                            }
+                            
+                            Button {
+                                showTeacherMethodPrompt = false
+                                isCapturingTeacherMethod = false
+                                proceedWithAnalysis()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "arrow.right.circle.fill")
+                                    Text("Skip & Continue")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.gray)
+                                .cornerRadius(12)
+                            }
+                        }
+                        .padding(.horizontal, 40)
+                    }
+                }
+            }
+            .navigationBarItems(trailing: Button("Cancel") {
+                showTeacherMethodPrompt = false
+                isCapturingTeacherMethod = false
+                selectedImage = nil
+                isProcessing = false
+            })
         }
     }
     
@@ -847,7 +968,9 @@ struct HomeView: View {
     // MARK: - Teacher Method Workflow
     
     private func showTeacherMethodChoice() {
+        // Show action sheet to choose camera or photo library for teacher method
         isCapturingTeacherMethod = true
+        // The user will see the teacher method upload options below the prompt
     }
     
     private func proceedWithAnalysis() {
@@ -869,8 +992,8 @@ struct HomeView: View {
         // Save the selected image
         selectedImage = image
         
-        // Directly proceed with analysis (teacher method feature disabled)
-        performImageAnalysis(problemImage: image, teacherMethodImage: nil)
+        // Show teacher method prompt
+        showTeacherMethodPrompt = true
     }
     
     private func performImageAnalysis(problemImage: UIImage, teacherMethodImage: UIImage?) {
