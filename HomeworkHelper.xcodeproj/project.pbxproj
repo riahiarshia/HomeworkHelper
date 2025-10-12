@@ -29,7 +29,6 @@
 		A1000012 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ChatMessage.swift */; };
 		A1000013 /* UserProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* UserProgress.swift */; };
 		A1000014 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* DataManager.swift */; };
-		A1000015 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000015 /* OpenAIService.swift */; };
 		A1000016 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* KeychainHelper.swift */; };
 		A1000017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000017 /* Assets.xcassets */; };
 		A1000018 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018 /* OnboardingView.swift */; };
@@ -63,7 +62,6 @@
 		A2000012 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		A2000013 /* UserProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgress.swift; sourceTree = "<group>"; };
 		A2000014 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		A2000015 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		A2000016 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		A2000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2000018 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 				68163CD72E97163A000E7318 /* SubscriptionService.swift */,
 				68163CD12E95CE0D000E7318 /* AuthenticationService.swift */,
 				A2000014 /* DataManager.swift */,
-				A2000015 /* OpenAIService.swift */,
 				A2000016 /* KeychainHelper.swift */,
 				A2000020 /* AzureKeyVaultService.swift */,
 				A2000022 /* BackendAPIService.swift */,
@@ -270,7 +267,6 @@
 				A1000013 /* UserProgress.swift in Sources */,
 				A1000014 /* DataManager.swift in Sources */,
 				68163CD42E95CEBE000E7318 /* AuthenticationView.swift in Sources */,
-				A1000015 /* OpenAIService.swift in Sources */,
 				A1000016 /* KeychainHelper.swift in Sources */,
 				A1000020 /* AzureKeyVaultService.swift in Sources */,
 				A1000022 /* BackendAPIService.swift in Sources */,
