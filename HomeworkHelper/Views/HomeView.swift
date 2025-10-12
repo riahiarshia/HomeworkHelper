@@ -869,8 +869,8 @@ struct HomeView: View {
         // Save the selected image
         selectedImage = image
         
-        // Show teacher method prompt after image is selected
-        showTeacherMethodPrompt = true
+        // Directly proceed with analysis (teacher method feature disabled)
+        performImageAnalysis(problemImage: image, teacherMethodImage: nil)
     }
     
     private func performImageAnalysis(problemImage: UIImage, teacherMethodImage: UIImage?) {
