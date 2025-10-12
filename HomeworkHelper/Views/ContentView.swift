@@ -221,6 +221,11 @@ struct ContentView: View {
             dataManager.currentUser = authUser
             print("✅ Created new user in DataManager from auth")
         } else {
+            // CRITICAL: Preserve username and grade from DataManager
+            // These are set during profile setup and should NOT be overwritten
+            let existingUsername = dataManager.currentUser?.username
+            let existingGrade = dataManager.currentUser?.grade
+            
             // Update existing user with auth info
             dataManager.currentUser?.userId = authUser.userId
             dataManager.currentUser?.email = authUser.email
@@ -228,7 +233,16 @@ struct ContentView: View {
             dataManager.currentUser?.subscriptionStatus = authUser.subscriptionStatus
             dataManager.currentUser?.subscriptionEndDate = authUser.subscriptionEndDate
             dataManager.currentUser?.daysRemaining = authUser.daysRemaining
-            print("✅ Updated existing user in DataManager with auth info")
+            
+            // Restore profile data if it exists
+            if let username = existingUsername {
+                dataManager.currentUser?.username = username
+            }
+            if let grade = existingGrade {
+                dataManager.currentUser?.grade = grade
+            }
+            
+            print("✅ Updated existing user in DataManager with auth info (preserved username: \(existingUsername ?? "nil"), grade: \(existingGrade ?? "nil"))")
         }
         dataManager.saveData()
     }

@@ -67,6 +67,14 @@ class AuthenticationService: ObservableObject {
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+        
+        // Listen for profile updates from ProfileSetupView
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(profileUpdated),
+            name: NSNotification.Name("ProfileUpdated"),
+            object: nil
+        )
     }
     
     deinit {
@@ -79,6 +87,24 @@ class AuthenticationService: ObservableObject {
     
     @objc private func appWillEnterForeground() {
         validateIfNeeded(trigger: "app entering foreground")
+    }
+    
+    @objc private func profileUpdated(_ notification: Notification) {
+        // Update currentUser with profile data from notification
+        guard let updatedUser = notification.userInfo?["user"] as? User else { return }
+        
+        print("📝 Profile updated notification received - updating AuthenticationService")
+        print("   Username: \(updatedUser.username ?? "nil")")
+        print("   Grade: \(updatedUser.grade ?? "nil")")
+        
+        // Update our current user with the profile data
+        if var user = currentUser {
+            user.username = updatedUser.username
+            user.grade = updatedUser.grade
+            user.age = updatedUser.age
+            currentUser = user
+            saveUser(user)
+        }
     }
     
     private func validateIfNeeded(trigger: String) {

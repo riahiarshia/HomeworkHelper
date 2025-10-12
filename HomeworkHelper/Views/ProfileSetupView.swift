@@ -139,6 +139,13 @@ struct ProfileSetupView: View {
             user.grade = selectedGrade
             dataManager.currentUser = user
             
+            // CRITICAL: Also sync to AuthenticationService so it persists
+            NotificationCenter.default.post(
+                name: NSNotification.Name("ProfileUpdated"),
+                object: nil,
+                userInfo: ["user": user]
+            )
+            
             // Sync to backend if authenticated
             if let userId = user.userId, let token = user.authToken {
                 syncProfileToBackend(userId: userId, token: token, username: trimmedName, grade: user.grade)
