@@ -6,19 +6,20 @@ struct AuthenticationView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        ZStack {
-            // Background gradient
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color.blue.opacity(0.6),
-                    Color.purple.opacity(0.6)
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-            
-            VStack(spacing: 40) {
+        NavigationView {
+            ZStack {
+                // Background gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.blue.opacity(0.6),
+                        Color.purple.opacity(0.6)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                VStack(spacing: 40) {
                 Spacer()
                 
                 // App Logo and Title
@@ -73,7 +74,7 @@ struct AuthenticationView: View {
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                     
-                    // Apple Sign In Button
+                    // Apple Sign In Button (Primary CTA)
                     SignInWithAppleButton(
                         onRequest: { request in
                             request.requestedScopes = [.fullName, .email]
@@ -83,25 +84,10 @@ struct AuthenticationView: View {
                         }
                     )
                     .signInWithAppleButtonStyle(.white)
-                    .frame(height: 50)
+                    .frame(height: 55)
                     .disabled(authService.isLoading)
                     
-                    // OR divider
-                    HStack {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.3))
-                            .frame(height: 1)
-                        Text("OR")
-                            .foregroundColor(.white.opacity(0.7))
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                        Rectangle()
-                            .fill(Color.white.opacity(0.3))
-                            .frame(height: 1)
-                    }
-                    .padding(.vertical, 8)
-                    
-                    // Google Sign In Button
+                    // Google Sign In Button (Primary CTA)
                     Button(action: {
                         authService.signInWithGoogle()
                     }) {
@@ -109,7 +95,7 @@ struct AuthenticationView: View {
                             Image(systemName: "globe")
                                 .font(.title3)
                             
-                            Text("Start Trial with Google")
+                            Text("Continue with Google")
                                 .fontWeight(.semibold)
                         }
                         .frame(maxWidth: .infinity)
@@ -119,6 +105,7 @@ struct AuthenticationView: View {
                         .cornerRadius(12)
                         .shadow(radius: 5)
                     }
+                    .frame(height: 55)
                     .disabled(authService.isLoading)
                     
                     // Loading indicator
@@ -147,8 +134,16 @@ struct AuthenticationView: View {
                 
                 Spacer()
                 
-                // Footer info
-                VStack(spacing: 8) {
+                // Footer info with email/password link
+                VStack(spacing: 12) {
+                    // Organization/Test Account Link (De-emphasized)
+                    NavigationLink(destination: EmailPasswordLoginView()) {
+                        Text("Existing org/test account? Log in")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.7))
+                            .underline()
+                    }
+                    
                     Text("Trusted by students worldwide")
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.7))
@@ -158,7 +153,9 @@ struct AuthenticationView: View {
                         .foregroundColor(.white.opacity(0.7))
                 }
                 .padding(.bottom, 40)
+                }
             }
+            .navigationBarHidden(true)
         }
         .onChange(of: authService.isAuthenticated) { isAuthenticated in
             if isAuthenticated {

@@ -192,6 +192,37 @@ class DataManager: ObservableObject {
         }
     }
     
+    /// Clears ALL data (used for account deletion)
+    func clearAllData() {
+        guard let userId = currentUser?.userId else {
+            print("⚠️ DataManager: Cannot clear all data - no userId")
+            return
+        }
+        
+        print("🗑️ DataManager: Clearing ALL data for account deletion")
+        
+        // Clear homework data first
+        clearHomeworkData()
+        
+        // Delete ALL user-specific files (including any we might have missed)
+        do {
+            let files = try fileManager.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
+            for file in files {
+                if file.lastPathComponent.contains("user_\(userId)") {
+                    try? fileManager.removeItem(at: file)
+                    print("🗑️ Deleted: \(file.lastPathComponent)")
+                }
+            }
+        } catch {
+            print("❌ Error deleting user files: \(error)")
+        }
+        
+        // Clear current user
+        currentUser = nil
+        
+        print("✅ DataManager: Successfully cleared all data for account deletion")
+    }
+    
     func saveImage(_ imageData: Data, forProblemId problemId: UUID, suffix: String = "") -> String? {
         let filename = "\(problemId.uuidString)\(suffix).jpg"
         let fileURL = documentsDirectory.appendingPathComponent(filename)

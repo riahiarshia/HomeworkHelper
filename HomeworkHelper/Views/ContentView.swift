@@ -54,8 +54,8 @@ struct ContentView: View {
         
         Group {
             if !authService.isAuthenticated {
-                // Show new onboarding/authentication screen
-                OnboardingView()
+                // Show new authentication screen with SSO primary
+                AuthenticationView()
                     .environmentObject(authService)
             } else if needsOnboarding {
                 // Show profile setup after authentication

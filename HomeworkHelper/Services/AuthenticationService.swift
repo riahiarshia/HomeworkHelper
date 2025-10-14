@@ -1023,6 +1023,183 @@ class AuthenticationService: ObservableObject {
         }
     }
     
+    // MARK: - Password Reset
+    
+    func resetPassword(token: String, newPassword: String) async -> Bool {
+        guard let url = URL(string: "\(backendURL)/api/auth/reset-password") else {
+            await MainActor.run {
+                self.errorMessage = "Invalid backend URL"
+            }
+            return false
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "token": token,
+            "newPassword": newPassword
+        ]
+        
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: body) else {
+            await MainActor.run {
+                self.errorMessage = "Failed to encode request"
+            }
+            return false
+        }
+        
+        request.httpBody = httpBody
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                await MainActor.run {
+                    self.errorMessage = "Invalid response from server"
+                }
+                return false
+            }
+            
+            if httpResponse.statusCode == 200 {
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let success = json["success"] as? Bool, success {
+                    await MainActor.run {
+                        self.errorMessage = nil
+                    }
+                    return true
+                }
+            } else {
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? String {
+                    await MainActor.run {
+                        self.errorMessage = error
+                    }
+                } else {
+                    await MainActor.run {
+                        self.errorMessage = "Password reset failed. Please try again."
+                    }
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = "Network error: \(error.localizedDescription)"
+            }
+            return false
+        }
+        
+        return false
+    }
+    
+    // MARK: - Delete Account
+    
+    func deleteAccount() async -> Bool {
+        print("🗑️ deleteAccount() method called")
+        
+        guard let token = keychain.load(forKey: "authToken") else {
+            print("❌ No authentication token found")
+            await MainActor.run {
+                self.errorMessage = "No authentication token found"
+            }
+            return false
+        }
+        
+        print("✅ Auth token found: \(token.prefix(20))...")
+        
+        guard let url = URL(string: "\(backendURL)/api/auth/delete-account") else {
+            print("❌ Invalid backend URL")
+            await MainActor.run {
+                self.errorMessage = "Invalid backend URL"
+            }
+            return false
+        }
+        
+        print("📤 Sending DELETE request to: \(url.absoluteString)")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        print("🗑️ Request configured, sending to backend...")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            print("📥 Received response from backend")
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("❌ Invalid response from server")
+                await MainActor.run {
+                    self.errorMessage = "Invalid response from server"
+                }
+                return false
+            }
+            
+            print("🔍 Delete account status code: \(httpResponse.statusCode)")
+            
+            // Log response body
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("📄 Response body: \(responseString)")
+            }
+            
+            if httpResponse.statusCode == 200 {
+                print("✅ Status code 200 - parsing response")
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    print("📋 JSON: \(json)")
+                    if let success = json["success"] as? Bool, success {
+                        print("✅ Backend confirmed deletion, clearing local data...")
+                        
+                        await MainActor.run {
+                            // Clear all local data
+                            print("🗑️ Deleting auth token from keychain")
+                            _ = self.keychain.delete(forKey: "authToken")
+                            
+                            print("🗑️ Removing user from UserDefaults")
+                            UserDefaults.standard.removeObject(forKey: "savedUser")
+                            
+                            print("🗑️ Clearing user state")
+                            self.currentUser = nil
+                            self.isAuthenticated = false
+                            
+                            print("🗑️ Clearing all app data")
+                            DataManager.shared.clearAllData()
+                            
+                            print("✅ Account deleted successfully - user should be signed out")
+                        }
+                        return true
+                    } else {
+                        print("❌ Success flag not true in response")
+                    }
+                } else {
+                    print("❌ Failed to parse JSON response")
+                }
+            } else {
+                print("❌ Non-200 status code received")
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? String {
+                    print("❌ Error from backend: \(error)")
+                    await MainActor.run {
+                        self.errorMessage = error
+                    }
+                } else {
+                    await MainActor.run {
+                        self.errorMessage = "Failed to delete account (HTTP \(httpResponse.statusCode))"
+                    }
+                }
+            }
+        } catch {
+            print("❌ Network error: \(error.localizedDescription)")
+            print("❌ Error details: \(error)")
+            await MainActor.run {
+                self.errorMessage = "Network error: \(error.localizedDescription)"
+            }
+            return false
+        }
+        
+        print("❌ Reached end of function without success")
+        return false
+    }
+    
     // MARK: - Sign Out
     
     func signOut() {

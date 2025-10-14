@@ -1,18 +1,32 @@
 import SwiftUI
 import MessageUI
 
+enum SettingsAlert: Identifiable {
+    case clearHistory
+    case signOut
+    case deleteAccount
+    
+    var id: String {
+        switch self {
+        case .clearHistory: return "clearHistory"
+        case .signOut: return "signOut"
+        case .deleteAccount: return "deleteAccount"
+        }
+    }
+}
+
 struct SettingsView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var authService: AuthenticationService
     @EnvironmentObject var subscriptionService: SubscriptionService
-    @State private var showingResetAlert = false
+    @State private var activeAlert: SettingsAlert?
     @State private var showingPrivacyPolicy = false
     @State private var showingTermsOfUse = false
     @State private var showingDisclaimer = false
     @State private var emailCopied = false
     @State private var userIdCopied = false
     @State private var supportEmailCopied = false
-    @State private var showingSignOutAlert = false
+    @State private var isDeletingAccount = false
     @State private var showPaywall = false
     
     var body: some View {
@@ -290,21 +304,35 @@ struct SettingsView: View {
                         
                         // Sign Out Button
                         Button(action: {
-                            showingSignOutAlert = true
+                            activeAlert = .signOut
                         }) {
                             HStack {
                                 Image(systemName: "arrow.right.square")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.orange)
                                 Text("Sign Out")
+                                    .foregroundColor(.orange)
+                            }
+                        }
+                        
+                        // Delete Account Button
+                        Button(action: {
+                            print("🗑️ Delete Account button tapped")
+                            activeAlert = .deleteAccount
+                        }) {
+                            HStack {
+                                Image(systemName: "trash.fill")
+                                    .foregroundColor(.red)
+                                Text("Delete Account")
                                     .foregroundColor(.red)
                             }
                         }
+                        .disabled(isDeletingAccount)
                     }
                 }
                 
                 Section(header: Text("Data")) {
                     Button("Clear Homework History") {
-                        showingResetAlert = true
+                        activeAlert = .clearHistory
                     }
                     .foregroundColor(.red)
                 }
@@ -408,22 +436,40 @@ struct SettingsView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
-            .alert("Clear Homework History?", isPresented: $showingResetAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Clear", role: .destructive) {
-                    clearHomeworkHistory()
+            .alert(item: $activeAlert) { alertType in
+                switch alertType {
+                case .clearHistory:
+                    return Alert(
+                        title: Text("Clear Homework History?"),
+                        message: Text("This will permanently delete all your homework problems, progress, and chat history. Your account and subscription will remain active."),
+                        primaryButton: .cancel(),
+                        secondaryButton: .destructive(Text("Clear")) {
+                            clearHomeworkHistory()
+                        }
+                    )
+                case .signOut:
+                    return Alert(
+                        title: Text("Sign Out?"),
+                        message: Text("Are you sure you want to sign out? Your homework data will be saved and restored when you sign back in."),
+                        primaryButton: .cancel(),
+                        secondaryButton: .destructive(Text("Sign Out")) {
+                            authService.signOut()
+                            dataManager.clearCurrentUser()
+                        }
+                    )
+                case .deleteAccount:
+                    return Alert(
+                        title: Text("Delete Account?"),
+                        message: Text("⚠️ This will permanently delete your account, subscription, and ALL data including homework history. This action cannot be undone!"),
+                        primaryButton: .cancel {
+                            print("🗑️ Delete cancelled")
+                        },
+                        secondaryButton: .destructive(Text("Delete Permanently")) {
+                            print("🗑️ Delete Permanently button tapped")
+                            performAccountDeletion()
+                        }
+                    )
                 }
-            } message: {
-                Text("This will permanently delete all your homework problems, progress, and chat history. Your account and subscription will remain active.")
-            }
-            .alert("Sign Out?", isPresented: $showingSignOutAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Sign Out", role: .destructive) {
-                    authService.signOut()
-                    dataManager.clearCurrentUser()
-                }
-            } message: {
-                Text("Are you sure you want to sign out? Your homework data will be saved and restored when you sign back in.")
             }
             .sheet(isPresented: $showingDisclaimer) {
                 DisclaimerView()
@@ -473,6 +519,30 @@ struct SettingsView: View {
         
         if let url = URL(string: "mailto:support_homework@arshia.com?subject=Support%20Request&body=\(encoded)") {
             UIApplication.shared.open(url)
+        }
+    }
+    
+    private func performAccountDeletion() {
+        print("🗑️ performAccountDeletion() called")
+        isDeletingAccount = true
+        
+        Task {
+            print("🗑️ Inside Task - calling authService.deleteAccount()")
+            let success = await authService.deleteAccount()
+            
+            await MainActor.run {
+                isDeletingAccount = false
+                
+                if success {
+                    print("✅ Account deleted successfully")
+                    // User should be signed out automatically by deleteAccount()
+                } else {
+                    print("❌ Failed to delete account")
+                    if let error = authService.errorMessage {
+                        print("❌ Error: \(error)")
+                    }
+                }
+            }
         }
     }
     
