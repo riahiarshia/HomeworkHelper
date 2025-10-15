@@ -27,30 +27,17 @@ jobs:
       working-directory: ./backend
       run: npm ci
       
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+    - name: Create deployment package
+      run: |
+        cd backend
+        zip -r ../deployment.zip . -x "node_modules/*" "*.log" ".env*" "deploy*.sh" "*.zip"
+        
     - name: Deploy to Azure App Service
-      uses: azure/CLI@v1
+      uses: azure/webapps-deploy@v2
       with:
-        azcliversion: '2.0.72'
-        inlineScript: |
-          # Set the active subscription (get from your Azure credentials)
-          az account list --output table
-          SUBSCRIPTION_ID=$(az account show --query id --output tsv)
-          az account set --subscription $SUBSCRIPTION_ID
-          
-          # Create deployment package
-          cd backend
-          zip -r ../deployment.zip . -x "node_modules/*" "*.log" ".env*" "deploy*.sh" "*.zip"
-          
-          # Deploy to Azure using the correct command
-          az webapp deployment source config-zip --resource-group homework-helper-stage-rg-f --name homework-helper-staging --src ../deployment.zip
-          
-          # Restart the app
-          az webapp restart --name homework-helper-staging --resource-group homework-helper-stage-rg-f
+        app-name: homework-helper-staging
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+        package: deployment.zip
           
     - name: Verify deployment
       run: |
