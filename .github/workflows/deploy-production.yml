@@ -1,112 +1,62 @@
-name: Deploy to Azure Production
+name: Deploy to Production
 
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:  # Allow manual triggers with additional confirmation
-
-env:
-  NODE_VERSION: '18.x'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  production-deploy:
+  deploy-production:
     runs-on: ubuntu-latest
-    environment: 
-      name: production
-      url: https://homework-helper-api.azurewebsites.net
+    environment: production
     
     steps:
-    - name: 'Checkout GitHub Action'
+    - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: 'Verify production deployment'
-      run: |
-        echo "🚨 PRODUCTION DEPLOYMENT WARNING 🚨"
-        echo "This will deploy to the LIVE production environment!"
-        echo "Target: homework-helper-api"
-        echo "Resource Group: homework-helper-rg-f"
-        echo "Branch: ${{ github.ref_name }}"
-        echo "Commit: ${{ github.sha }}"
-        echo "Environment: ${{ github.environment }}"
-        echo ""
-        echo "Please ensure you have:"
-        echo "1. ✅ Tested thoroughly in staging"
-        echo "2. ✅ Reviewed all changes"
-        echo "3. ✅ Backed up production database"
-        echo "4. ✅ Notified team members"
-
-    - name: 'Set up Node.js'
+      
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ env.NODE_VERSION }}
-
-    - name: 'Install dependencies'
-      run: |
-        cd backend
-        npm ci
-
-    - name: 'Run production tests'
-      run: |
-        cd backend
-        echo "Skipping tests in CI environment - tests require database connection"
-        # npm test --if-present
-
-    - name: 'Build application'
-      run: |
-        cd backend
-        npm run build --if-present
-
-    - name: 'Prepare deployment package'
-      run: |
-        # Create a deployment directory with backend files
-        mkdir -p deployment
-        cp -r backend/* deployment/
-        # Ensure .deployment file is present
-        cp backend/.deployment deployment/ || echo "No .deployment file found"
-        # Create a simple package.json in root if needed
-        if [ ! -f deployment/package.json ]; then
-          echo "No package.json found in backend!"
-          exit 1
-        fi
-        echo "Deployment package prepared"
-
-    - name: 'Azure Login'
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: ./backend
+      run: npm ci
+      
+    - name: Run tests
+      working-directory: ./backend
+      run: npm test
+      
+    - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
-
-    - name: 'Deploy to Azure Production'
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Create deployment package
+      run: |
+        cd backend
+        zip -r ../deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
+        
+    - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
-        app-name: homework-helper-api
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
-        package: deployment/
-        deployment-method: zip
-
-    - name: 'Post-deployment verification'
-      run: |
-        echo "Waiting for production deployment to complete..."
-        sleep 45
+        app-name: homework-helper-prod
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCTION }}
+        package: deployment.zip
         
-        # Test health endpoint
-        response=$(curl -s -o /dev/null -w "%{http_code}" https://homework-helper-api.azurewebsites.net/api/health)
-        
-        if [ $response -eq 200 ]; then
-          echo "✅ Production deployment successful!"
-        else
-          echo "❌ Production deployment may have issues. HTTP Status: $response"
-          exit 1
-        fi
-
-    - name: 'Production deployment notification'
-      if: always()
+    - name: Verify deployment
       run: |
-        if [ "${{ job.status }}" == "success" ]; then
-          echo "🎉 PRODUCTION DEPLOYMENT SUCCESSFUL!"
-          echo "🌐 Live API: https://homework-helper-api.azurewebsites.net"
-          echo "🎯 Admin Panel: https://homework-helper-api.azurewebsites.net/admin"
-          echo "📊 Monitor: Check Azure Portal for application metrics"
-        else
-          echo "❌ PRODUCTION DEPLOYMENT FAILED!"
-          echo "🚨 Check logs and consider rollback if necessary"
-        fi
+        echo "Waiting for deployment to stabilize..."
+        sleep 30
+        curl -f https://homework-helper-prod.azurewebsites.net/api/health || exit 1
+        echo "✅ Production deployment successful!"
+        
+    - name: Notify deployment success
+      run: |
+        echo "🎉 Production deployment completed successfully!"
+        echo "🌐 Production URL: https://homework-helper-prod.azurewebsites.net"
+        echo "🔧 Admin Portal: https://homework-helper-prod.azurewebsites.net/admin/"
