@@ -56,6 +56,20 @@ jobs:
         cd backend
         npm run build --if-present
 
+    - name: 'Prepare deployment package'
+      run: |
+        # Create a deployment directory with backend files
+        mkdir -p deployment
+        cp -r backend/* deployment/
+        # Ensure .deployment file is present
+        cp backend/.deployment deployment/ || echo "No .deployment file found"
+        # Create a simple package.json in root if needed
+        if [ ! -f deployment/package.json ]; then
+          echo "No package.json found in backend!"
+          exit 1
+        fi
+        echo "Deployment package prepared"
+
     - name: 'Azure Login'
       uses: azure/login@v1
       with:
@@ -66,7 +80,8 @@ jobs:
       with:
         app-name: homework-helper-api
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
-        package: backend/
+        package: deployment/
+        deployment-method: zip
 
     - name: 'Post-deployment verification'
       run: |
