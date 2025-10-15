@@ -1899,6 +1899,7 @@ async function loadLedgerData() {
 
 async function loadLedgerStats() {
     try {
+        console.log('Loading ledger stats...');
         const data = await apiRequest('/admin/ledger/stats', 'GET');
         
         if (data && data.success) {
@@ -1907,9 +1908,17 @@ async function loadLedgerStats() {
             document.getElementById('ledgerTrialCount').textContent = formatNumber(ledger.trial_count);
             document.getElementById('ledgerActiveCount').textContent = formatNumber(ledger.active_count);
             document.getElementById('ledgerExpiredCount').textContent = formatNumber(ledger.expired_count);
+            console.log('Ledger stats loaded successfully');
+        } else {
+            console.error('Ledger stats API returned success=false:', data);
         }
     } catch (error) {
         console.error('Error loading ledger stats:', error);
+        // Show error in UI
+        document.getElementById('ledgerTotalRecords').textContent = 'Error';
+        document.getElementById('ledgerTrialCount').textContent = 'Error';
+        document.getElementById('ledgerActiveCount').textContent = 'Error';
+        document.getElementById('ledgerExpiredCount').textContent = 'Error';
     }
 }
 
@@ -2112,6 +2121,7 @@ async function loadAuditLogRecords(page = 1) {
     currentAuditPage = page;
     
     try {
+        console.log('Loading audit log records...', { page, filter: currentAuditFilter });
         const queryParams = new URLSearchParams({
             page,
             limit: 20,
@@ -2121,8 +2131,11 @@ async function loadAuditLogRecords(page = 1) {
         const data = await apiRequest(`/admin/audit-log?${queryParams}`, 'GET');
         
         if (data.success) {
+            console.log('Audit log loaded successfully:', data.records.length, 'records');
             displayAuditLogRecords(data.records);
             displayAuditLogPagination(data.pagination);
+        } else {
+            console.error('Audit log API returned success=false:', data);
         }
     } catch (error) {
         console.error('Error loading audit log:', error);
@@ -2262,6 +2275,7 @@ function filterAuditLog(filter) {
 }
 
 function refreshAuditLog() {
+    console.log('Refreshing audit log...');
     loadAuditLogRecords(currentAuditPage);
 }
 
