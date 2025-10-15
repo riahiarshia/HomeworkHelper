@@ -13,6 +13,33 @@ const pool = new Pool({
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
+// Helper function to log admin actions
+async function logAdminAction(adminUser, action, targetType, targetId, targetEmail, targetUsername, details, req) {
+    try {
+        await pool.query(`
+            INSERT INTO admin_audit_log (
+                admin_user_id, admin_username, admin_email, action, target_type,
+                target_id, target_email, target_username, details, ip_address, user_agent
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `, [
+            adminUser.id,
+            adminUser.username,
+            adminUser.email,
+            action,
+            targetType,
+            targetId,
+            targetEmail,
+            targetUsername,
+            JSON.stringify(details),
+            req.ip || req.connection.remoteAddress,
+            req.get('User-Agent')
+        ]);
+    } catch (error) {
+        console.error('Error logging admin action:', error);
+        // Don't throw - logging failures shouldn't break the main operation
+    }
+}
+
 // MARK: - Admin User Management
 
 /**
@@ -322,6 +349,7 @@ router.post('/users', requireAdmin, async (req, res) => {
 router.delete('/users/:userId', requireAdmin, async (req, res) => {
     try {
         const { userId } = req.params;
+        const adminUser = req.admin;
         
         // Check if user exists
         const userCheck = await pool.query('SELECT * FROM users WHERE user_id = $1', [userId]);
@@ -329,6 +357,25 @@ router.delete('/users/:userId', requireAdmin, async (req, res) => {
         if (userCheck.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }
+        
+        const userToDelete = userCheck.rows[0];
+        
+        // Log admin action before deletion
+        await logAdminAction(
+            adminUser,
+            'user_delete',
+            'user',
+            userId,
+            userToDelete.email,
+            userToDelete.username,
+            {
+                user_subscription_status: userToDelete.subscription_status,
+                user_auth_provider: userToDelete.auth_provider,
+                user_created_at: userToDelete.created_at,
+                deletion_reason: 'Admin deletion via portal'
+            },
+            req
+        );
         
         // Delete user and related data
         await pool.query('DELETE FROM subscription_history WHERE user_id = $1', [userId]);
