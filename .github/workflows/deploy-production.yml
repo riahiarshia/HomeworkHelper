@@ -42,17 +42,14 @@ jobs:
 
     - name: 'Install dependencies'
       run: |
-        cd backend
         npm ci
 
     - name: 'Run production tests'
       run: |
-        cd backend
         npm test --if-present
 
     - name: 'Build application'
       run: |
-        cd backend
         npm run build --if-present
 
     - name: 'Azure Login'
@@ -65,7 +62,7 @@ jobs:
       with:
         app-name: homework-helper-api
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
-        package: backend/
+        package: ./
 
     - name: 'Post-deployment verification'
       run: |
