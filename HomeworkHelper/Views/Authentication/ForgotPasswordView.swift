@@ -150,7 +150,7 @@ struct ForgotPasswordView: View {
     }
     
     private func requestReset(email: String) async -> Bool {
-        let backendURL = "https://homework-helper-api.azurewebsites.net"
+        let backendURL = Config.apiBaseURL
         
         guard let url = URL(string: "\(backendURL)/api/auth/request-reset") else {
             await MainActor.run {

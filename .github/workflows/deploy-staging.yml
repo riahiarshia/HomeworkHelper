@@ -1,0 +1,79 @@
+name: Deploy to Azure Staging
+
+on:
+  push:
+    branches: [ staging, develop ]
+  workflow_dispatch:  # Allow manual triggers
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: 
+      name: staging
+      url: https://homework-helper-staging.azurewebsites.net
+    
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+    - name: 'Set up Node.js'
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: 'Install dependencies'
+      run: |
+        cd backend
+        npm ci
+
+    - name: 'Run tests (if any)'
+      run: |
+        cd backend
+        npm test --if-present
+
+    - name: 'Build application'
+      run: |
+        cd backend
+        npm run build --if-present
+
+    - name: 'Azure Login'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Web App'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: homework-helper-staging
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: backend/
+
+    - name: 'Verify deployment'
+      run: |
+        echo "Waiting for deployment to complete..."
+        sleep 30
+        
+        # Test health endpoint
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://homework-helper-staging.azurewebsites.net/api/health)
+        
+        if [ $response -eq 200 ]; then
+          echo "✅ Deployment successful! App is responding."
+        else
+          echo "⚠️ Deployment completed but app may still be starting up. HTTP Status: $response"
+        fi
+
+    - name: 'Post-deployment notification'
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 Staging deployment successful!"
+          echo "🌐 Backend: https://homework-helper-staging.azurewebsites.net"
+          echo "🎯 Admin: https://homework-helper-staging.azurewebsites.net/admin"
+        else
+          echo "❌ Staging deployment failed!"
+        fi

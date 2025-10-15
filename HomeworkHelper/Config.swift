@@ -21,7 +21,7 @@ enum AppEnvironment {
         switch self {
         case .development:
             // Local development - backend running on your Mac
-            return "http://localhost:3000"
+            return "http://10.253.17.4:3000"
             
         case .staging:
             // Azure staging environment for testing

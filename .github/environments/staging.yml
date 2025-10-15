@@ -1,0 +1,63 @@
+# Staging Environment Configuration
+# This file defines the staging environment settings for GitHub Actions
+
+name: staging
+display_name: Staging Environment
+
+# Environment protection rules (less restrictive than production)
+protection_rules:
+  # No manual approval required for staging
+  required_reviewers: []
+  
+  # No wait timer for staging
+  wait_timer: 0
+  
+  # Allow deployments from staging and develop branches
+  deployment_branch_policy:
+    protected_branches: false
+    custom_branch_policies: true
+    allowed_branches:
+      - "staging"
+      - "develop"
+      - "feature/*"  # Allow feature branch deployments for testing
+
+# Environment secrets (these will be configured in GitHub UI)
+secrets:
+  # Azure credentials for staging
+  AZURE_CREDENTIALS: "{{ secrets.AZURE_CREDENTIALS }}"
+  AZURE_WEBAPP_PUBLISH_PROFILE: "{{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}"
+  
+  # Additional staging secrets
+  DATABASE_URL_STAGING: "{{ secrets.DATABASE_URL_STAGING }}"
+  JWT_SECRET_STAGING: "{{ secrets.JWT_SECRET_STAGING }}"
+  ADMIN_JWT_SECRET_STAGING: "{{ secrets.ADMIN_JWT_SECRET_STAGING }}"
+  OPENAI_API_KEY_STAGING: "{{ secrets.OPENAI_API_KEY_STAGING }}"
+  STRIPE_SECRET_KEY_STAGING: "{{ secrets.STRIPE_SECRET_KEY_STAGING }}"
+
+# Environment variables (non-sensitive configuration)
+variables:
+  NODE_ENV: "staging"
+  APP_URL: "https://homework-helper-staging.azurewebsites.net"
+  AZURE_WEBAPP_NAME: "homework-helper-staging"
+  AZURE_RESOURCE_GROUP: "homework-helper-stage-rg-f"
+  NODE_VERSION: "18.x"
+
+# Deployment settings
+deployment_settings:
+  # Health check configuration
+  health_check:
+    enabled: true
+    endpoint: "/api/health"
+    timeout: 30
+    retries: 3
+  
+  # Rollback settings
+  rollback:
+    enabled: true
+    max_rollback_attempts: 3
+  
+  # Notification settings
+  notifications:
+    on_success: true
+    on_failure: true
+    on_cancellation: false  # Less critical for staging

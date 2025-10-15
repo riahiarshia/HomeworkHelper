@@ -92,7 +92,7 @@ struct EditProfileView: View {
     }
     
     private func syncProfileToBackend(userId: String, token: String, username: String, grade: String?) {
-        guard let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/update-profile") else { return }
+        guard let url = URL(string: "\(Config.apiBaseURL)/api/auth/update-profile") else { return }
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"

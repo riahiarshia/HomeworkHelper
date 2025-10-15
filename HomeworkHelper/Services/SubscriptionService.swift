@@ -350,7 +350,7 @@ class SubscriptionService: ObservableObject {
         print("🔍 checkTrialStatus: userId=\(userId), making backend request...")
         
         do {
-            let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/auth/validate-session")!
+            let url = URL(string: "\(Config.apiBaseURL)/api/auth/validate-session")!
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -465,7 +465,7 @@ class SubscriptionService: ObservableObject {
             
             print("🍎 Sending receipt for validation to backend...")
             
-            let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/subscription/apple/validate-receipt")!
+            let url = URL(string: "\(Config.apiBaseURL)/api/subscription/apple/validate-receipt")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -511,7 +511,7 @@ class SubscriptionService: ObservableObject {
         guard let userId = getUserId(), let token = getAuthToken() else { return }
         
         do {
-            let url = URL(string: "https://homework-helper-api.azurewebsites.net/api/subscription/sync")!
+            let url = URL(string: "\(Config.apiBaseURL)/api/subscription/sync")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")

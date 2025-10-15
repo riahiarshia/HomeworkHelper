@@ -1,0 +1,67 @@
+# Production Environment Configuration
+# This file defines the production environment settings for GitHub Actions
+
+name: production
+display_name: Production Environment
+
+# Environment protection rules
+protection_rules:
+  # Require manual approval for production deployments
+  required_reviewers:
+    - username: "ar616n"  # Replace with your GitHub username
+    # Add additional reviewers as needed
+    # - username: "team-member-1"
+    # - username: "team-member-2"
+  
+  # Wait timer before deployment (optional - gives time to cancel)
+  wait_timer: 5  # minutes
+  
+  # Restrict deployments to specific branches
+  deployment_branch_policy:
+    protected_branches: true
+    custom_branch_policies: false
+    # Only allow deployments from main branch
+    allowed_branches:
+      - "main"
+      - "master"
+
+# Environment secrets (these will be configured in GitHub UI)
+secrets:
+  # Azure credentials for production
+  AZURE_CREDENTIALS_PROD: "{{ secrets.AZURE_CREDENTIALS_PROD }}"
+  AZURE_WEBAPP_PUBLISH_PROFILE_PROD: "{{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}"
+  
+  # Additional production secrets
+  DATABASE_URL_PROD: "{{ secrets.DATABASE_URL_PROD }}"
+  JWT_SECRET_PROD: "{{ secrets.JWT_SECRET_PROD }}"
+  ADMIN_JWT_SECRET_PROD: "{{ secrets.ADMIN_JWT_SECRET_PROD }}"
+  OPENAI_API_KEY_PROD: "{{ secrets.OPENAI_API_KEY_PROD }}"
+  STRIPE_SECRET_KEY_PROD: "{{ secrets.STRIPE_SECRET_KEY_PROD }}"
+
+# Environment variables (non-sensitive configuration)
+variables:
+  NODE_ENV: "production"
+  APP_URL: "https://homework-helper-api.azurewebsites.net"
+  AZURE_WEBAPP_NAME: "homework-helper-api"
+  AZURE_RESOURCE_GROUP: "homework-helper-rg-f"
+  NODE_VERSION: "18.x"
+
+# Deployment settings
+deployment_settings:
+  # Health check configuration
+  health_check:
+    enabled: true
+    endpoint: "/api/health"
+    timeout: 30
+    retries: 3
+  
+  # Rollback settings
+  rollback:
+    enabled: true
+    max_rollback_attempts: 3
+  
+  # Notification settings
+  notifications:
+    on_success: true
+    on_failure: true
+    on_cancellation: true

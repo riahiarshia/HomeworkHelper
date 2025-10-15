@@ -1,0 +1,98 @@
+name: Deploy to Azure Production
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual triggers with additional confirmation
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  production-deploy:
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url: https://homework-helper-api.azurewebsites.net
+    
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+    - name: 'Verify production deployment'
+      run: |
+        echo "🚨 PRODUCTION DEPLOYMENT WARNING 🚨"
+        echo "This will deploy to the LIVE production environment!"
+        echo "Target: homework-helper-api"
+        echo "Resource Group: homework-helper-rg-f"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Environment: ${{ github.environment }}"
+        echo ""
+        echo "Please ensure you have:"
+        echo "1. ✅ Tested thoroughly in staging"
+        echo "2. ✅ Reviewed all changes"
+        echo "3. ✅ Backed up production database"
+        echo "4. ✅ Notified team members"
+
+    - name: 'Set up Node.js'
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: 'Install dependencies'
+      run: |
+        cd backend
+        npm ci
+
+    - name: 'Run production tests'
+      run: |
+        cd backend
+        npm test --if-present
+
+    - name: 'Build application'
+      run: |
+        cd backend
+        npm run build --if-present
+
+    - name: 'Azure Login'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+
+    - name: 'Deploy to Azure Production'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: homework-helper-api
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
+        package: backend/
+
+    - name: 'Post-deployment verification'
+      run: |
+        echo "Waiting for production deployment to complete..."
+        sleep 45
+        
+        # Test health endpoint
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://homework-helper-api.azurewebsites.net/api/health)
+        
+        if [ $response -eq 200 ]; then
+          echo "✅ Production deployment successful!"
+        else
+          echo "❌ Production deployment may have issues. HTTP Status: $response"
+          exit 1
+        fi
+
+    - name: 'Production deployment notification'
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 PRODUCTION DEPLOYMENT SUCCESSFUL!"
+          echo "🌐 Live API: https://homework-helper-api.azurewebsites.net"
+          echo "🎯 Admin Panel: https://homework-helper-api.azurewebsites.net/admin"
+          echo "📊 Monitor: Check Azure Portal for application metrics"
+        else
+          echo "❌ PRODUCTION DEPLOYMENT FAILED!"
+          echo "🚨 Check logs and consider rollback if necessary"
+        fi

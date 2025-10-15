@@ -10,7 +10,7 @@ class AuthenticationService: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    private let backendURL = "https://homework-helper-api.azurewebsites.net"
+    private let backendURL = Config.apiBaseURL
     private let keychain = KeychainHelper.shared
     private var lastValidationTime: Date?
     private let validationInterval: TimeInterval = 10 // 10 seconds for immediate detection
