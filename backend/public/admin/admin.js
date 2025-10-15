@@ -153,7 +153,8 @@ function showTab(tabName) {
         'devices': 'devicesSection',
         'promo-codes': 'promoCodesSection',
         'api-usage': 'apiUsageSection',
-        'ledger': 'ledgerSection'
+        'ledger': 'ledgerSection',
+        'audit-log': 'auditLogSection'
     };
     
     document.getElementById(sectionMap[tabName]).classList.add('active');
@@ -172,6 +173,8 @@ function showTab(tabName) {
         loadPromoCodes();
     } else if (tabName === 'ledger') {
         loadLedgerData();
+    } else if (tabName === 'audit-log') {
+        loadAuditLogData();
     }
 }
 
@@ -2094,6 +2097,172 @@ function filterLedger(filter) {
 function refreshLedgerData() {
     loadLedgerStats();
     loadLedgerRecords(currentLedgerPage);
+}
+
+// MARK: - Admin Audit Log
+
+let currentAuditFilter = 'all';
+let currentAuditPage = 1;
+
+async function loadAuditLogData() {
+    await loadAuditLogRecords();
+}
+
+async function loadAuditLogRecords(page = 1) {
+    currentAuditPage = page;
+    
+    try {
+        const queryParams = new URLSearchParams({
+            page,
+            limit: 20,
+            action: currentAuditFilter === 'all' ? '' : currentAuditFilter
+        });
+        
+        const data = await apiRequest(`/admin/audit-log?${queryParams}`, 'GET');
+        
+        if (data.success) {
+            displayAuditLogRecords(data.records);
+            displayAuditLogPagination(data.pagination);
+        }
+    } catch (error) {
+        console.error('Error loading audit log:', error);
+        document.getElementById('auditLogTable').innerHTML = 
+            '<p style="color: #e74c3c;">Error loading audit log</p>';
+    }
+}
+
+function displayAuditLogRecords(records) {
+    if (!records || records.length === 0) {
+        document.getElementById('auditLogTable').innerHTML = 
+            '<p style="color: #95a5a6;">No audit log entries found</p>';
+        return;
+    }
+    
+    let html = `
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Admin</th>
+                        <th>Action</th>
+                        <th>Target</th>
+                        <th>Details</th>
+                        <th>IP Address</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    records.forEach(record => {
+        const details = record.details ? JSON.parse(record.details) : {};
+        const actionIcon = getActionIcon(record.action);
+        const timestamp = new Date(record.created_at).toLocaleString();
+        
+        html += `
+            <tr>
+                <td>
+                    <div>
+                        <strong>${record.admin_username}</strong><br>
+                        <small style="color: #7f8c8d;">${record.admin_email}</small>
+                    </div>
+                </td>
+                <td>
+                    <span class="action-badge ${getActionClass(record.action)}">
+                        ${actionIcon} ${record.action.replace('_', ' ')}
+                    </span>
+                </td>
+                <td>
+                    ${record.target_email ? `
+                        <div>
+                            <strong>${record.target_username || 'N/A'}</strong><br>
+                            <small style="color: #7f8c8d;">${record.target_email}</small>
+                        </div>
+                    ` : '<span style="color: #95a5a6;">System</span>'}
+                </td>
+                <td>
+                    <div style="max-width: 200px; word-wrap: break-word;">
+                        ${Object.keys(details).map(key => 
+                            `<small><strong>${key}:</strong> ${details[key]}</small>`
+                        ).join('<br>')}
+                    </div>
+                </td>
+                <td>
+                    <code>${record.ip_address || 'N/A'}</code>
+                </td>
+                <td>
+                    <small>${timestamp}</small>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    document.getElementById('auditLogTable').innerHTML = html;
+}
+
+function displayAuditLogPagination(pagination) {
+    if (pagination.pages <= 1) return;
+    
+    let html = '<div style="margin-top: 20px; text-align: center;">';
+    
+    for (let i = 1; i <= Math.min(pagination.pages, 10); i++) {
+        const active = i === pagination.page ? 'style="background: #3498db; color: white;"' : '';
+        html += `<button class="btn btn-secondary" ${active} onclick="loadAuditLogRecords(${i})" style="margin: 0 5px;">${i}</button>`;
+    }
+    
+    html += '</div>';
+    document.getElementById('auditLogTable').innerHTML += html;
+}
+
+function getActionIcon(action) {
+    const icons = {
+        'user_delete': '🗑️',
+        'user_ban': '🚫',
+        'user_extend': '⏰',
+        'user_create': '➕',
+        'user_modify': '✏️',
+        'system': '⚙️'
+    };
+    return icons[action] || '📝';
+}
+
+function getActionClass(action) {
+    const classes = {
+        'user_delete': 'action-delete',
+        'user_ban': 'action-ban',
+        'user_extend': 'action-extend',
+        'user_create': 'action-create',
+        'user_modify': 'action-modify'
+    };
+    return classes[action] || 'action-default';
+}
+
+function filterAuditLog(filter) {
+    currentAuditFilter = filter;
+    
+    // Update button states
+    document.querySelectorAll('[id^="filterAudit"]').forEach(btn => {
+        btn.style.background = '';
+        btn.style.color = '';
+    });
+    
+    const activeBtn = document.getElementById(`filterAudit${filter === 'all' ? 'All' : filter.charAt(0).toUpperCase() + filter.slice(1)}`);
+    if (activeBtn) {
+        activeBtn.style.background = '#3498db';
+        activeBtn.style.color = 'white';
+    }
+    
+    loadAuditLogRecords(1);
+}
+
+function refreshAuditLog() {
+    loadAuditLogRecords(currentAuditPage);
 }
 
 function refreshUserEntitlements() {

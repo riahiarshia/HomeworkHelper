@@ -398,6 +398,52 @@
             width: 18px;
             height: 18px;
         }
+
+        /* Action Badge Styles */
+        .action-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .action-delete {
+            background-color: #fee;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .action-ban {
+            background-color: #fef5e7;
+            color: #dd6b20;
+            border: 1px solid #fbd38d;
+        }
+
+        .action-extend {
+            background-color: #e6fffa;
+            color: #319795;
+            border: 1px solid #81e6d9;
+        }
+
+        .action-create {
+            background-color: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+        }
+
+        .action-modify {
+            background-color: #ebf8ff;
+            color: #3182ce;
+            border: 1px solid #90cdf4;
+        }
+
+        .action-default {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -440,6 +486,7 @@
                 <button class="nav-tab" onclick="showTab('promo-codes')">Promo Codes</button>
                 <button class="nav-tab" onclick="showTab('api-usage')">📊 API Usage</button>
                 <button class="nav-tab" onclick="showTab('ledger')">🔐 Ledger</button>
+                <button class="nav-tab" onclick="showTab('audit-log')">📋 Audit Log</button>
             </div>
 
             <!-- Dashboard Section -->
@@ -675,6 +722,52 @@
                         <button class="btn btn-secondary" onclick="refreshUserEntitlements()">🔄 Refresh</button>
                     </div>
                     <div id="userEntitlementsTable"></div>
+                </div>
+            </div>
+
+            <!-- Audit Log Section -->
+            <div id="auditLogSection" class="content-section">
+                <div class="card" style="margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 20px;">📋 Admin Audit Log</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">
+                        Complete audit trail of all admin actions including user deletions, modifications, and system changes.
+                    </p>
+                </div>
+
+                <!-- Audit Log Filters -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="margin: 0;">🔍 Filter Actions</h3>
+                            <p style="color: #7f8c8d; font-size: 14px; margin-top: 5px;">
+                                Filter audit log by action type
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="refreshAuditLog()">🔄 Refresh</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="filterAuditLog('all')" id="filterAuditAll">All Actions</button>
+                        <button class="btn btn-secondary" onclick="filterAuditLog('user_delete')" id="filterAuditDelete">User Deletions</button>
+                        <button class="btn btn-secondary" onclick="filterAuditLog('user_ban')" id="filterAuditBan">User Bans</button>
+                        <button class="btn btn-secondary" onclick="filterAuditLog('user_extend')" id="filterAuditExtend">Extensions</button>
+                        <button class="btn btn-secondary" onclick="filterAuditLog('user_create')" id="filterAuditCreate">User Creation</button>
+                    </div>
+                </div>
+
+                <!-- Audit Log Records Table -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="margin: 0;">📊 Audit Trail</h3>
+                            <p style="color: #7f8c8d; font-size: 14px; margin-top: 5px;">
+                                Complete record of admin actions with timestamps and details
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="refreshAuditLog()">🔄 Refresh</button>
+                        </div>
+                    </div>
+                    <div id="auditLogTable"></div>
                 </div>
             </div>
         </div>

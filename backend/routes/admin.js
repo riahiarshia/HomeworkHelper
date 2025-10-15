@@ -40,6 +40,73 @@ async function logAdminAction(adminUser, action, targetType, targetId, targetEma
     }
 }
 
+// MARK: - Admin Audit Log
+
+/**
+ * GET /api/admin/audit-log
+ * Get admin audit log entries
+ */
+router.get('/audit-log', requireAdmin, async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const offset = (page - 1) * limit;
+        const action = req.query.action || '';
+        
+        let query = `
+            SELECT 
+                aal.id, aal.admin_user_id, aal.admin_username, aal.admin_email,
+                aal.action, aal.target_type, aal.target_id, aal.target_email,
+                aal.target_username, aal.details, aal.ip_address, aal.user_agent,
+                aal.created_at
+            FROM admin_audit_log aal
+            WHERE 1=1
+        `;
+        
+        const params = [];
+        let paramCount = 1;
+        
+        if (action) {
+            query += ` AND aal.action = $${paramCount}`;
+            params.push(action);
+            paramCount++;
+        }
+        
+        query += ` ORDER BY aal.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+        params.push(limit, offset);
+        
+        const result = await pool.query(query, params);
+        
+        // Get total count for pagination
+        let countQuery = 'SELECT COUNT(*) FROM admin_audit_log WHERE 1=1';
+        const countParams = [];
+        let countParamCount = 1;
+        
+        if (action) {
+            countQuery += ` AND action = $${countParamCount}`;
+            countParams.push(action);
+        }
+        
+        const countResult = await pool.query(countQuery, countParams);
+        const totalRecords = parseInt(countResult.rows[0].count);
+        
+        res.json({
+            success: true,
+            records: result.rows,
+            pagination: {
+                page,
+                limit,
+                total: totalRecords,
+                pages: Math.ceil(totalRecords / limit)
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error fetching audit log:', error);
+        res.status(500).json({ error: 'Failed to fetch audit log' });
+    }
+});
+
 // MARK: - Admin User Management
 
 /**
