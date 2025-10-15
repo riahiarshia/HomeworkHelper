@@ -14,7 +14,7 @@ enum AppEnvironment {
     
     // MARK: - Current Environment
     // Change this to switch between environments
-    static let current: AppEnvironment = .development
+    static let current: AppEnvironment = .staging
     
     // MARK: - Environment URLs
     var apiBaseURL: String {
