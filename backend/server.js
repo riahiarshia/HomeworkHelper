@@ -40,7 +40,12 @@ app.use('/api/payment/webhook', express.raw({type: 'application/json'}));
 app.use(express.json());
 
 // Serve static files (admin dashboard)
-app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+// Serve staging-specific admin dashboard when in staging environment
+if (process.env.WEBSITE_SITE_NAME === 'homework-helper-staging') {
+    app.use('/admin', express.static(path.join(__dirname, 'public/admin-staging')));
+} else {
+    app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+}
 
 // Import routes
 const healthRoutes = require('./routes/health');
