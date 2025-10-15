@@ -283,17 +283,12 @@ struct PaywallView: View {
         print("🛒 Purchase button tapped")
         isPurchasing = true
         
-        #if DEBUG
-        // TestFlight bypass - simulate successful purchase
-        print("🧪 TestFlight/DEBUG mode - simulating successful purchase")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.isPurchasing = false
-            self.dismiss()
-        }
-        #else
-        // Production purchase flow
+        // ALWAYS use real StoreKit flow (works with sandbox and production)
+        // Sandbox testing requires the actual purchase flow
         Task {
             print("🛒 Starting purchase flow...")
+            print("🛒 Environment: \(isSandbox ? "Sandbox" : "Production")")
+            
             let success = await subscriptionService.purchase()
             isPurchasing = false
             
@@ -307,6 +302,14 @@ struct PaywallView: View {
                 print("❌ Purchase failed or cancelled")
             }
         }
+    }
+    
+    // Helper to detect sandbox environment
+    private var isSandbox: Bool {
+        #if DEBUG
+        return true
+        #else
+        return Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
         #endif
     }
     

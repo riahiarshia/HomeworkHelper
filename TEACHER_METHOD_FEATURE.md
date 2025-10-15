@@ -192,3 +192,5 @@ Fields:
 - Images are not permanently stored on backend servers
 - Usage tracking includes flag for whether teacher method was used (no actual image data logged)
 
+
+

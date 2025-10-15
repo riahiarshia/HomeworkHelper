@@ -94,7 +94,7 @@
             "internalID" : "6738009256",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
-            "subscriptionPeriod" : "P1W"
+            "subscriptionPeriod" : "P7D"
           },
           "localizations" : [
             {

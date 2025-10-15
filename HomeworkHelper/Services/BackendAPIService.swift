@@ -35,7 +35,7 @@ class BackendAPIService: ObservableObject {
     @Published var isAnalyzing = false
     
     // Update this URL to your deployed backend
-    private let baseURL = "https://homework-helper-api.azurewebsites.net" // Your actual backend URL
+    private let baseURL = Config.apiBaseURL
     private let session: URLSession
     private let keychain = KeychainHelper.shared
     

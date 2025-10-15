@@ -20,8 +20,8 @@ struct ContentView: View {
     }
     
     private var shouldShowPaywall: Bool {
-        // Show paywall ONLY when trial has expired (not during active trial)
-        // This allows users to use the app freely for 7 days before requiring subscription
+        // NEW: Show paywall for users without active subscription
+        // Apple IAP manages the 7-day trial (one per Apple ID) - not us
         if !authService.isAuthenticated || needsOnboarding {
             return false
         }
@@ -29,14 +29,15 @@ struct ContentView: View {
         // Check subscription status
         switch subscriptionService.subscriptionStatus {
         case .trial:
-            // During trial period - NO paywall, let them use the app
+            // During Apple IAP trial period - NO paywall, let them use the app
             return false
         case .active, .gracePeriod:
             // Active subscription - no paywall
             return false
         case .expired, .unknown:
-            // Trial expired - allow limited access, don't show paywall immediately
-            return false
+            // No active subscription - SHOW paywall to subscribe through Apple IAP
+            // Apple will offer free trial if eligible (first time per Apple ID)
+            return true
         }
     }
     

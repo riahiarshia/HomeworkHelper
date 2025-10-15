@@ -60,21 +60,12 @@ class SubscriptionService: ObservableObject {
     // MARK: - Load Products
     func loadProducts() async {
         print("📦 Loading products...")
+        print("📦 Environment: \(isTestFlight ? "Sandbox/TestFlight" : "Production")")
         isLoading = true
         errorMessage = nil
         
-        // TestFlight bypass - skip product loading in TestFlight
-        if isTestFlight {
-            print("🧪 TestFlight detected - bypassing product loading")
-            print("🧪 Note: Subscription status will be loaded from backend")
-            
-            // Don't set mock status - let loadSubscriptionStatus() handle it
-            isLoading = false
-            return
-        }
-        
         do {
-            // Request products from App Store
+            // Request products from App Store (works in both sandbox and production)
             print("📦 Requesting product ID: \(monthlySubscriptionID)")
             let products = try await Product.products(for: [monthlySubscriptionID])
             
@@ -82,17 +73,33 @@ class SubscriptionService: ObservableObject {
                 errorMessage = "No subscription products available. Please check your StoreKit Configuration."
                 print("⚠️ No products found for ID: \(monthlySubscriptionID)")
                 print("⚠️ Make sure StoreKit Configuration is set in Xcode scheme")
+                print("⚠️ For sandbox testing, ensure Configuration.storekit file is selected in scheme settings")
             } else {
                 currentSubscription = products.first
                 print("✅ Loaded subscription product: \(products.first?.displayName ?? "Unknown")")
                 print("   Price: \(products.first?.displayPrice ?? "Unknown")")
                 print("   Description: \(products.first?.description ?? "Unknown")")
                 print("   Product ID: \(products.first?.id ?? "Unknown")")
+                
+                if isTestFlight {
+                    print("🧪 SANDBOX MODE - Ready for testing with sandbox Apple ID")
+                    print("🧪 Sign out of App Store in Settings > App Store")
+                    print("🧪 When purchasing, use your sandbox test account")
+                }
             }
         } catch {
             errorMessage = "Failed to load subscription: \(error.localizedDescription)"
             print("❌ Error loading products: \(error)")
             print("❌ Error details: \(error)")
+            print("❌ Error type: \(type(of: error))")
+            
+            if isTestFlight {
+                print("🧪 SANDBOX ERROR TIPS:")
+                print("   1. Check Configuration.storekit is selected in scheme")
+                print("   2. Verify product ID matches: \(monthlySubscriptionID)")
+                print("   3. Try cleaning build folder (Cmd+Shift+K)")
+                print("   4. Restart Xcode if needed")
+            }
         }
         
         isLoading = false
@@ -102,20 +109,33 @@ class SubscriptionService: ObservableObject {
     // MARK: - Purchase Subscription
     func purchase() async -> Bool {
         print("🛒 Purchase() called")
+        print("🛒 Environment: \(isTestFlight ? "Sandbox" : "Production")")
         
         guard let product = currentSubscription else {
             errorMessage = "No subscription product available. Please wait for products to load."
             print("❌ No product available to purchase")
+            print("❌ Try restarting the app or checking your connection")
             return false
         }
         
         print("🛒 Product found: \(product.displayName)")
+        print("🛒 Product ID: \(product.id)")
+        print("🛒 Price: \(product.displayPrice)")
+        print("🎁 Trial Eligibility: Determined by Apple based on Apple ID")
+        print("   → If first time: StoreKit will show '7 Days Free, then $9.99/month'")
+        print("   → If already used trial: StoreKit will show '$9.99/month' only")
+        print("   → Apple enforces this automatically - no custom code needed")
         isLoading = true
         errorMessage = nil
         
         do {
             // Attempt purchase
             print("🛒 Calling product.purchase()...")
+            if isTestFlight {
+                print("🧪 SANDBOX: You should see Apple's sandbox purchase dialog")
+                print("🧪 SANDBOX: Use your sandbox test account (not your real Apple ID)")
+            }
+            
             let result = try await product.purchase()
             print("🛒 Purchase result received: \(result)")
             
@@ -125,6 +145,13 @@ class SubscriptionService: ObservableObject {
                 // Check transaction verification
                 let transaction = try checkVerified(verification)
                 print("✅ Transaction verified")
+                print("✅ Transaction ID: \(transaction.id)")
+                print("✅ Product ID: \(transaction.productID)")
+                print("✅ Purchase Date: \(transaction.purchaseDate)")
+                
+                if isTestFlight {
+                    print("🧪 SANDBOX: Transaction successful in sandbox environment")
+                }
                 
                 // Update local subscription status
                 await updateSubscriptionStatus(transaction: transaction)
@@ -141,6 +168,9 @@ class SubscriptionService: ObservableObject {
                 
             case .userCancelled:
                 print("ℹ️ User cancelled purchase")
+                if isTestFlight {
+                    print("🧪 SANDBOX: User cancelled the sandbox purchase dialog")
+                }
                 isLoading = false
                 return false
                 
@@ -159,6 +189,16 @@ class SubscriptionService: ObservableObject {
             errorMessage = "Purchase failed: \(error.localizedDescription)"
             print("❌ Purchase error: \(error)")
             print("❌ Error type: \(type(of: error))")
+            print("❌ Error details: \(error)")
+            
+            if isTestFlight {
+                print("🧪 SANDBOX ERROR TROUBLESHOOTING:")
+                print("   1. Sign OUT of App Store in Settings > App Store")
+                print("   2. When prompted during purchase, sign in with sandbox account")
+                print("   3. Make sure sandbox account is set up in App Store Connect")
+                print("   4. Check that product ID matches in Configuration.storekit")
+            }
+            
             isLoading = false
             return false
         }
@@ -187,15 +227,59 @@ class SubscriptionService: ObservableObject {
     
     // MARK: - Public Methods
     
-    /// Force refresh subscription status from backend
+    /// Force refresh subscription status from backend AND Apple
     func refreshSubscriptionStatus() async {
-        print("🔄 Force refreshing subscription status from backend...")
+        print("🔄 Force refreshing subscription status from Apple and backend...")
         print("🔄 Current status before refresh: \(subscriptionStatus)")
         
-        // Clear any local state and always fetch from backend - single source of truth
+        // FIRST: Check with Apple/StoreKit for active subscriptions
+        await checkCurrentEntitlements()
+        
+        // THEN: Fetch from backend to get days remaining calculation
         await checkTrialStatus()
         
         print("🔄 Current status after refresh: \(subscriptionStatus)")
+    }
+    
+    /// Check current subscription entitlements with StoreKit and revalidate with backend
+    /// NOTE: Apple enforces one free trial per Apple ID per subscription group
+    /// Even if user deletes account and re-signs up, Apple won't offer trial again
+    private func checkCurrentEntitlements() async {
+        print("🔍 Checking current subscription entitlements with StoreKit...")
+        print("   Apple enforces: One trial per Apple ID (prevents trial abuse)")
+        
+        // Check for active subscriptions
+        for await result in Transaction.currentEntitlements {
+            do {
+                let transaction = try checkVerified(result)
+                
+                // Only process subscription transactions
+                guard transaction.productType == .autoRenewable else { continue }
+                
+                // Check if this is our subscription product
+                if transaction.productID == monthlySubscriptionID {
+                    print("✅ Found active subscription: \(transaction.productID)")
+                    print("   Transaction ID: \(transaction.id)")
+                    print("   Original Transaction ID: \(transaction.originalID)")
+                    print("   Purchase Date: \(transaction.purchaseDate)")
+                    print("   Expiration Date: \(transaction.expirationDate?.description ?? "N/A")")
+                    print("   Product Type: \(transaction.productType)")
+                    
+                    // Revalidate this receipt with backend to update database
+                    // Backend will track trial usage by original_transaction_id
+                    await validateReceiptWithBackend(transaction: transaction)
+                    
+                    print("✅ Subscription entitlement validated with backend")
+                    return
+                }
+            } catch {
+                print("❌ Failed to verify transaction: \(error)")
+            }
+        }
+        
+        print("ℹ️ No active subscription entitlements found in StoreKit")
+        print("   If user has no active subscription, they'll see paywall")
+        print("   Apple will determine if they're eligible for free trial")
     }
     
     /// Clear local subscription cache and force refresh from backend

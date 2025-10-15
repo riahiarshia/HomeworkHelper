@@ -18,22 +18,25 @@ struct SignUpView: View {
         "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade"
     ]
     
+    private var headerView: some View {
+        VStack(spacing: 8) {
+            Text("Create Account")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            Text("Join HomeworkHelper and start your learning journey")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.top, 20)
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Header
-                    VStack(spacing: 8) {
-                        Text("Create Account")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        Text("Join HomeworkHelper and start your learning journey")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding(.top, 20)
+                    headerView
                     
                     // Form
                     VStack(spacing: 16) {
@@ -125,14 +128,12 @@ struct SignUpView: View {
                         print("   Age: \(useGrade ? "N/A" : "\(selectedAge)")")
                         print("   Grade: \(useGrade ? selectedGrade : "N/A")")
                         
-                        Task {
-                            await authService.signUp(
-                                email: email,
-                                password: password,
-                                age: useGrade ? nil : selectedAge,
-                                grade: useGrade ? selectedGrade : nil
-                            )
-                        }
+                        // Use signUpWithEmail method - age/grade stored in profile setup later
+                        authService.signUpWithEmail(
+                            email: email,
+                            password: password,
+                            username: email.split(separator: "@").first.map(String.init) ?? "User"
+                        )
                     }) {
                         HStack {
                             if authService.isLoading {

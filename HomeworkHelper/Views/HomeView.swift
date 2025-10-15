@@ -129,15 +129,9 @@ struct HomeView: View {
                     print("🏠 HomeView - Subscription status: \(subscriptionService.subscriptionStatus)")
                 }
             }
-            .background(
-                // Using deprecated NavigationLink for iOS 15+ compatibility
-                // TODO: Migrate to NavigationStack + navigationDestination when dropping iOS 15 support
-                NavigationLink(
-                    destination: destinationView,
-                    isActive: $navigateToGuidance,
-                    label: { EmptyView() }
-                )
-            )
+            .navigationDestination(isPresented: $navigateToGuidance) {
+                destinationView
+            }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(image: $tempImageForCropping, sourceType: .photoLibrary, onImageSelected: { image in
                     logger.critical("🚨 CRITICAL DEBUG: Photo library onImageSelected callback - setting tempImageForCropping")
@@ -1084,6 +1078,9 @@ struct HomeView: View {
                 logger.critical("🚨 CRITICAL DEBUG: Homework analysis completed successfully!")
                 logger.critical("🚨 CRITICAL DEBUG: Analysis result - Subject: \(analysis.subject), Difficulty: \(analysis.difficulty), Steps: \(analysis.steps.count)")
                 
+                // Capture teacherMethodImageData before MainActor to avoid concurrency issues
+                let capturedMethodData = teacherMethodImageData
+                
                 await MainActor.run {
                     // Create problem from analysis
                     var problem = HomeworkProblem(
@@ -1099,7 +1096,7 @@ struct HomeView: View {
                     problem.imageFilename = problemImageFilename
                     
                     // Save teacher method image if provided
-                    if let methodData = teacherMethodImageData {
+                    if let methodData = capturedMethodData {
                         let methodImageFilename = dataManager.saveImage(methodData, forProblemId: problem.id, suffix: "_method")
                         problem.teacherMethodImageFilename = methodImageFilename
                         logger.critical("🚨 CRITICAL DEBUG: Saved teacher method image: \(methodImageFilename ?? "unknown")")
