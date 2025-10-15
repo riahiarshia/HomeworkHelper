@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Environment files (NEVER commit these!)
+.env
+.env.local
+.env.*.local
+
+# Keep environment templates but not actual values
+# These should be committed:
+# - env-example.txt
+# - .env.staging (template only)
+# - .env.production (template only)
+# These should NOT be committed:
+.env.development
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup/archive files
+*.zip
+*.tar
+*.gz
+*-backup.*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+build/

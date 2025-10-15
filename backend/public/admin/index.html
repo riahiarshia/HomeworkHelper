@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Homework Helper - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            color: #7f8c8d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-card .trend {
+            font-size: 12px;
+            color: #27ae60;
+            margin-top: 5px;
+        }
+
+        /* Main Content */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background: #ecf0f1;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Search & Filters */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filters input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            background: #f8f9fa;
+        }
+
+        .pagination button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Bulk selection */
+        .selected-row {
+            background: #e3f2fd !important;
+        }
+
+        .user-checkbox {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        #selectAllCheckbox {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="container" style="max-width: 400px; margin-top: 100px;">
+        <div class="card">
+            <h1 style="margin-bottom: 30px; text-align: center;">Admin Login</h1>
+            <div id="loginError" class="alert alert-error" style="display: none;"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display: none;">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div>
+                    <h1>📚 Homework Helper Admin</h1>
+                    <p style="color: #95a5a6; margin-top: 5px;">Manage users and subscriptions</p>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="showTab('users')">Users</button>
+                <button class="nav-tab" onclick="showTab('devices')">Device Analytics</button>
+                <button class="nav-tab" onclick="showTab('promo-codes')">Promo Codes</button>
+                <button class="nav-tab" onclick="showTab('api-usage')">📊 API Usage</button>
+                <button class="nav-tab" onclick="showTab('ledger')">🔐 Ledger</button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="content-section active">
+                <div class="stats-grid" id="stats">
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <div class="value" id="totalUsers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Subscriptions</h3>
+                        <div class="value" id="activeSubs">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Trial Users</h3>
+                        <div class="value" id="trialUsers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Expired</h3>
+                        <div class="value" id="expiredUsers">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="usersSection" class="content-section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>User Management</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-danger" id="bulkDeleteBtn" onclick="bulkDeleteUsers()" style="display: none;">
+                                🗑️ Delete Selected (<span id="selectedCount">0</span>)
+                            </button>
+                            <button class="btn btn-secondary" onclick="forceRefreshUsers()" style="margin-right: 10px;">
+                                🔄 Refresh
+                            </button>
+                            <button class="btn btn-success" onclick="showCreateUserModal()">+ Create User</button>
+                        </div>
+                    </div>
+
+                    <div class="filters">
+                        <input type="text" id="userSearch" placeholder="Search by User ID, email, or username...">
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="trial">Trial</option>
+                            <option value="active">Active</option>
+                            <option value="promo_active">Promo Active</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadUsers()">Search</button>
+                        <label style="margin-left: 20px; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="selectAllUsers" onchange="toggleSelectAll()">
+                            <span>Select All</span>
+                        </label>
+                    </div>
+
+                    <div id="usersTable"></div>
+                    <div id="usersPagination" class="pagination"></div>
+                </div>
+            </div>
+
+            <!-- Device Analytics Section -->
+            <div id="devicesSection" class="content-section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>📱 Shared Devices Overview</h2>
+                        <button class="btn btn-primary" onclick="loadDeviceAnalytics()">🔄 Refresh</button>
+                    </div>
+                    
+                    <div class="alert alert-info" style="margin-bottom: 20px;">
+                        <strong>💡 What This Shows:</strong> Devices where multiple user accounts have logged in. 
+                        This is normal for families sharing devices, but high numbers may indicate abuse.
+                    </div>
+                    
+                    <div id="deviceAnalytics">
+                        <div class="loading">Loading device analytics...</div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>🚨 Fraud Flags</h3>
+                        <button class="btn btn-warning" onclick="loadFraudFlags()">🔄 Refresh</button>
+                    </div>
+                    
+                    <div id="fraudFlags">
+                        <div class="loading">Loading fraud flags...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promo Codes Section -->
+            <div id="promoCodesSection" class="content-section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Promo Codes</h2>
+                        <button class="btn btn-success" onclick="showCreatePromoModal()">+ Create Promo Code</button>
+                    </div>
+
+                    <div id="promoCodesTable"></div>
+                </div>
+            </div>
+
+            <!-- API Usage Section -->
+            <div id="apiUsageSection" class="content-section">
+                <!-- Overall Statistics -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 20px;">📊 API Usage Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total API Calls</h3>
+                            <div class="value" id="totalApiCalls">-</div>
+                            <p class="change" id="todayApiCalls">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Tokens</h3>
+                            <div class="value" id="totalTokens">-</div>
+                            <p class="change" id="todayTokens">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Cost (USD)</h3>
+                            <div class="value" id="totalCost">-</div>
+                            <p class="change" id="todayCost">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active Users</h3>
+                            <div class="value" id="activeUsersCount">-</div>
+                            <p class="change" id="monthlyUsersCount">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Buttons -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0;">📥 Export Data</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-success" onclick="exportUsageData('summary')">
+                                📊 Export Summary (CSV)
+                            </button>
+                            <button class="btn btn-success" onclick="exportUsageData('detailed')">
+                                📋 Export Detailed (CSV)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endpoint Usage -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px;">🔌 Usage by Endpoint</h3>
+                    <div id="endpointUsageTable"></div>
+                </div>
+
+                <!-- User Usage Table -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">👥 User API Usage</h3>
+                        <button class="btn btn-secondary" onclick="refreshUsageData()">🔄 Refresh</button>
+                    </div>
+                    <div id="userUsageTable"></div>
+                </div>
+            </div>
+
+            <!-- Ledger Section -->
+            <div id="ledgerSection" class="content-section">
+                <!-- Ledger Statistics -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 20px;">🔐 Entitlements Ledger Overview</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">
+                        De-identified transaction ledger for fraud prevention (Apple 5.1.1(v) compliant).
+                        Contains NO PII - only hashed transaction IDs and metadata.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Records</h3>
+                            <div class="value" id="ledgerTotalRecords">-</div>
+                            <p class="change">De-identified entries</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Ever Used Trial</h3>
+                            <div class="value" id="ledgerTrialCount">-</div>
+                            <p class="change">Trial conversions</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active</h3>
+                            <div class="value" id="ledgerActiveCount">-</div>
+                            <p class="change">Currently active</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Expired</h3>
+                            <div class="value" id="ledgerExpiredCount">-</div>
+                            <p class="change">No longer active</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0;">Filter Records</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="filterLedger('all')" id="filterAll">All</button>
+                            <button class="btn btn-secondary" onclick="filterLedger('trial')" id="filterTrial">Trials Only</button>
+                            <button class="btn btn-secondary" onclick="filterLedger('active')" id="filterActive">Active</button>
+                            <button class="btn btn-secondary" onclick="filterLedger('expired')" id="filterExpired">Expired</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ledger Records Table (PII-Free) -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="margin: 0;">📊 Entitlements Ledger (PII-Free)</h3>
+                            <p style="color: #7f8c8d; font-size: 14px; margin-top: 5px;">
+                                Persists after account deletion. No user IDs, emails, or names.
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="refreshLedgerData()">🔄 Refresh</button>
+                    </div>
+                    <div id="ledgerRecordsTable"></div>
+                </div>
+
+                <!-- User Entitlements Table (Contains PII) -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="margin: 0;">👥 User Entitlements (Linked to Users)</h3>
+                            <p style="color: #7f8c8d; font-size: 14px; margin-top: 5px;">
+                                Contains PII. Deleted when user deletes account.
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="refreshUserEntitlements()">🔄 Refresh</button>
+                    </div>
+                    <div id="userEntitlementsTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Promo Code Modal -->
+    <div id="createPromoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Promo Code</h2>
+                <button class="close-modal" onclick="closeModal('createPromoModal')">&times;</button>
+            </div>
+            <form id="createPromoForm">
+                <div class="form-group">
+                    <label>Code *</label>
+                    <input type="text" id="promoCode" required placeholder="e.g., WELCOME2025">
+                </div>
+                <div class="form-group">
+                    <label>Duration (days) *</label>
+                    <input type="number" id="promoDuration" required placeholder="e.g., 90 for 3 months">
+                </div>
+                <div class="form-group">
+                    <label>Total Uses</label>
+                    <input type="number" id="promoUses" placeholder="Leave empty for unlimited">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="promoDescription" placeholder="Internal note about this code"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Expires At (optional)</label>
+                    <input type="datetime-local" id="promoExpires">
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Create Promo Code</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>User Details</h2>
+                <button class="close-modal" onclick="closeModal('userDetailsModal')">&times;</button>
+            </div>
+            <div id="userDetailsContent"></div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div id="createUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New User</h2>
+                <button class="close-modal" onclick="closeModal('createUserModal')">&times;</button>
+            </div>
+            <form id="createUserForm">
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="newUserEmail" required placeholder="user@example.com">
+                    <small style="color: #666; display: block; margin-top: 4px;">Username will be automatically set to the email address</small>
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="newUserPassword" required placeholder="Minimum 6 characters">
+                </div>
+                <div class="form-group">
+                    <label>Subscription Status</label>
+                    <select id="newUserStatus">
+                        <option value="trial">Trial</option>
+                        <option value="active">Active</option>
+                        <option value="promo_active">Promo Active</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subscription Days</label>
+                    <input type="number" id="newUserDays" value="7" placeholder="Number of days">
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Create User</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button>
+            </div>
+            <form id="changePasswordForm">
+                <input type="hidden" id="changePasswordUserId">
+                <div class="form-group">
+                    <label>New Password *</label>
+                    <input type="password" id="newPassword" required placeholder="Minimum 6 characters">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password *</label>
+                    <input type="password" id="confirmPassword" required placeholder="Re-enter password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Membership Modal -->
+    <div id="editMembershipModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Membership</h2>
+                <button class="close-modal" onclick="closeModal('editMembershipModal')">&times;</button>
+            </div>
+            <form id="editMembershipForm">
+                <input type="hidden" id="editMembershipUserId">
+                <div class="form-group">
+                    <label>Subscription Status</label>
+                    <select id="editMembershipStatus">
+                        <option value="">Don't change</option>
+                        <option value="trial">Trial</option>
+                        <option value="active">Active</option>
+                        <option value="promo_active">Promo Active</option>
+                        <option value="expired">Expired</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subscription Start Date</label>
+                    <input type="datetime-local" id="editMembershipStartDate">
+                </div>
+                <div class="form-group">
+                    <label>Subscription End Date</label>
+                    <input type="datetime-local" id="editMembershipEndDate">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Update Membership</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Cycle Details Modal -->
+    <div id="userCycleDetailsModal" class="modal">
+        <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2>📊 Billing Cycle Details</h2>
+                <button class="close-modal" onclick="closeModal('userCycleDetailsModal')">&times;</button>
+            </div>
+            <div id="userCycleDetailsContent">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading cycle details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js?v=20250108-2"></script>
+</body>
+</html>
+
+

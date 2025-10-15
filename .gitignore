@@ -119,4 +119,8 @@ TestResults/
 *.tmp
 *.temp
 
-backend/
+
+# Backend sensitive files
+backend/.env.*
+backend/LogFiles/
+backend/deployments/
