@@ -41,8 +41,8 @@ jobs:
           cd backend
           zip -r ../deployment.zip . -x "node_modules/*" "*.log" ".env*" "deploy*.sh" "*.zip"
           
-          # Deploy to Azure
-          az webapp deploy --resource-group homework-helper-stage-rg-f --name homework-helper-staging --src-path ../deployment.zip --type zip
+          # Deploy to Azure using the correct command
+          az webapp deployment source config-zip --resource-group homework-helper-stage-rg-f --name homework-helper-staging --src ../deployment.zip
           
           # Restart the app
           az webapp restart --name homework-helper-staging --resource-group homework-helper-stage-rg-f
