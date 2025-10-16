@@ -40,28 +40,7 @@ app.use('/api/payment/webhook', express.raw({type: 'application/json'}));
 app.use(express.json());
 
 // Serve static files (admin dashboard)
-// Serve staging-specific admin dashboard when in staging environment
-// Check multiple ways to detect staging environment
-console.log('=== ENVIRONMENT DETECTION DEBUG ===');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('WEBSITE_SITE_NAME:', process.env.WEBSITE_SITE_NAME);
-console.log('AZURE_WEBSITE_SITE_NAME:', process.env.AZURE_WEBSITE_SITE_NAME);
-console.log('All WEBSITE env vars:', Object.keys(process.env).filter(key => key.includes('WEBSITE')).map(key => `${key}=${process.env[key]}`));
-
-const isStaging = process.env.WEBSITE_SITE_NAME === 'homework-helper-staging' || 
-                  process.env.NODE_ENV === 'staging' ||
-                  process.env.AZURE_WEBSITE_SITE_NAME === 'homework-helper-staging' ||
-                  (typeof process.env.WEBSITE_SITE_NAME === 'string' && process.env.WEBSITE_SITE_NAME.includes('staging'));
-
-console.log('Staging detection result:', isStaging);
-
-if (isStaging) {
-    console.log('🚧 STAGING ENVIRONMENT DETECTED - Using staging admin dashboard');
-    app.use('/admin', express.static(path.join(__dirname, 'public/admin-staging')));
-} else {
-    console.log('🏭 PRODUCTION ENVIRONMENT - Using production admin dashboard');
-    app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
-}
+app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
 // Import routes
 const healthRoutes = require('./routes/health');
