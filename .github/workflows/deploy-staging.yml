@@ -40,30 +40,28 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-    - name: Create backend deployment package
+    - name: Create complete deployment package
       run: |
-        cd backend
-        zip -r ../backend-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
+        # Create the deployment directory structure
+        mkdir -p deployment/backend
+        mkdir -p deployment/public/admin-staging
         
-    - name: Create frontend deployment package
-      run: |
-        cd public/admin-staging/dist
-        zip -r ../../../frontend-deployment.zip . -x "*.DS_Store"
+        # Copy backend files
+        cp -r backend/* deployment/backend/
         
-    - name: Deploy backend to Azure App Service
+        # Copy frontend build files
+        cp -r public/admin-staging/dist/* deployment/public/admin-staging/
+        
+        # Create the final deployment package
+        cd deployment
+        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
+        
+    - name: Deploy complete application to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
         app-name: homework-helper-staging
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-        package: backend-deployment.zip
-        
-    - name: Deploy frontend to Azure App Service
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: homework-helper-staging
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-        package: frontend-deployment.zip
-        target-path: "/home/site/wwwroot/public/admin-staging"
+        package: complete-deployment.zip
           
     - name: Verify deployment
       run: |
