@@ -1126,7 +1126,7 @@ router.get('/ledger/user-entitlements', requireAdmin, async (req, res) => {
                     ELSE 0 
                 END as days_remaining
             FROM user_entitlements ue
-            LEFT JOIN users u ON ue.user_id::text = u.user_id::text
+            LEFT JOIN users u ON ue.user_id = u.user_id::uuid
             ORDER BY ue.created_at DESC
             LIMIT $1 OFFSET $2
         `, [limit, offset]);
