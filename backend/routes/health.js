@@ -44,28 +44,34 @@ router.get('/health/detailed', async (req, res) => {
             };
         }
 
-        // 2. Check Database Connection
-        try {
-            const pool = new Pool({
-                connectionString: config.database.url || 
-                    `postgresql://${config.database.user}:${config.database.password}@${config.database.host}:${config.database.port}/${config.database.database}`,
-                ssl: config.database.ssl
-            });
-            
-            const result = await pool.query('SELECT NOW()');
-            await pool.end();
-            
+        // 2. Check Database Connection (if configured)
+        if (config.database.url) {
+            try {
+                const pool = new Pool({
+                    connectionString: config.database.url,
+                    ssl: config.database.ssl
+                });
+                
+                const result = await pool.query('SELECT NOW()');
+                await pool.end();
+                
+                health.services.database = {
+                    status: 'healthy',
+                    connected: true,
+                    timestamp: result.rows[0].now
+                };
+            } catch (error) {
+                health.services.database = {
+                    status: 'unhealthy',
+                    error: error.message,
+                    connected: false
+                };
+                // Don't mark overall health as unhealthy if database is down
+            }
+        } else {
             health.services.database = {
-                status: 'healthy',
-                connected: true,
-                timestamp: result.rows[0].now
-            };
-        } catch (error) {
-            health.status = 'unhealthy';
-            health.services.database = {
-                status: 'unhealthy',
-                error: error.message,
-                connected: false
+                status: 'not_configured',
+                message: 'DATABASE_URL not set'
             };
         }
 

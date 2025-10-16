@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'staging' && process.env.NODE_ENV !== 'production')
 }
 
 // Validate required environment variables
-const requiredEnvVars = ['DATABASE_URL', 'LEDGER_SALT'];
+const requiredEnvVars = ['LEDGER_SALT'];
 requiredEnvVars.forEach(varName => {
     if (!process.env[varName]) {
         console.error(`❌ ERROR: Missing required environment variable: ${varName}`);
@@ -22,6 +22,11 @@ requiredEnvVars.forEach(varName => {
         process.exit(1);
     }
 });
+
+// DATABASE_URL is optional for basic startup
+if (!process.env.DATABASE_URL) {
+    console.warn('⚠️ WARNING: DATABASE_URL not set. Database features will be disabled.');
+}
 
 // Log environment validation success (but not the values!)
 console.log('✅ Environment variables validated');
