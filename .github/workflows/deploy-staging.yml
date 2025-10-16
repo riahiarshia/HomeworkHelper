@@ -29,7 +29,7 @@ jobs:
       
     - name: Install frontend dependencies
       working-directory: ./public/admin-staging
-      run: npm ci
+      run: npm install
       
     - name: Build React frontend
       working-directory: ./public/admin-staging
