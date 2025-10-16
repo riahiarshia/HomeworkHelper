@@ -54,10 +54,14 @@ jobs:
         mkdir -p deployment/public/admin-staging
         cp -r public/admin-staging/dist/* deployment/public/admin-staging/
         
-        # Create the deployment package WITHOUT node_modules
-        # Let Azure App Service handle npm install
+        # Install backend dependencies in deployment directory
         cd deployment
-        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip" "node_modules/*"
+        npm ci --production --silent
+        
+        # Create the deployment package WITH node_modules
+        cd ..
+        cd deployment
+        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
         
     - name: Deploy complete application to Azure App Service
       uses: azure/webapps-deploy@v2
