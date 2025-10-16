@@ -190,6 +190,14 @@ async function loadDashboardData() {
             document.getElementById('trialUsers').textContent = stats.trial_users || 0;
             document.getElementById('expiredUsers').textContent = stats.expired_subscriptions || 0;
         }
+        
+        // Also load initial data for other sections
+        console.log('Loading initial data for all sections...');
+        await loadUsers(1, true);
+        await loadLedgerStats();
+        await loadAuditLogData();
+        await loadApiUsageData();
+        
     } catch (error) {
         console.error('Error loading stats:', error);
     }
