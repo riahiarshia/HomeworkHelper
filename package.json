@@ -14,7 +14,10 @@
     "db:reset": "dropdb homework_helper_dev && createdb homework_helper_dev && npm run db:migrate",
     "test": "NODE_ENV=test jest",
     "lint": "eslint .",
-    "prestart": "echo 'Starting Homework Helper Backend...'"
+    "prestart": "echo 'Starting Homework Helper Backend...'",
+    "auto-fix": "node backend/auto-fix-deployment.js",
+    "post-deploy": "node backend/post-deployment-verify.js",
+    "verify": "npm run auto-fix && npm run post-deploy"
   },
   "dependencies": {
     "@azure/identity": "^4.0.0",

@@ -1,0 +1,91 @@
+name: Auto Fix Staging Deployment
+
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch:
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.20.8'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm install
+        
+    - name: Run auto-fix script
+      run: |
+        cd backend
+        node auto-fix-deployment.js
+        
+    - name: Verify deployment structure
+      run: |
+        echo "🔍 Verifying deployment structure..."
+        ls -la
+        ls -la backend/
+        ls -la backend/node_modules/ | head -10
+        
+    - name: Test server files
+      run: |
+        echo "🧪 Testing server files..."
+        cd backend
+        node -c server.js
+        echo "✅ server.js syntax is valid"
+        
+    - name: Check critical dependencies
+      run: |
+        echo "📦 Checking critical dependencies..."
+        cd backend
+        node -e "
+          const fs = require('fs');
+          const criticalDeps = ['express', 'pg', 'bcrypt', 'jsonwebtoken', 'cors'];
+          let missing = [];
+          for (const dep of criticalDeps) {
+            if (!fs.existsSync(\`node_modules/\${dep}\`)) {
+              missing.push(dep);
+            }
+          }
+          if (missing.length > 0) {
+            console.error('❌ Missing dependencies:', missing.join(', '));
+            process.exit(1);
+          } else {
+            console.log('✅ All critical dependencies present');
+          }
+        "
+        
+    - name: Create deployment package
+      run: |
+        echo "📦 Creating deployment package..."
+        tar -czf deployment-package.tar.gz -C . .
+        ls -la deployment-package.tar.gz
+        
+    - name: Upload deployment package
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-package
+        path: deployment-package.tar.gz
+        
+    - name: Deployment Summary
+      run: |
+        echo "🎉 AUTO FIX DEPLOYMENT COMPLETE!"
+        echo "================================"
+        echo "✅ Dependencies verified"
+        echo "✅ Server files validated"
+        echo "✅ Deployment package created"
+        echo ""
+        echo "📋 NEXT STEPS:"
+        echo "1. Azure will automatically deploy this package"
+        echo "2. Check Azure Portal → Log stream for startup logs"
+        echo "3. Test admin portal: https://homework-helper-staging.azurewebsites.net/admin/"
+        echo "4. Login with: admin / Admin123!Staging"
