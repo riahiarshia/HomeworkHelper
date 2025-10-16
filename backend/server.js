@@ -40,7 +40,16 @@ app.use('/api/payment/webhook', express.raw({type: 'application/json'}));
 app.use(express.json());
 
 // Serve static files (admin dashboard)
-app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+// Simple staging detection - check if we're in staging environment
+const isStaging = process.env.WEBSITE_SITE_NAME && process.env.WEBSITE_SITE_NAME.includes('staging');
+
+if (isStaging) {
+    console.log('🚧 STAGING ENVIRONMENT - Using staging admin dashboard');
+    app.use('/admin', express.static(path.join(__dirname, 'public/admin-staging')));
+} else {
+    console.log('🏭 PRODUCTION ENVIRONMENT - Using production admin dashboard');
+    app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+}
 
 // Import routes
 const healthRoutes = require('./routes/health');
