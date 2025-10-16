@@ -43,18 +43,23 @@ jobs:
     - name: Create complete deployment package
       run: |
         # Create the deployment directory structure
-        mkdir -p deployment/backend
-        mkdir -p deployment/public/admin-staging
+        mkdir -p deployment
         
-        # Copy backend files
-        cp -r backend/* deployment/backend/
+        # Copy backend files (package.json, server.js, etc.)
+        cp -r backend/* deployment/
+        cp package.json deployment/
+        cp server.js deployment/
         
-        # Copy frontend build files
-        cp -r public/admin-staging/dist/* deployment/public/admin-staging/
+        # Install backend dependencies in deployment directory
+        cd deployment
+        npm ci --production
+        
+        # Copy frontend build files to the correct location
+        mkdir -p public/admin-staging
+        cp -r ../public/admin-staging/dist/* public/admin-staging/
         
         # Create the final deployment package
-        cd deployment
-        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
+        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip" "node_modules/.cache/*"
         
     - name: Deploy complete application to Azure App Service
       uses: azure/webapps-deploy@v2
