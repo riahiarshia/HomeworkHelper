@@ -45,6 +45,9 @@ jobs:
         # Create the deployment directory structure
         mkdir -p deployment
         
+        # Copy static test file first
+        cp index.html deployment/
+        
         # Copy backend files and package.json
         cp -r backend/* deployment/
         cp package.json deployment/
@@ -59,12 +62,13 @@ jobs:
         cd deployment
         zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip" "node_modules/*"
         
-    - name: Configure App Service startup command
+    - name: Configure App Service for static files
       run: |
+        # Remove startup command to use default static file serving
         az webapp config set \
           --resource-group homework-helper-stage-rg-f \
           --name homework-helper-staging \
-          --startup-file "bash start.sh"
+          --startup-file ""
     
     - name: Deploy complete application to Azure App Service
       uses: azure/webapps-deploy@v2

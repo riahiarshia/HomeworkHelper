@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Helper - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .status {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .info {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Homework Helper</h1>
+        
+        <div class="status">
+            ✅ <strong>Static Deployment Working!</strong><br>
+            If you can see this page, basic Azure deployment is functional.
+        </div>
+        
+        <div class="info">
+            <h3>Current Status:</h3>
+            <ul>
+                <li>✅ Static HTML deployment: <strong>WORKING</strong></li>
+                <li>🔄 Backend API: <strong>IN PROGRESS</strong></li>
+                <li>🔄 React Frontend: <strong>IN PROGRESS</strong></li>
+            </ul>
+        </div>
+        
+        <h3>Next Steps:</h3>
+        <ol>
+            <li>✅ Confirm static deployment works</li>
+            <li>🔄 Fix backend startup issues</li>
+            <li>🔄 Deploy React frontend</li>
+            <li>🔄 Test full application</li>
+        </ol>
+        
+        <p><strong>Test Time:</strong> <span id="timestamp"></span></p>
+    </div>
+    
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
