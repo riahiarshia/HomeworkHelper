@@ -23,30 +23,54 @@ jobs:
         cache: 'npm'
         cache-dependency-path: backend/package-lock.json
         
-    - name: Install dependencies
+    - name: Install backend dependencies
       working-directory: ./backend
       run: npm ci
+      
+    - name: Install frontend dependencies
+      working-directory: ./public/admin-staging
+      run: npm ci
+      
+    - name: Build React frontend
+      working-directory: ./public/admin-staging
+      run: npm run build
       
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-    - name: Create deployment package
+    - name: Create backend deployment package
       run: |
         cd backend
-        zip -r ../deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
+        zip -r ../backend-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
         
-    - name: Deploy to Azure App Service
+    - name: Create frontend deployment package
+      run: |
+        cd public/admin-staging/dist
+        zip -r ../../../frontend-deployment.zip . -x "*.DS_Store"
+        
+    - name: Deploy backend to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
         app-name: homework-helper-staging
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-        package: deployment.zip
+        package: backend-deployment.zip
+        
+    - name: Deploy frontend to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: homework-helper-staging
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+        package: frontend-deployment.zip
+        target-path: "/home/site/wwwroot/public/admin-staging"
           
     - name: Verify deployment
       run: |
         echo "Waiting for deployment to stabilize..."
         sleep 30
+        echo "Testing backend API..."
         curl -f https://homework-helper-staging.azurewebsites.net/api/health || exit 1
+        echo "Testing frontend..."
+        curl -f https://homework-helper-staging.azurewebsites.net/public/admin-staging/ || exit 1
         echo "✅ Staging deployment successful!"
