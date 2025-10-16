@@ -54,15 +54,18 @@ jobs:
         mkdir -p deployment/public/admin-staging
         cp -r public/admin-staging/dist/* deployment/public/admin-staging/
         
-        # Install backend dependencies in deployment directory
+        # Create the deployment package WITHOUT node_modules
+        # Use Azure's built-in npm install with startup command
         cd deployment
-        npm ci --production --silent
+        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip" "node_modules/*"
         
-        # Create the deployment package WITH node_modules
-        cd ..
-        cd deployment
-        zip -r ../complete-deployment.zip . -x "*.log" ".env*" "deploy*.sh" "*.zip"
-        
+    - name: Configure App Service startup command
+      run: |
+        az webapp config set \
+          --resource-group homework-helper-stage-rg-f \
+          --name homework-helper-staging \
+          --startup-file "bash start.sh"
+    
     - name: Deploy complete application to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
