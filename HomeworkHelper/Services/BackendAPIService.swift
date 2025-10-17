@@ -41,8 +41,8 @@ class BackendAPIService: ObservableObject {
     
     private init() {
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 180.0 // 3 minutes for image analysis
-        config.timeoutIntervalForResource = 600.0 // 10 minutes total
+        config.timeoutIntervalForRequest = Config.API.requestTimeout // Use Config timeout settings
+        config.timeoutIntervalForResource = Config.API.resourceTimeout // Use Config timeout settings
         config.waitsForConnectivity = true
         self.session = URLSession(configuration: config)
         

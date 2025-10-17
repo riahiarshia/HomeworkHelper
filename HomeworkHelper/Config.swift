@@ -14,7 +14,7 @@ enum AppEnvironment {
     
     // MARK: - Current Environment
     // Change this to switch between environments
-    static let current: AppEnvironment = .development
+    static let current: AppEnvironment = .production
     
     // MARK: - Environment URLs
     var apiBaseURL: String {
@@ -58,18 +58,18 @@ enum AppEnvironment {
     var requestTimeout: TimeInterval {
         switch self {
         case .development:
-            return 180.0 // 3 minutes - longer for debugging
+            return 300.0 // 5 minutes - longer for debugging
         case .staging, .production:
-            return 120.0 // 2 minutes
+            return 240.0 // 4 minutes - increased for better reliability
         }
     }
     
     var resourceTimeout: TimeInterval {
         switch self {
         case .development:
-            return 600.0 // 10 minutes - longer for debugging
+            return 900.0 // 15 minutes - longer for debugging
         case .staging, .production:
-            return 300.0 // 5 minutes
+            return 600.0 // 10 minutes - increased for better reliability
         }
     }
 }

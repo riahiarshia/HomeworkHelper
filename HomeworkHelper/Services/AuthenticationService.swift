@@ -14,6 +14,7 @@ class AuthenticationService: ObservableObject {
     private let keychain = KeychainHelper.shared
     private var lastValidationTime: Date?
     private let validationInterval: TimeInterval = 10 // 10 seconds for immediate detection
+    private let session: URLSession
     
     // Apple Sign-In
     private var currentNonce: String?
@@ -49,6 +50,13 @@ class AuthenticationService: ObservableObject {
     }
     
     init() {
+        // Configure URLSession with proper timeout settings
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = Config.API.requestTimeout
+        config.timeoutIntervalForResource = Config.API.resourceTimeout
+        config.waitsForConnectivity = true
+        self.session = URLSession(configuration: config)
+        
         // Check if user is already authenticated
         loadSavedUser()
         
@@ -217,7 +225,7 @@ class AuthenticationService: ObservableObject {
         
         print("📤 Sending email authentication request to backend...")
         
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -283,7 +291,7 @@ class AuthenticationService: ObservableObject {
         
         print("📤 Sending registration request to backend...")
         
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -562,7 +570,7 @@ class AuthenticationService: ObservableObject {
         print("🔍 Email: \(email ?? "none")")
         print("🔍 Name: \(name)")
         
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -737,7 +745,7 @@ class AuthenticationService: ObservableObject {
         
         print("📤 Sending authentication request to backend...")
         
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -933,7 +941,7 @@ class AuthenticationService: ObservableObject {
         
         do {
             print("🔍 Sending request...")
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await session.data(for: request)
             print("🔍 Received response")
             
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -1052,7 +1060,7 @@ class AuthenticationService: ObservableObject {
         request.httpBody = httpBody
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await session.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 await MainActor.run {
@@ -1123,7 +1131,7 @@ class AuthenticationService: ObservableObject {
         print("🗑️ Request configured, sending to backend...")
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await session.data(for: request)
             
             print("📥 Received response from backend")
             
