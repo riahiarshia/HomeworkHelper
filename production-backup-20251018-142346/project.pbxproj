@@ -1,0 +1,741 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		680138C62E9EC16D004A94A0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680138C52E9EC16D004A94A0 /* Config.swift */; };
+		68163CCC2E95CC7D000E7318 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 68163CCB2E95CC7D000E7318 /* GoogleSignIn */; };
+		68163CCE2E95CC7D000E7318 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 68163CCD2E95CC7D000E7318 /* GoogleSignInSwift */; };
+		68163CD02E95CCA5000E7318 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */; };
+		68163CD22E95CE0D000E7318 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD12E95CE0D000E7318 /* AuthenticationService.swift */; };
+		68163CD42E95CEBE000E7318 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD32E95CEBE000E7318 /* AuthenticationView.swift */; };
+		68163CD82E97163A000E7318 /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD72E97163A000E7318 /* SubscriptionService.swift */; };
+		68163CDA2E971657000E7318 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CD92E971657000E7318 /* PaywallView.swift */; };
+		68163CDE2E971659000E7318 /* EmailPasswordLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CDF2E971659000E7318 /* EmailPasswordLoginView.swift */; };
+		68163CE02E97165A000E7318 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CE12E97165A000E7318 /* ResetPasswordView.swift */; };
+		68163CE22E97165B000E7318 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CE32E97165B000E7318 /* SignUpView.swift */; };
+		68163CE42E97165C000E7318 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68163CE52E97165C000E7318 /* ForgotPasswordView.swift */; };
+		68163CDC2E971681000E7318 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 68163CDB2E971681000E7318 /* Configuration.storekit */; };
+		A1000001 /* HomeworkHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* HomeworkHelperApp.swift */; };
+		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
+		A1000003 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* HomeView.swift */; };
+		A1000004 /* StepGuidanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* StepGuidanceView.swift */; };
+		A1000005 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005 /* ChatView.swift */; };
+		A1000006 /* ProgressStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006 /* ProgressStatsView.swift */; };
+		A1000007 /* ProblemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007 /* ProblemsListView.swift */; };
+		A1000008 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008 /* SettingsView.swift */; };
+		A1000009 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009 /* User.swift */; };
+		A1000010 /* HomeworkProblem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* HomeworkProblem.swift */; };
+		A1000011 /* GuidanceStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* GuidanceStep.swift */; };
+		A1000012 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ChatMessage.swift */; };
+		A1000013 /* UserProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* UserProgress.swift */; };
+		A1000014 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014 /* DataManager.swift */; };
+		A1000016 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000016 /* KeychainHelper.swift */; };
+		A1000018 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018 /* OnboardingView.swift */; };
+		A1000018A /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000018A /* ProfileSetupView.swift */; };
+		A1000019 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000019 /* EditProfileView.swift */; };
+		A1000020 /* AzureKeyVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* AzureKeyVaultService.swift */; };
+		A1000021 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A4000002 /* PrivacyInfo.xcprivacy */; };
+		A1000022 /* BackendAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000022 /* BackendAPIService.swift */; };
+		A1000023 /* ImageCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* ImageCropperView.swift */; };
+		A1000024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000024 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		680138C52E9EC16D004A94A0 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		68163CD12E95CE0D000E7318 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		68163CD32E95CEBE000E7318 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		68163CD62E96F03E000E7318 /* HomeworkHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomeworkHelper.entitlements; sourceTree = "<group>"; };
+		68163CD72E97163A000E7318 /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
+		68163CD92E971657000E7318 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		68163CDF2E971659000E7318 /* EmailPasswordLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Authentication/EmailPasswordLoginView.swift"; sourceTree = "<group>"; };
+		68163CE12E97165A000E7318 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Authentication/ResetPasswordView.swift"; sourceTree = "<group>"; };
+		68163CE32E97165B000E7318 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Authentication/SignUpView.swift"; sourceTree = "<group>"; };
+		68163CE52E97165C000E7318 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Authentication/ForgotPasswordView.swift"; sourceTree = "<group>"; };
+		68163CDB2E971681000E7318 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
+		A2000001 /* HomeworkHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeworkHelperApp.swift; sourceTree = "<group>"; };
+		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2000003 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A2000004 /* StepGuidanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepGuidanceView.swift; sourceTree = "<group>"; };
+		A2000005 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		A2000006 /* ProgressStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStatsView.swift; sourceTree = "<group>"; };
+		A2000007 /* ProblemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemsListView.swift; sourceTree = "<group>"; };
+		A2000008 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A2000009 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		A2000010 /* HomeworkProblem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeworkProblem.swift; sourceTree = "<group>"; };
+		A2000011 /* GuidanceStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceStep.swift; sourceTree = "<group>"; };
+		A2000012 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		A2000013 /* UserProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgress.swift; sourceTree = "<group>"; };
+		A2000014 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		A2000016 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		A2000018 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A2000018A /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
+		A2000019 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		A2000020 /* AzureKeyVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureKeyVaultService.swift; sourceTree = "<group>"; };
+		A2000022 /* BackendAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPIService.swift; sourceTree = "<group>"; };
+		A2000023 /* ImageCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropperView.swift; sourceTree = "<group>"; };
+		A2000024 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A3000001 /* Homework HelperDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Homework HelperDev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A5000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68163CCC2E95CC7D000E7318 /* GoogleSignIn in Frameworks */,
+				68163CCE2E95CC7D000E7318 /* GoogleSignInSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A6000001 = {
+			isa = PBXGroup;
+			children = (
+				A6000002 /* HomeworkHelper */,
+				A6000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A6000002 /* HomeworkHelper */ = {
+			isa = PBXGroup;
+			children = (
+				680138C52E9EC16D004A94A0 /* Config.swift */,
+				68163CDB2E971681000E7318 /* Configuration.storekit */,
+				68163CD62E96F03E000E7318 /* HomeworkHelper.entitlements */,
+				68163CCF2E95CCA5000E7318 /* GoogleService-Info.plist */,
+				A2000001 /* HomeworkHelperApp.swift */,
+				A6000004 /* Views */,
+				A6000005 /* Models */,
+				A6000006 /* Services */,
+				A6000007 /* Resources */,
+				A4000001 /* Info.plist */,
+				A4000002 /* PrivacyInfo.xcprivacy */,
+			);
+			path = HomeworkHelper;
+			sourceTree = "<group>";
+		};
+		A6000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3000001 /* Homework HelperDev.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A6000004 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				68163CD92E971657000E7318 /* PaywallView.swift */,
+				68163CD32E95CEBE000E7318 /* AuthenticationView.swift */,
+				68163CDF2E971659000E7318 /* EmailPasswordLoginView.swift */,
+				68163CE12E97165A000E7318 /* ResetPasswordView.swift */,
+				68163CE32E97165B000E7318 /* SignUpView.swift */,
+				A2000002 /* ContentView.swift */,
+				A2000003 /* HomeView.swift */,
+				A2000004 /* StepGuidanceView.swift */,
+				A2000005 /* ChatView.swift */,
+				A2000006 /* ProgressStatsView.swift */,
+				A2000007 /* ProblemsListView.swift */,
+				A2000008 /* SettingsView.swift */,
+				A2000023 /* ImageCropperView.swift */,
+				A2000018 /* OnboardingView.swift */,
+				A2000018A /* ProfileSetupView.swift */,
+				A2000019 /* EditProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A6000005 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A2000009 /* User.swift */,
+				A2000010 /* HomeworkProblem.swift */,
+				A2000011 /* GuidanceStep.swift */,
+				A2000012 /* ChatMessage.swift */,
+				A2000013 /* UserProgress.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A6000006 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				68163CD72E97163A000E7318 /* SubscriptionService.swift */,
+				68163CD12E95CE0D000E7318 /* AuthenticationService.swift */,
+				A2000014 /* DataManager.swift */,
+				A2000016 /* KeychainHelper.swift */,
+				A2000020 /* AzureKeyVaultService.swift */,
+				A2000022 /* BackendAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A6000007 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A2000024 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A7000001 /* HomeworkHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000001 /* Build configuration list for PBXNativeTarget "HomeworkHelper" */;
+			buildPhases = (
+				A9000001 /* Sources */,
+				A5000001 /* Frameworks */,
+				A5000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HomeworkHelper;
+			productName = HomeworkHelper;
+			productReference = A3000001 /* Homework HelperDev.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AB000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = AC000001 /* Build configuration list for PBXProject "HomeworkHelper" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A6000001;
+			packageReferences = (
+				68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			productRefGroup = A6000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7000001 /* HomeworkHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A5000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68163CDC2E971681000E7318 /* Configuration.storekit in Resources */,
+				A1000021 /* PrivacyInfo.xcprivacy in Resources */,
+				68163CD02E95CCA5000E7318 /* GoogleService-Info.plist in Resources */,
+				A1000024 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A9000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* HomeworkHelperApp.swift in Sources */,
+				A1000002 /* ContentView.swift in Sources */,
+				68163CD82E97163A000E7318 /* SubscriptionService.swift in Sources */,
+				A1000003 /* HomeView.swift in Sources */,
+				A1000004 /* StepGuidanceView.swift in Sources */,
+				A1000005 /* ChatView.swift in Sources */,
+				A1000006 /* ProgressStatsView.swift in Sources */,
+				A1000007 /* ProblemsListView.swift in Sources */,
+				A1000008 /* SettingsView.swift in Sources */,
+				A1000023 /* ImageCropperView.swift in Sources */,
+				A1000018 /* OnboardingView.swift in Sources */,
+				A1000018A /* ProfileSetupView.swift in Sources */,
+				A1000019 /* EditProfileView.swift in Sources */,
+				A1000009 /* User.swift in Sources */,
+				A1000010 /* HomeworkProblem.swift in Sources */,
+				A1000011 /* GuidanceStep.swift in Sources */,
+				A1000012 /* ChatMessage.swift in Sources */,
+				68163CD22E95CE0D000E7318 /* AuthenticationService.swift in Sources */,
+				68163CDA2E971657000E7318 /* PaywallView.swift in Sources */,
+				68163CDE2E971659000E7318 /* EmailPasswordLoginView.swift in Sources */,
+				68163CE02E97165A000E7318 /* ResetPasswordView.swift in Sources */,
+				68163CE22E97165B000E7318 /* SignUpView.swift in Sources */,
+				680138C62E9EC16D004A94A0 /* Config.swift in Sources */,
+				A1000013 /* UserProgress.swift in Sources */,
+				A1000014 /* DataManager.swift in Sources */,
+				68163CD42E95CEBE000E7318 /* AuthenticationView.swift in Sources */,
+				A1000016 /* KeychainHelper.swift in Sources */,
+				A1000020 /* AzureKeyVaultService.swift in Sources */,
+				A1000022 /* BackendAPIService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		680138C72E9EC571004A94A0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DISPLAY_NAME_SUFFIX = Dev;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Development;
+		};
+		680138C82E9EC571004A94A0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HomeworkHelper/HomeworkHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4ZRWGGBTT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeworkHelper/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to capture homework problems";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need photo library access to select homework images";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Development;
+		};
+		680138C92E9EC599004A94A0 /* Staging  */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DISPLAY_NAME_SUFFIX = Staging;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Staging ";
+		};
+		680138CA2E9EC599004A94A0 /* Staging  */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stage";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HomeworkHelper/HomeworkHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4ZRWGGBTT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeworkHelper/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to capture homework problems";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need photo library access to select homework images";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Staging ";
+		};
+		AD000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DISPLAY_NAME_SUFFIX = Dev;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AD000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DISPLAY_NAME_SUFFIX = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AE000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HomeworkHelper/HomeworkHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4ZRWGGBTT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeworkHelper/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to capture homework problems";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need photo library access to select homework images";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AE000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Release";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HomeworkHelper/HomeworkHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G4ZRWGGBTT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeworkHelper/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to capture homework problems";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need photo library access to select homework images";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.homeworkhelper.app$(BUNDLE_ID_SUFFIX)";
+				PRODUCT_NAME = "Homework Helper$(DISPLAY_NAME_SUFFIX)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A8000001 /* Build configuration list for PBXNativeTarget "HomeworkHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE000001 /* Debug */,
+				680138CA2E9EC599004A94A0 /* Staging  */,
+				680138C82E9EC571004A94A0 /* Development */,
+				AE000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AC000001 /* Build configuration list for PBXProject "HomeworkHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD000001 /* Debug */,
+				680138C92E9EC599004A94A0 /* Staging  */,
+				680138C72E9EC571004A94A0 /* Development */,
+				AD000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		68163CCB2E95CC7D000E7318 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		68163CCD2E95CC7D000E7318 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68163CCA2E95CC7D000E7318 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AB000001 /* Project object */;
+}

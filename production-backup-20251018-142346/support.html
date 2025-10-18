@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Helper - Support & Help Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #2d3748;
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+        }
+        
+        .faq-item {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .faq-answer {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+        
+        .contact-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .contact-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-item h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .contact-item p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .steps {
+            counter-reset: step-counter;
+        }
+        
+        .step {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+        }
+        
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .troubleshooting {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .troubleshooting h4 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+        
+        ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+            color: #4a5568;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .highlight strong {
+            color: #856404;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🦉 Homework Helper</h1>
+            <p class="subtitle">Support & Help Center</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <h2>Welcome to Homework Helper Support</h2>
+            <p>We're here to help you get the most out of your AI tutoring experience. Whether you're having technical issues or need guidance on using the app, we've got you covered.</p>
+            
+            <div class="highlight">
+                <strong>Quick Support:</strong> For immediate assistance, email us at <strong>support_homework@arshia.com</strong> and we'll respond within 24 hours.
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Getting Started</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <h3>Download & Install</h3>
+                    <p>Download Homework Helper from the App Store and install it on your iPhone or iPad.</p>
+                </div>
+                
+                <div class="step">
+                    <h3>Create Your Account</h3>
+                    <p>Sign up with your email or use "Sign in with Apple" for quick access.</p>
+                </div>
+                
+                <div class="step">
+                    <h3>Start Your Free Trial</h3>
+                    <p>Enjoy 7 days of unlimited AI tutoring completely free!</p>
+                </div>
+                
+                <div class="step">
+                    <h3>Subscribe for Full Access</h3>
+                    <p>After your trial, subscribe for $9.99/month to continue unlimited access.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How does the AI tutoring work?</div>
+                <div class="faq-answer">Our AI analyzes your homework problems across all subjects and provides step-by-step solutions with explanations. Simply take a photo of your homework or type the problem, and our AI will guide you through the solution process.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What subjects are supported?</div>
+                <div class="faq-answer">Homework Helper supports all subjects for grades K-12, including mathematics, science, English, history, social studies, foreign languages, and more. Our AI can help with homework across all academic disciplines.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is my data safe and private?</div>
+                <div class="faq-answer">Absolutely! We use industry-standard encryption to protect your data. Your homework problems and progress are kept secure and are never shared with third parties. Read our <a href="#privacy">Privacy Policy</a> for more details.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I cancel my subscription anytime?</div>
+                <div class="faq-answer">Yes! You can cancel your subscription at any time through your Apple ID settings. Your access will continue until the end of your current billing period.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What devices are supported?</div>
+                <div class="faq-answer">Homework Helper works on iPhone and iPad running iOS 14.0 or later. We're optimized for all screen sizes and support both portrait and landscape orientations.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the AI?</div>
+                <div class="faq-answer">Our AI is highly accurate for most K-12 homework problems across all subjects. However, we recommend double-checking solutions for complex problems and using the app as a learning tool rather than just copying answers.</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Troubleshooting Common Issues</h2>
+            
+            <div class="troubleshooting">
+                <h4>App Won't Open or Crashes</h4>
+                <ul>
+                    <li>Make sure you have a stable internet connection</li>
+                    <li>Restart the app by closing it completely and reopening</li>
+                    <li>Restart your device</li>
+                    <li>Update to the latest version from the App Store</li>
+                    <li>If problems persist, delete and reinstall the app</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>Subscription Issues</h4>
+                <ul>
+                    <li>Check your Apple ID subscription settings</li>
+                    <li>Verify payment method is valid</li>
+                    <li>Ensure you're signed in with the correct Apple ID</li>
+                    <li>Wait a few minutes after purchase for activation</li>
+                    <li>Contact Apple Support if billing issues persist</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>AI Not Responding</h4>
+                <ul>
+                    <li>Check your internet connection</li>
+                    <li>Make sure the math problem is clearly visible in photos</li>
+                    <li>Try typing the problem instead of using camera</li>
+                    <li>Ensure you have an active subscription or trial</li>
+                    <li>Restart the app if responses are slow</li>
+                </ul>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>Camera Issues</h4>
+                <ul>
+                    <li>Grant camera permissions in Settings > Privacy > Camera</li>
+                    <li>Ensure good lighting when taking photos</li>
+                    <li>Keep the device steady while capturing</li>
+                    <li>Make sure the math problem fills most of the frame</li>
+                    <li>Try using the flash if lighting is poor</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Tips for Best Results</h2>
+            
+            <h3>Taking Good Photos</h3>
+            <ul>
+                <li>Use good lighting (natural light is best)</li>
+                <li>Keep your device steady</li>
+                <li>Make sure the entire problem is visible</li>
+                <li>Avoid shadows or glare on the paper</li>
+                <li>Ensure text is clear and readable</li>
+            </ul>
+            
+            <h3>Getting Better AI Responses</h3>
+            <ul>
+                <li>Be specific about what you need help with</li>
+                <li>Ask for step-by-step explanations</li>
+                <li>Request alternative solution methods</li>
+                <li>Ask follow-up questions if something isn't clear</li>
+                <li>Use the chat feature for detailed explanations</li>
+                <li>Specify the subject area for more targeted help</li>
+            </ul>
+            
+            <h3>Making the Most of Your Subscription</h3>
+            <ul>
+                <li>Practice regularly to improve your academic skills across all subjects</li>
+                <li>Review the step-by-step solutions carefully</li>
+                <li>Use the app to check your work on practice problems</li>
+                <li>Explore different solution methods for the same problem</li>
+                <li>Track your progress across all subjects in the app</li>
+            </ul>
+        </div>
+
+        <div class="contact-box">
+            <h3>Still Need Help?</h3>
+            <p>Our support team is here to assist you. Contact us and we'll get back to you within 24 hours.</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>📧 Email Support</h4>
+                    <p>support_homework@arshia.com</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h4>🏠 Business Address</h4>
+                    <p>6127 E. Beverly Lane<br>Scottsdale, AZ 85254</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h4>⏰ Response Time</h4>
+                    <p>Within 24 hours<br>Monday - Friday</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <a href="mailto:support_homework@arshia.com" class="btn">Send Email</a>
+                <a href="#privacy" class="btn btn-secondary">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div class="content" id="privacy">
+            <h2>Privacy Policy</h2>
+            <p>Your privacy is important to us. We collect only the information necessary to provide our educational services.</p>
+            
+            <h3>Information We Collect</h3>
+            <ul>
+                <li>Email address and username for account creation</li>
+                <li>Grade level to provide age-appropriate content</li>
+                <li>Homework problems and chat messages across all subjects for AI assistance</li>
+                <li>Usage analytics to improve our services</li>
+                <li>Device information for technical support</li>
+            </ul>
+            
+            <h3>How We Use Your Information</h3>
+            <ul>
+                <li>Provide AI-powered homework assistance across all subjects</li>
+                <li>Personalize your learning experience</li>
+                <li>Manage your subscription and account</li>
+                <li>Improve our app and services</li>
+                <li>Provide customer support</li>
+            </ul>
+            
+            <h3>Data Security</h3>
+            <ul>
+                <li>All data is encrypted in transit and at rest</li>
+                <li>We use secure cloud storage (Azure)</li>
+                <li>Access is limited to authorized personnel only</li>
+                <li>We never sell or share your personal information</li>
+            </ul>
+            
+            <p><strong>Full Privacy Policy:</strong> For complete details, please contact us at support_homework@arshia.com to request a copy of our full privacy policy.</p>
+        </div>
+
+        <div class="content">
+            <h2>App Store Information</h2>
+            
+            <h3>System Requirements</h3>
+            <ul>
+                <li>iOS 14.0 or later</li>
+                <li>iPhone, iPad, or iPod touch</li>
+                <li>Internet connection required</li>
+                <li>Camera for photo capture (optional)</li>
+            </ul>
+            
+            <h3>Subscription Details</h3>
+            <ul>
+                <li><strong>Free Trial:</strong> 7 days of unlimited access</li>
+                <li><strong>Monthly Subscription:</strong> $9.99/month</li>
+                <li><strong>Auto-Renewal:</strong> Subscriptions automatically renew unless cancelled</li>
+                <li><strong>Cancellation:</strong> Cancel anytime in Apple ID settings</li>
+                <li><strong>Payment:</strong> Charged to your Apple ID account</li>
+            </ul>
+            
+            <h3>Download Links</h3>
+            <p>Homework Helper is available on the App Store. Search for "Homework Helper" or visit our developer page.</p>
+        </div>
+    </div>
+
+    <footer style="background: #2d3748; color: white; text-align: center; padding: 40px 0; margin-top: 40px;">
+        <div class="container">
+            <p>&copy; 2025 Homework Helper. All rights reserved.</p>
+            <p>6127 E. Beverly Lane, Scottsdale, AZ 85254</p>
+            <p>Email: support_homework@arshia.com</p>
+        </div>
+    </footer>
+</body>
+</html>

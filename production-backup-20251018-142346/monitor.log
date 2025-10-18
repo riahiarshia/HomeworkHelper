@@ -1,0 +1,35 @@
+🔍 LEDGER & DEPLOYMENT MONITOR
+==============================
+Monitoring every 10 seconds until ledger shows data...
+
+[2025-10-17 11:27:27] [0;32m🚀 Starting comprehensive ledger and deployment monitoring[0m
+[2025-10-17 11:27:27] [0;34mTarget: https://homework-helper-api.azurewebsites.net[0m
+[2025-10-17 11:27:27] [0;34mAdmin Portal: https://homework-helper-api.azurewebsites.net/admin/[0m
+
+[2025-10-17 11:27:27] [0;34m🔄 Monitoring attempt #1[0m
+
+[2025-10-17 11:27:27] [0;34m📊 Checking GitHub deployment status...[0m
+[2025-10-17 11:27:29] [0;34m   Workflow: Deploy to Production[0m
+[2025-10-17 11:27:29] [0;34m   Status: completed[0m
+[2025-10-17 11:27:29] [0;34m   Conclusion: failure[0m
+[2025-10-17 11:27:29] [0;31m❌ Deployment failed[0m
+[2025-10-17 11:27:29] [0;34m🏥 Checking production health...[0m
+[2025-10-17 11:27:30] [0;32m✅ Production health: ok (production)[0m
+[2025-10-17 11:27:30] [0;34m🔧 Checking admin portal accessibility...[0m
+[2025-10-17 11:27:30] [0;32m✅ Admin portal accessible[0m
+[2025-10-17 11:27:30] [0;34m📊 Checking system information...[0m
+[2025-10-17 11:27:31] [0;34m   Users: 17[0m
+[2025-10-17 11:27:31] [0;34m   Subscriptions: 21[0m
+[2025-10-17 11:27:31] [0;34m   Ledger Records: 4[0m
+[2025-10-17 11:27:31] [0;32m✅ System info accessible[0m
+[2025-10-17 11:27:31] [0;34m📋 Checking ledger statistics...[0m
+[2025-10-17 11:27:32] [0;34m   Total Records: 4[0m
+[2025-10-17 11:27:32] [0;34m   Trial Records: 2[0m
+[2025-10-17 11:27:32] [0;34m   Active Records: 2[0m
+[2025-10-17 11:27:32] [0;32m✅ Ledger has data! (4 records)[0m
+[2025-10-17 11:27:32] [0;34m📄 Checking ledger records...[0m
+[2025-10-17 11:27:33] [0;31m❌ Failed to get ledger records (HTTP 401)[0m
+
+[2025-10-17 11:27:33] [0;34m📊 Summary: 4 successes, 2 failures[0m
+[2025-10-17 11:27:33] [0;32m🎉 SUCCESS! Ledger is showing data![0m
+[2025-10-17 11:27:33] [0;32m✅ Monitoring complete - ledger is functional[0m

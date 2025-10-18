@@ -1,0 +1,9 @@
+<step title="Incoming Request" date="2025-10-15T17:56:57.155" instance="978cd1" url="/api/deployments/latest" method="GET" type="request" pid="770,1,31" Accept="*/*" Host="homework-helper-staging.scm.azurewebsites.net" User-Agent="AZURECLI/2.67.0 (HOMEBREW)" Accept-Encoding="gzip, deflate" Authorization="Bas..." x-ms-client-request-id="48aabff2-a9f0-11f0-80ef-9ebfc73c1928" X-ARR-LOG-ID="48aabff2-a9f0-11f0-80ef-9ebfc73c1928" CLIENT-IP="184.101.15.41:51080" X-SITE-DEPLOYMENT-ID="homework-helper-staging" WAS-DEFAULT-HOSTNAME="homework-helper-staging.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest" X-Client-IP="184.101.15.41" X-Client-Port="51080" >
+  <step title="Cleanup Xml Logs" date="2025-10-15T17:56:57.165" /><!-- duration: 19ms -->
+  <step title="DeploymentService.GetResult" date="2025-10-15T17:56:57.228" >
+    <step title="DeploymentService.GetLatestDeployment" date="2025-10-15T17:56:57.247" >
+      <step title="DeploymentManager.GetResults" date="2025-10-15T17:56:57.264" /><!-- duration: 478ms -->
+    </step><!-- duration: 505ms -->
+  </step><!-- duration: 553ms -->
+  <step title="Outgoing response" date="2025-10-15T17:56:57.801" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 17ms -->
+</step><!-- duration: 675ms -->

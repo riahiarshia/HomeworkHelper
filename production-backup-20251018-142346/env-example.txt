@@ -1,0 +1,30 @@
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+APP_URL=http://localhost:3000
+
+# Database Configuration
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=homework_helper
+DB_PASSWORD=your_database_password
+DB_PORT=5432
+
+# Or use DATABASE_URL for hosted databases (Heroku, Render, etc.)
+# DATABASE_URL=postgresql://username:password@host:port/database
+
+# JWT Secrets (CHANGE THESE IN PRODUCTION!)
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+ADMIN_JWT_SECRET=your-super-secret-admin-jwt-key-change-this-in-production
+
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+STRIPE_PRICE_ID=price_your_default_price_id
+
+# Admin Account (Initial Setup)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123  # CHANGE THIS!
+ADMIN_EMAIL=admin@homeworkhelper.com
+
+

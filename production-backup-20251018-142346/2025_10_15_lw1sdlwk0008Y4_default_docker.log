@@ -1,0 +1,545 @@
+2025-10-15T17:41:16.875946145Z    _____                               
+2025-10-15T17:41:16.876050705Z   /  _  \ __________ _________   ____  
+2025-10-15T17:41:16.876058322Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:41:16.876063737Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:41:16.876088044Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:41:16.876094199Z         \/      \/                  \/ 
+2025-10-15T17:41:16.876098853Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:41:16.876103428Z 
+2025-10-15T17:41:16.876107645Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:41:16.876112082Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:41:16.876116491Z NodeJS Version : v18.20.8
+2025-10-15T17:41:16.876120926Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:41:16.876125490Z 
+2025-10-15T17:41:18.944796724Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:41:18.994343565Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:41:19.082163776Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:41:34.557572718Z 4 added, 0 removed; done.
+2025-10-15T17:41:34.565558885Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:41:34.577686432Z done.
+2025-10-15T17:41:34.605996636Z CA certificates copied and updated successfully.
+2025-10-15T17:41:34.892998384Z Starting periodic command scheduler: cron.
+2025-10-15T17:41:35.081977794Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-15T17:41:35.091306325Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:41:35.100084306Z Build Operation ID: 3dd7e765-0fa2-4dec-9409-b6e39f8fb9d7
+2025-10-15T17:41:35.846584958Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:41:35.885110823Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:41:35.975626683Z Running #!/bin/sh
+2025-10-15T17:41:35.975672682Z 
+2025-10-15T17:41:35.975677949Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:41:35.975681710Z cd "/home/site/wwwroot"
+2025-10-15T17:41:35.975685146Z 
+2025-10-15T17:41:35.975688233Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:41:35.975691802Z if [ -z "$PORT" ]; then
+2025-10-15T17:41:35.975695179Z 		export PORT=8080
+2025-10-15T17:41:35.975710821Z fi
+2025-10-15T17:41:35.975714531Z 
+2025-10-15T17:41:35.975717613Z npm start
+2025-10-15T17:41:38.269484612Z npm info using npm@10.9.2
+2025-10-15T17:41:38.291275130Z npm info using node@v18.20.8
+2025-10-15T17:41:43.889214543Z 
+2025-10-15T17:41:43.889251360Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:41:43.896095612Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:41:43.896100759Z 
+2025-10-15T17:41:43.990129531Z Starting Homework Helper Backend...
+2025-10-15T17:41:44.000504481Z 
+2025-10-15T17:41:44.000534714Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:41:44.000539328Z > node server.js
+2025-10-15T17:41:44.000542822Z 
+2025-10-15T17:41:44.858306257Z node:internal/modules/cjs/loader:1143
+2025-10-15T17:41:44.858342613Z   throw err;
+2025-10-15T17:41:44.858346860Z   ^
+2025-10-15T17:41:44.858350276Z 
+2025-10-15T17:41:44.858353801Z Error: Cannot find module 'express'
+2025-10-15T17:41:44.858357338Z Require stack:
+2025-10-15T17:41:44.858360585Z - /home/site/wwwroot/server.js
+2025-10-15T17:41:44.858363905Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+2025-10-15T17:41:44.858367301Z     at Module._load (node:internal/modules/cjs/loader:981:27)
+2025-10-15T17:41:44.858370537Z     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-10-15T17:41:44.858373865Z     at require (node:internal/modules/helpers:177:18)
+2025-10-15T17:41:44.858377042Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-15T17:41:44.858380908Z     at Module._compile (node:internal/modules/cjs/loader:1364:14)
+2025-10-15T17:41:44.858384211Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+2025-10-15T17:41:44.858387546Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
+2025-10-15T17:41:44.858390768Z     at Module._load (node:internal/modules/cjs/loader:1019:12)
+2025-10-15T17:41:44.858394493Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+2025-10-15T17:41:44.858398082Z   code: 'MODULE_NOT_FOUND',
+2025-10-15T17:41:44.858401345Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-15T17:41:44.858404574Z }
+2025-10-15T17:41:44.858407740Z 
+2025-10-15T17:41:44.858410866Z Node.js v18.20.8
+2025-10-15T17:41:45.112001646Z npm http fetch GET 200 https://registry.npmjs.org/npm 1576ms
+2025-10-15T17:41:45.183867702Z npm notice
+2025-10-15T17:41:45.183896154Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:41:45.183901178Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:41:45.183904804Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:41:45.183908419Z npm notice
+
+2025-10-15T17:42:06.956194721Z    _____                               
+2025-10-15T17:42:06.956256840Z   /  _  \ __________ _________   ____  
+2025-10-15T17:42:06.956262206Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:42:06.956265960Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:42:06.956269546Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:42:06.956273191Z         \/      \/                  \/ 
+2025-10-15T17:42:06.956276473Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:42:06.956279691Z 
+2025-10-15T17:42:06.956282804Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:42:06.956285975Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:42:06.956289098Z NodeJS Version : v18.20.8
+2025-10-15T17:42:06.956292301Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:42:06.956295559Z 
+2025-10-15T17:42:11.657620200Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:42:11.694033867Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:42:11.832466275Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:42:31.105396957Z 4 added, 0 removed; done.
+2025-10-15T17:42:31.105441460Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:42:31.159476965Z done.
+2025-10-15T17:42:31.255826945Z CA certificates copied and updated successfully.
+2025-10-15T17:42:31.695308210Z Starting periodic command scheduler: cron.
+2025-10-15T17:42:31.870297979Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-15T17:42:31.879749483Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:42:31.879794181Z Build Operation ID: 6529c330-70da-424c-a7a0-afdfc6581bcc
+2025-10-15T17:42:32.614342388Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:42:32.699975508Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:42:32.844212449Z Running #!/bin/sh
+2025-10-15T17:42:32.844288251Z 
+2025-10-15T17:42:32.844293951Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:42:32.844297713Z cd "/home/site/wwwroot"
+2025-10-15T17:42:32.844301483Z 
+2025-10-15T17:42:32.844304596Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:42:32.844307809Z if [ -z "$PORT" ]; then
+2025-10-15T17:42:32.844311143Z 		export PORT=8080
+2025-10-15T17:42:32.844314675Z fi
+2025-10-15T17:42:32.844317717Z 
+2025-10-15T17:42:32.844320747Z npm start
+2025-10-15T17:42:36.990205993Z npm info using npm@10.9.2
+2025-10-15T17:42:37.062062631Z npm info using node@v18.20.8
+2025-10-15T17:42:49.276867159Z 
+2025-10-15T17:42:49.276914625Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:42:49.276920925Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:42:49.276925460Z 
+2025-10-15T17:42:49.372037060Z Starting Homework Helper Backend...
+2025-10-15T17:42:51.665317946Z npm http fetch GET 200 https://registry.npmjs.org/npm 4691ms
+2025-10-15T17:42:51.665533730Z 
+2025-10-15T17:42:51.665543804Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:42:51.665549137Z > node server.js
+2025-10-15T17:42:51.665553569Z 
+2025-10-15T17:42:52.775875481Z node:internal/modules/cjs/loader:1143
+2025-10-15T17:42:52.775932441Z   throw err;
+2025-10-15T17:42:52.776598073Z   ^
+2025-10-15T17:42:52.776617384Z 
+2025-10-15T17:42:52.776622365Z Error: Cannot find module 'express'
+2025-10-15T17:42:52.776627217Z Require stack:
+2025-10-15T17:42:52.776631631Z - /home/site/wwwroot/server.js
+2025-10-15T17:42:52.776636182Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+2025-10-15T17:42:52.776641425Z     at Module._load (node:internal/modules/cjs/loader:981:27)
+2025-10-15T17:42:52.776646032Z     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-10-15T17:42:52.776650725Z     at require (node:internal/modules/helpers:177:18)
+2025-10-15T17:42:52.776655154Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-15T17:42:52.804037207Z     at Module._compile (node:internal/modules/cjs/loader:1364:14)
+2025-10-15T17:42:52.804056052Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+2025-10-15T17:42:52.804061242Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
+2025-10-15T17:42:52.804065809Z     at Module._load (node:internal/modules/cjs/loader:1019:12)
+2025-10-15T17:42:52.804070297Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+2025-10-15T17:42:52.804074979Z   code: 'MODULE_NOT_FOUND',
+2025-10-15T17:42:52.804079398Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-15T17:42:52.804083928Z }
+2025-10-15T17:42:52.804088311Z 
+2025-10-15T17:42:52.804092661Z Node.js v18.20.8
+2025-10-15T17:42:53.121704733Z npm notice
+2025-10-15T17:42:53.283442726Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:42:53.283450019Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:42:53.283455316Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:42:53.283459943Z npm notice
+
+2025-10-15T17:43:19.479206238Z    _____                               
+2025-10-15T17:43:19.479266299Z   /  _  \ __________ _________   ____  
+2025-10-15T17:43:19.479271421Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:43:19.479275216Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:43:19.479278672Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:43:19.479282325Z         \/      \/                  \/ 
+2025-10-15T17:43:19.479285684Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:43:19.479289002Z 
+2025-10-15T17:43:19.479292073Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:43:19.479295190Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:43:19.479298466Z NodeJS Version : v18.20.8
+2025-10-15T17:43:19.479301595Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:43:19.479304830Z 
+2025-10-15T17:43:26.607004021Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:43:26.672846185Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:43:26.925020278Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:43:55.240816472Z 4 added, 0 removed; done.
+2025-10-15T17:43:55.240864268Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:43:55.329246134Z done.
+2025-10-15T17:43:55.382812623Z CA certificates copied and updated successfully.
+2025-10-15T17:43:56.025390154Z Starting periodic command scheduler: cron.
+2025-10-15T17:43:56.917074747Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-15T17:43:56.926446249Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:43:56.935421283Z Build Operation ID: 078e5cf5-ff6e-446e-82d1-3c66f0c6b31b
+2025-10-15T17:43:57.764671531Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:43:57.810230352Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:43:57.930823453Z Running #!/bin/sh
+2025-10-15T17:43:57.930855310Z 
+2025-10-15T17:43:57.930860979Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:43:57.930866079Z cd "/home/site/wwwroot"
+2025-10-15T17:43:57.930878645Z 
+2025-10-15T17:43:57.930883176Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:43:57.930887932Z if [ -z "$PORT" ]; then
+2025-10-15T17:43:57.930892641Z 		export PORT=8080
+2025-10-15T17:43:57.930898068Z fi
+2025-10-15T17:43:57.930902653Z 
+2025-10-15T17:43:57.939997921Z npm start
+2025-10-15T17:44:01.871477081Z npm info using npm@10.9.2
+2025-10-15T17:44:02.083701431Z npm info using node@v18.20.8
+2025-10-15T17:44:15.439447357Z 
+2025-10-15T17:44:15.439480060Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:44:15.439484800Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:44:15.439488485Z 
+2025-10-15T17:44:15.580706603Z Starting Homework Helper Backend...
+2025-10-15T17:44:16.569787634Z npm http fetch GET 200 https://registry.npmjs.org/npm 1916ms
+2025-10-15T17:44:16.571009237Z 
+2025-10-15T17:44:16.571024167Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:44:16.571028476Z > node server.js
+2025-10-15T17:44:16.571031827Z 
+2025-10-15T17:44:18.115052951Z node:internal/modules/cjs/loader:1143
+2025-10-15T17:44:18.115093954Z   throw err;
+2025-10-15T17:44:18.115098533Z   ^
+2025-10-15T17:44:18.115101846Z 
+2025-10-15T17:44:18.115105044Z Error: Cannot find module 'express'
+2025-10-15T17:44:18.115108201Z Require stack:
+2025-10-15T17:44:18.115111295Z - /home/site/wwwroot/server.js
+2025-10-15T17:44:18.115114578Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+2025-10-15T17:44:18.115117875Z     at Module._load (node:internal/modules/cjs/loader:981:27)
+2025-10-15T17:44:18.115121195Z     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-10-15T17:44:18.115124499Z     at require (node:internal/modules/helpers:177:18)
+2025-10-15T17:44:18.115127644Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-15T17:44:18.115131443Z     at Module._compile (node:internal/modules/cjs/loader:1364:14)
+2025-10-15T17:44:18.115134670Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+2025-10-15T17:44:18.115137976Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
+2025-10-15T17:44:18.115141138Z     at Module._load (node:internal/modules/cjs/loader:1019:12)
+2025-10-15T17:44:18.115144435Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+2025-10-15T17:44:18.115147739Z   code: 'MODULE_NOT_FOUND',
+2025-10-15T17:44:18.115150885Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-15T17:44:18.115154153Z }
+2025-10-15T17:44:18.115157185Z 
+2025-10-15T17:44:18.115160272Z Node.js v18.20.8
+2025-10-15T17:44:18.354058639Z npm notice
+2025-10-15T17:44:18.354099270Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:44:18.354104615Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:44:18.354108424Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:44:18.354111759Z npm notice
+
+2025-10-15T17:44:35.400365455Z    _____                               
+2025-10-15T17:44:35.400494215Z   /  _  \ __________ _________   ____  
+2025-10-15T17:44:35.400501175Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:44:35.400505024Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:44:35.400508357Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:44:35.400511956Z         \/      \/                  \/ 
+2025-10-15T17:44:35.400515311Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:44:35.400518490Z 
+2025-10-15T17:44:35.400521600Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:44:35.400524735Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:44:35.400527976Z NodeJS Version : v18.20.8
+2025-10-15T17:44:35.400531127Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:44:35.400534353Z 
+2025-10-15T17:44:39.913983983Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:44:39.956700794Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:44:40.025189419Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:44:56.328038747Z 4 added, 0 removed; done.
+2025-10-15T17:44:56.328070009Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:44:56.348578256Z done.
+2025-10-15T17:44:56.386670075Z CA certificates copied and updated successfully.
+2025-10-15T17:44:56.688476083Z Starting periodic command scheduler: cron.
+2025-10-15T17:44:56.896176954Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-10-15T17:44:56.897956078Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:44:56.897975744Z Build Operation ID: 5aae3fef-74a2-44d8-a9a2-1fa50137257a
+2025-10-15T17:44:57.340554604Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:44:57.394322495Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:44:57.581429638Z Running #!/bin/sh
+2025-10-15T17:44:57.581458875Z 
+2025-10-15T17:44:57.581464691Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:44:57.581469451Z cd "/home/site/wwwroot"
+2025-10-15T17:44:57.581474005Z 
+2025-10-15T17:44:57.581478260Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:44:57.581483280Z if [ -z "$PORT" ]; then
+2025-10-15T17:44:57.581487719Z 		export PORT=8080
+2025-10-15T17:44:57.581505869Z fi
+2025-10-15T17:44:57.581510984Z 
+2025-10-15T17:44:57.581515359Z npm start
+2025-10-15T17:45:01.070657705Z npm info using npm@10.9.2
+2025-10-15T17:45:01.088804618Z npm info using node@v18.20.8
+2025-10-15T17:45:13.822616080Z 
+2025-10-15T17:45:13.822662871Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:45:13.822667661Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:45:13.822671298Z 
+2025-10-15T17:45:13.919090563Z Starting Homework Helper Backend...
+2025-10-15T17:45:14.014496982Z 
+2025-10-15T17:45:14.014530578Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:45:14.014535251Z > node server.js
+2025-10-15T17:45:14.014538762Z 
+2025-10-15T17:45:14.685574470Z node:internal/modules/cjs/loader:1143
+2025-10-15T17:45:14.685611941Z   throw err;
+2025-10-15T17:45:14.685616337Z   ^
+2025-10-15T17:45:14.685620006Z 
+2025-10-15T17:45:14.685623168Z Error: Cannot find module 'express'
+2025-10-15T17:45:14.685626479Z Require stack:
+2025-10-15T17:45:14.685629576Z - /home/site/wwwroot/server.js
+2025-10-15T17:45:14.685632975Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+2025-10-15T17:45:14.685636350Z     at Module._load (node:internal/modules/cjs/loader:981:27)
+2025-10-15T17:45:14.685639642Z     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-10-15T17:45:14.685642959Z     at require (node:internal/modules/helpers:177:18)
+2025-10-15T17:45:14.685646194Z     at Object.<anonymous> (/home/site/wwwroot/server.js:7:17)
+2025-10-15T17:45:14.685649980Z     at Module._compile (node:internal/modules/cjs/loader:1364:14)
+2025-10-15T17:45:14.685653331Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+2025-10-15T17:45:14.685656593Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
+2025-10-15T17:45:14.685659908Z     at Module._load (node:internal/modules/cjs/loader:1019:12)
+2025-10-15T17:45:14.685663128Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+2025-10-15T17:45:14.685666451Z   code: 'MODULE_NOT_FOUND',
+2025-10-15T17:45:14.685669608Z   requireStack: [ '/home/site/wwwroot/server.js' ]
+2025-10-15T17:45:14.685672857Z }
+2025-10-15T17:45:14.712875660Z 
+2025-10-15T17:45:14.712937867Z Node.js v18.20.8
+2025-10-15T17:45:14.976449337Z npm http fetch GET 200 https://registry.npmjs.org/npm 2089ms
+2025-10-15T17:45:15.014348979Z npm notice
+2025-10-15T17:45:15.014414716Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:45:15.014420093Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:45:15.014423685Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:45:15.014426955Z npm notice
+
+2025-10-15T17:48:16.838999359Z    _____                               
+2025-10-15T17:48:16.858086501Z   /  _  \ __________ _________   ____  
+2025-10-15T17:48:16.858094540Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:48:16.858098482Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:48:16.858101939Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:48:16.858105588Z         \/      \/                  \/ 
+2025-10-15T17:48:16.858108955Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:48:16.858112335Z 
+2025-10-15T17:48:16.858115445Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:48:16.858118610Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:48:16.858121867Z NodeJS Version : v18.20.8
+2025-10-15T17:48:16.858125046Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:48:16.858128263Z 
+2025-10-15T17:48:21.015683693Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:48:21.035507183Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:48:21.129957194Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:48:34.428933952Z 4 added, 0 removed; done.
+2025-10-15T17:48:34.430384554Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:48:34.447279716Z done.
+2025-10-15T17:48:34.473053822Z CA certificates copied and updated successfully.
+2025-10-15T17:48:34.713686685Z Starting periodic command scheduler: cron.
+2025-10-15T17:48:34.890351390Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-15T17:48:34.908219043Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:48:34.908833341Z Build Operation ID: 3aef1885-3d29-4d46-8b79-6cd51207eb15
+2025-10-15T17:48:35.616338872Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:48:35.688155399Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:48:35.785164922Z Running #!/bin/sh
+2025-10-15T17:48:35.785193187Z 
+2025-10-15T17:48:35.785198621Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:48:35.785203424Z cd "/home/site/wwwroot"
+2025-10-15T17:48:35.785208000Z 
+2025-10-15T17:48:35.785212502Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:48:35.785216974Z if [ -z "$PORT" ]; then
+2025-10-15T17:48:35.785221611Z 		export PORT=8080
+2025-10-15T17:48:35.785226474Z fi
+2025-10-15T17:48:35.785230708Z 
+2025-10-15T17:48:35.785234995Z echo Found tar.gz based node_modules.
+2025-10-15T17:48:35.785239510Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-15T17:48:35.785258717Z echo "Removing existing modules directory from root..."
+2025-10-15T17:48:35.785262660Z rm -fr /node_modules
+2025-10-15T17:48:35.785265964Z mkdir -p /node_modules
+2025-10-15T17:48:35.785269264Z echo Extracting modules...
+2025-10-15T17:48:35.785272447Z $extractionCommand
+2025-10-15T17:48:35.785275589Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-15T17:48:35.785278914Z export PATH=/node_modules/.bin:$PATH
+2025-10-15T17:48:35.785282181Z if [ -d node_modules ]; then
+2025-10-15T17:48:35.785285383Z     mv -f node_modules _del_node_modules || true
+2025-10-15T17:48:35.785288627Z fi
+2025-10-15T17:48:35.785291687Z 
+2025-10-15T17:48:35.785294809Z if [ -d /node_modules ]; then
+2025-10-15T17:48:35.785298008Z     ln -sfn /node_modules ./node_modules 
+2025-10-15T17:48:35.785301273Z fi
+2025-10-15T17:48:35.785304348Z 
+2025-10-15T17:48:35.785307488Z echo "Done."
+2025-10-15T17:48:35.785310688Z npm start
+2025-10-15T17:48:35.842186848Z Found tar.gz based node_modules.
+2025-10-15T17:48:35.842198490Z Removing existing modules directory from root...
+2025-10-15T17:48:35.906277682Z Extracting modules...
+2025-10-15T17:48:51.287416712Z Done.
+2025-10-15T17:48:53.643146514Z npm info using npm@10.9.2
+2025-10-15T17:48:53.643205293Z npm info using node@v18.20.8
+2025-10-15T17:48:55.712551797Z 
+2025-10-15T17:48:55.712587868Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:48:55.712593755Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:48:55.712598395Z 
+2025-10-15T17:48:55.771653635Z Starting Homework Helper Backend...
+2025-10-15T17:48:55.788690997Z 
+2025-10-15T17:48:55.788720747Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:48:55.788727030Z > node server.js
+2025-10-15T17:48:55.788731785Z 
+2025-10-15T17:48:57.151073720Z ❌ ERROR: Missing required environment variable: DATABASE_URL
+2025-10-15T17:48:57.154590269Z Please set DATABASE_URL in your .env file
+2025-10-15T17:48:57.190479966Z npm http fetch GET 200 https://registry.npmjs.org/npm 895ms
+2025-10-15T17:48:57.210328545Z npm notice
+2025-10-15T17:48:57.210357137Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:48:57.210363023Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:48:57.210367621Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:48:57.210372072Z npm notice
+
+2025-10-15T17:58:11.282605038Z    _____                               
+2025-10-15T17:58:11.282657330Z   /  _  \ __________ _________   ____  
+2025-10-15T17:58:11.282662334Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T17:58:11.282666096Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T17:58:11.282669524Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T17:58:11.282673093Z         \/      \/                  \/ 
+2025-10-15T17:58:11.282676488Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T17:58:11.282679758Z 
+2025-10-15T17:58:11.282682891Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T17:58:11.282686104Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T17:58:11.282689376Z NodeJS Version : v18.20.8
+2025-10-15T17:58:11.282692565Z Note: Any data outside '/home' is not persisted
+2025-10-15T17:58:11.282696132Z 
+2025-10-15T17:58:13.096288028Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T17:58:13.142330337Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T17:58:13.265729734Z Updating certificates in /etc/ssl/certs...
+2025-10-15T17:58:27.439325370Z 4 added, 0 removed; done.
+2025-10-15T17:58:27.441018919Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T17:58:27.480812515Z done.
+2025-10-15T17:58:27.537207268Z CA certificates copied and updated successfully.
+2025-10-15T17:58:27.762362906Z Starting periodic command scheduler: cron.
+2025-10-15T17:58:27.974554793Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-15T17:58:27.983200837Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T17:58:27.983723635Z Build Operation ID: 5b69ce51-6162-4bdb-992c-3bcb614ff623
+2025-10-15T17:58:28.673266768Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T17:58:28.740395669Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T17:58:28.807644776Z Running #!/bin/sh
+2025-10-15T17:58:28.807676344Z 
+2025-10-15T17:58:28.807680532Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T17:58:28.807684146Z cd "/home/site/wwwroot"
+2025-10-15T17:58:28.807687787Z 
+2025-10-15T17:58:28.807690855Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T17:58:28.807694143Z if [ -z "$PORT" ]; then
+2025-10-15T17:58:28.807697682Z 		export PORT=8080
+2025-10-15T17:58:28.807701339Z fi
+2025-10-15T17:58:28.807711898Z 
+2025-10-15T17:58:28.807715482Z echo Found tar.gz based node_modules.
+2025-10-15T17:58:28.807719152Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-15T17:58:28.807746486Z echo "Removing existing modules directory from root..."
+2025-10-15T17:58:28.807750280Z rm -fr /node_modules
+2025-10-15T17:58:28.807753537Z mkdir -p /node_modules
+2025-10-15T17:58:28.807756734Z echo Extracting modules...
+2025-10-15T17:58:28.807759901Z $extractionCommand
+2025-10-15T17:58:28.807763059Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-15T17:58:28.807766380Z export PATH=/node_modules/.bin:$PATH
+2025-10-15T17:58:28.807893726Z if [ -d node_modules ]; then
+2025-10-15T17:58:28.807898527Z     mv -f node_modules _del_node_modules || true
+2025-10-15T17:58:28.807901799Z fi
+2025-10-15T17:58:28.807904888Z 
+2025-10-15T17:58:28.807907923Z if [ -d /node_modules ]; then
+2025-10-15T17:58:28.807911146Z     ln -sfn /node_modules ./node_modules 
+2025-10-15T17:58:28.807914414Z fi
+2025-10-15T17:58:28.807917482Z 
+2025-10-15T17:58:28.807920520Z echo "Done."
+2025-10-15T17:58:28.816955005Z npm start
+2025-10-15T17:58:28.818109260Z Found tar.gz based node_modules.
+2025-10-15T17:58:28.981585999Z Removing existing modules directory from root...
+2025-10-15T17:58:28.991833242Z Extracting modules...
+2025-10-15T17:58:44.929387168Z Done.
+2025-10-15T17:58:47.789817350Z npm info using npm@10.9.2
+2025-10-15T17:58:47.798483301Z npm info using node@v18.20.8
+2025-10-15T17:58:50.479137827Z 
+2025-10-15T17:58:50.479176036Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T17:58:50.479182232Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T17:58:50.479187181Z 
+2025-10-15T17:58:50.592120552Z Starting Homework Helper Backend...
+2025-10-15T17:58:50.726903309Z 
+2025-10-15T17:58:50.726935678Z > homework-helper-backend@1.0.0 start
+2025-10-15T17:58:50.726949928Z > node server.js
+2025-10-15T17:58:50.726955132Z 
+2025-10-15T17:58:51.939735350Z ❌ ERROR: Missing required environment variable: DATABASE_URL
+2025-10-15T17:58:51.941186546Z Please set DATABASE_URL in your .env file
+2025-10-15T17:58:51.959765060Z npm http fetch GET 200 https://registry.npmjs.org/npm 946ms
+2025-10-15T17:58:51.978822277Z npm notice
+2025-10-15T17:58:51.979581297Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T17:58:51.979600221Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T17:58:51.979605322Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T17:58:51.979610189Z npm notice
+
+2025-10-15T18:08:39.353286930Z    _____                               
+2025-10-15T18:08:39.353349301Z   /  _  \ __________ _________   ____  
+2025-10-15T18:08:39.353354477Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-10-15T18:08:39.353358568Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-10-15T18:08:39.353362031Z \____|__  /_____ \____/ |__|    \___  >
+2025-10-15T18:08:39.353514315Z         \/      \/                  \/ 
+2025-10-15T18:08:39.353521777Z A P P   S E R V I C E   O N   L I N U X
+2025-10-15T18:08:39.353525214Z 
+2025-10-15T18:08:39.353528664Z Documentation: http://aka.ms/webapp-linux
+2025-10-15T18:08:39.353532339Z NodeJS quickstart: https://aka.ms/node-qs
+2025-10-15T18:08:39.353535514Z NodeJS Version : v18.20.8
+2025-10-15T18:08:39.353538764Z Note: Any data outside '/home' is not persisted
+2025-10-15T18:08:39.353542156Z 
+2025-10-15T18:08:42.805518437Z Starting OpenBSD Secure Shell server: sshd.
+2025-10-15T18:08:42.848865037Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-10-15T18:08:42.923919114Z Updating certificates in /etc/ssl/certs...
+2025-10-15T18:08:56.288554432Z 4 added, 0 removed; done.
+2025-10-15T18:08:56.296329141Z Running hooks in /etc/ca-certificates/update.d...
+2025-10-15T18:08:56.307584028Z done.
+2025-10-15T18:08:56.344197855Z CA certificates copied and updated successfully.
+2025-10-15T18:08:56.533791673Z Starting periodic command scheduler: cron.
+2025-10-15T18:08:56.751642843Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-10-15T18:08:56.761868812Z Could not find operation ID in manifest. Generating an operation id...
+2025-10-15T18:08:56.768606767Z Build Operation ID: 6b03d0aa-2186-4d20-b38c-06d2fd9928d4
+2025-10-15T18:08:57.341051179Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-10-15T18:08:57.408002034Z Writing output script to '/opt/startup/startup.sh'
+2025-10-15T18:08:57.623246611Z Running #!/bin/sh
+2025-10-15T18:08:57.623258598Z 
+2025-10-15T18:08:57.623264119Z # Enter the source directory to make sure the script runs where the user expects
+2025-10-15T18:08:57.623268768Z cd "/home/site/wwwroot"
+2025-10-15T18:08:57.623273670Z 
+2025-10-15T18:08:57.623278098Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-10-15T18:08:57.623282560Z if [ -z "$PORT" ]; then
+2025-10-15T18:08:57.623287078Z 		export PORT=8080
+2025-10-15T18:08:57.623291926Z fi
+2025-10-15T18:08:57.623296221Z 
+2025-10-15T18:08:57.623300629Z echo Found tar.gz based node_modules.
+2025-10-15T18:08:57.623305107Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-10-15T18:08:57.623324202Z echo "Removing existing modules directory from root..."
+2025-10-15T18:08:57.623327964Z rm -fr /node_modules
+2025-10-15T18:08:57.623331149Z mkdir -p /node_modules
+2025-10-15T18:08:57.623334288Z echo Extracting modules...
+2025-10-15T18:08:57.623337427Z $extractionCommand
+2025-10-15T18:08:57.623340612Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-10-15T18:08:57.623343969Z export PATH=/node_modules/.bin:$PATH
+2025-10-15T18:08:57.623347158Z if [ -d node_modules ]; then
+2025-10-15T18:08:57.623350373Z     mv -f node_modules _del_node_modules || true
+2025-10-15T18:08:57.623353597Z fi
+2025-10-15T18:08:57.623356701Z 
+2025-10-15T18:08:57.623359727Z if [ -d /node_modules ]; then
+2025-10-15T18:08:57.623362900Z     ln -sfn /node_modules ./node_modules 
+2025-10-15T18:08:57.623366227Z fi
+2025-10-15T18:08:57.623369330Z 
+2025-10-15T18:08:57.623372727Z echo "Done."
+2025-10-15T18:08:57.623376566Z npm start
+2025-10-15T18:08:57.706926931Z Found tar.gz based node_modules.
+2025-10-15T18:08:57.706956793Z Removing existing modules directory from root...
+2025-10-15T18:08:57.706961191Z Extracting modules...
+2025-10-15T18:09:11.093644860Z Done.
+2025-10-15T18:09:13.506056246Z npm info using npm@10.9.2
+2025-10-15T18:09:13.513892602Z npm info using node@v18.20.8
+2025-10-15T18:09:16.237981557Z 
+2025-10-15T18:09:16.238020195Z > homework-helper-backend@1.0.0 prestart
+2025-10-15T18:09:16.238026010Z > echo 'Starting Homework Helper Backend...'
+2025-10-15T18:09:16.238030625Z 
+2025-10-15T18:09:16.293993447Z Starting Homework Helper Backend...
+2025-10-15T18:09:16.364578188Z 
+2025-10-15T18:09:16.364636375Z > homework-helper-backend@1.0.0 start
+2025-10-15T18:09:16.364643811Z > node server.js
+2025-10-15T18:09:16.364648683Z 
+2025-10-15T18:09:17.724123241Z ❌ ERROR: Missing required environment variable: DATABASE_URL
+2025-10-15T18:09:17.733082562Z Please set DATABASE_URL in your .env file
+2025-10-15T18:09:17.752702713Z npm http fetch GET 200 https://registry.npmjs.org/npm 1032ms
+2025-10-15T18:09:17.778670675Z npm notice
+2025-10-15T18:09:17.779272626Z npm notice New major version of npm available! 10.9.2 -> 11.6.2
+2025-10-15T18:09:17.779286108Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+2025-10-15T18:09:17.779291289Z npm notice To update run: npm install -g npm@11.6.2
+2025-10-15T18:09:17.779296007Z npm notice
+
