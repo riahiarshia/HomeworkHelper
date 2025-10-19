@@ -1,6 +1,7 @@
 const axios = require('axios');
 const config = require('../config');
 const usageTrackingService = require('./usageTrackingService');
+const dm = require('../src/services/deterministicMath');
 
 class OpenAIService {
   constructor() {
@@ -246,26 +247,52 @@ class OpenAIService {
           "question": "Problem 1: [Identify the first problem and what it asks]",
           "explanation": "What we need to find for Problem 1",
           "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": "The exact correct option text"
+          "correctAnswer": "The exact correct option text",
+          "calc": {
+            "formulaName": "string (optional)",
+            "inputs": {},
+            "expression": "string (canonical math expression)",
+            "expectedUnits": "string (units or empty string)"
+          }
         },
         {
           "question": "Problem 1: [Next step for solving Problem 1]",
           "explanation": "How to approach this step",
           "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": "The exact correct option text"
+          "correctAnswer": "The exact correct option text",
+          "calc": {
+            "formulaName": "string (optional)",
+            "inputs": {},
+            "expression": "string (canonical math expression)",
+            "expectedUnits": "string (units or empty string)"
+          }
         },
         ... (3-5 steps for Problem 1)
         {
           "question": "Problem 2: [Identify the second problem]",
           "explanation": "What we need to find for Problem 2",
           "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": "The exact correct option text"
+          "correctAnswer": "The exact correct option text",
+          "calc": {
+            "formulaName": "string (optional)",
+            "inputs": {},
+            "expression": "string (canonical math expression)",
+            "expectedUnits": "string (units or empty string)"
+          }
         },
         ... (3-5 steps for Problem 2)
         ... (continue for ALL problems on the sheet)
       ],
       "finalAnswer": "Summary: Problem 1 = [answer], Problem 2 = [answer], Problem 3 = [answer], etc."
     }
+
+    CALC OBJECT REQUIREMENTS:
+    - For mathematical problems, ALWAYS include a "calc" object in each step
+    - "formulaName": Optional descriptive name (e.g., "area", "perimeter", "addition")
+    - "inputs": Key-value pairs of variables used in the calculation (e.g., {"length": 5, "width": 3})
+    - "expression": Mathematical expression using inputs (e.g., "length * width", "5 + 3", "2 * (length + width)")
+    - "expectedUnits": Units for the result (e.g., "m²", "cm", "degrees", or empty string "")
+    - If a step doesn't involve calculation, you may omit the "calc" object
 
     GUIDING STYLE:
     - Use 3–5 short, targeted steps per problem
@@ -369,6 +396,11 @@ class OpenAIService {
             usage: response.data.usage,
             metadata
           });
+        }
+        
+        // Apply deterministic math validation and repair incorrect calculations
+        if (result && result.steps && Array.isArray(result.steps)) {
+          result.steps = dm.repairSteps(result.steps);
         }
         
         return result;
@@ -516,6 +548,18 @@ Provide a helpful, age-appropriate hint that is DIRECTLY RELATED to the problem 
   }
 
   async verifyAnswer({ answer, step, problemContext, userGradeLevel, apiKey, userId, deviceId, metadata = {} }) {
+    // First, try deterministic math verification
+    const localVerification = dm.verifyAnswer({ answer, step });
+    
+    // If we can verify locally, return immediately without calling OpenAI
+    if (localVerification.expected !== undefined) {
+      return {
+        isCorrect: localVerification.isCorrect,
+        verification: localVerification.isCorrect ? 'CORRECT' : 'INCORRECT'
+      };
+    }
+
+    // If local verification is not possible, fall back to OpenAI
     const systemPrompt = `You are "Homework Mentor" — a precise and patient AI tutor that helps students solve their exact homework questions step by step.
     You are verifying a student's homework answer. Accuracy is ESSENTIAL to prevent misleading the student.`;
 
