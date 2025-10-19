@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Debug Tool - Homework Helper</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f7;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #007aff;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #f8f9ff;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background-color: #f0f4ff;
+            border-color: #0056b3;
+        }
+        
+        .upload-area.dragover {
+            background-color: #e6f3ff;
+            border-color: #0056b3;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+        
+        .upload-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .status.loading {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007aff;
+        }
+        
+        .log-entry {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .endpoints {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .endpoint {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #007aff;
+        }
+        
+        .endpoint strong {
+            color: #007aff;
+        }
+        
+        .progress {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007aff, #00d4aa);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Math Debug Tool</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Upload a math homework image to get comprehensive debugging information
+        </p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div>
+                <p>📸 Drop your math homework image here or click to browse</p>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose Image
+                </button>
+                <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+            </div>
+        </div>
+        
+        <div id="status"></div>
+        <div id="progressContainer" style="display: none;">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div class="endpoints">
+            <h3>🔗 Available Endpoints</h3>
+            <div class="endpoint">
+                <strong>POST /api/debug-math</strong> - Submit image for comprehensive debugging
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/debug-math/logs</strong> - View recent debug logs
+            </div>
+            <div class="endpoint">
+                <strong>DELETE /api/debug-math/logs</strong> - Clear debug logs
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/debug-math/test</strong> - Test debug system
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+        
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showStatus('Please select an image file', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            showStatus('🔍 Analyzing image...', 'loading');
+            showProgress();
+            
+            fetch('/api/debug-math', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideProgress();
+                if (data.success) {
+                    currentSessionId = data.sessionId;
+                    showStatus(`✅ Analysis complete! Session ID: ${data.sessionId}`, 'success');
+                    showResults(data.debugReport);
+                } else {
+                    showStatus(`❌ Error: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                hideProgress();
+                showStatus(`❌ Network error: ${error.message}`, 'error');
+                console.error('Error:', error);
+            });
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+            const progressBar = document.getElementById('progressBar');
+            let width = 0;
+            const interval = setInterval(() => {
+                width += Math.random() * 10;
+                if (width > 90) width = 90;
+                progressBar.style.width = width + '%';
+            }, 200);
+            
+            // Store interval ID for cleanup
+            window.progressInterval = interval;
+        }
+        
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = '100%';
+            if (window.progressInterval) {
+                clearInterval(window.progressInterval);
+            }
+            setTimeout(() => {
+                progressBar.style.width = '0%';
+            }, 500);
+        }
+        
+        function showResults(debugReport) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = '<div class="results">';
+            html += '<h3>📊 Debug Results</h3>';
+            
+            // Summary
+            html += '<h4>📋 Summary</h4>';
+            html += `<div class="log-entry">${JSON.stringify(debugReport.summary, null, 2)}</div>`;
+            
+            // Image Validation
+            html += '<h4>🖼️ Image Validation</h4>';
+            html += `<div class="log-entry">${JSON.stringify(debugReport.imageValidation, null, 2)}</div>`;
+            
+            // Homework Analysis
+            html += '<h4>🤖 OpenAI Analysis</h4>';
+            html += `<div class="log-entry">${JSON.stringify(debugReport.homeworkAnalysis, null, 2)}</div>`;
+            
+            // Math Evaluation
+            if (debugReport.mathEvaluation) {
+                html += '<h4>🧮 Math Evaluation</h4>';
+                html += `<div class="log-entry">${JSON.stringify(debugReport.mathEvaluation, null, 2)}</div>`;
+            }
+            
+            // Answer Verification
+            if (debugReport.answerVerification) {
+                html += '<h4>✅ Answer Verification</h4>';
+                html += `<div class="log-entry">${JSON.stringify(debugReport.answerVerification, null, 2)}</div>`;
+            }
+            
+            // Errors
+            if (debugReport.errors && debugReport.errors.length > 0) {
+                html += '<h4>❌ Errors</h4>';
+                html += `<div class="log-entry">${JSON.stringify(debugReport.errors, null, 2)}</div>`;
+            }
+            
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // Load recent logs on page load
+        window.addEventListener('load', () => {
+            fetch('/api/debug-math/logs')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.logs.length > 0) {
+                    console.log('Recent debug logs loaded:', data.logs);
+                }
+            })
+            .catch(error => {
+                console.error('Failed to load debug logs:', error);
+            });
+        });
+    </script>
+</body>
+</html>
